@@ -1,0 +1,53 @@
+{
+  "name": "shadow-accounts",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Shadow accounts microservice",
+  "main": "src/main.ts",
+  "scripts": {
+    "prepare": "husky install",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint": "eslint \"{src,test}/**/*.ts\"",
+    "lint:fix": "eslint \"{src,test}/**/*.ts\" --fix",
+    "dev": "bun run src/main.ts --watch",
+    "start": "bun run src/main.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leanderpaul/shadow-accounts-service.git"
+  },
+  "author": "Leander Paul",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/leanderpaul/shadow-accounts-service/issues"
+  },
+  "homepage": "https://github.com/leanderpaul/shadow-accounts-service#readme",
+  "dependencies": {
+    "@fastify/compress": "^6.5.0",
+    "@fastify/cookie": "^9.1.0",
+    "@fastify/static": "^6.12.0",
+    "@fastify/view": "^8.2.0",
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/core": "^10.0.0",
+    "@nestjs/platform-fastify": "^10.2.8",
+    "@nestjs/throttler": "^5.0.1",
+    "handlebars": "^4.7.8",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@commitlint/config-conventional": "^18.4.0",
+    "@nestjs/testing": "^10.0.0",
+    "@types/node": "^20.9.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "bun-types": "latest",
+    "eslint": "^8.42.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^8.0.3",
+    "prettier": "^3.0.0"
+  }
+}

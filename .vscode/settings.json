@@ -1,0 +1,11 @@
+{
+  "rest-client.environmentVariables": {
+    "$shared": {
+      "admin-email": "admin@shadow-apps.com",
+      "csrf-token": ""
+    },
+    "local": {
+      "host": "http://localhost:8080"
+    }
+  }
+}
