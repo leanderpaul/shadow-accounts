@@ -14,7 +14,7 @@ import handlebars from 'handlebars';
  * Importing user defined packages
  */
 import { AppModule } from './app.module';
-import { Config, Middleware } from './services';
+import { Config, Logger, Middleware } from './services';
 
 /**
  * Defining types
@@ -25,6 +25,7 @@ import { Config, Middleware } from './services';
  */
 
 async function bootstrap() {
+  const logger = Logger.getNestLogger('Nest');
   const publicDir = path.join(__dirname, '..', 'public');
   const templateDir = path.join(__dirname, '..', 'views');
 
@@ -35,7 +36,7 @@ async function bootstrap() {
   await instance.register(compression);
 
   /** Configuring the nestjs application */
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, { logger });
   Middleware.init(app);
   app.useStaticAssets({ root: publicDir });
   app.setViewEngine({ engine: { handlebars }, templates: templateDir });

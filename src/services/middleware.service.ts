@@ -10,6 +10,7 @@ import { type FastifyReply, type FastifyRequest } from 'fastify';
 import { type MiddlewarePromise } from '@app/interfaces';
 
 import { Context } from './context.service';
+import { Logger } from './logger.service';
 import { Storage } from './storage.service';
 
 /**
@@ -45,8 +46,10 @@ class MiddlewareService {
   init(app: NestFastifyApplication): void {
     Storage.set('app', app);
     const instance = app.getHttpAdapter().getInstance();
+    instance.addHook('onRequest', Logger.getRequestStartHandler());
     instance.addHook('preHandler', Context.init());
     instance.addHook('preHandler', this.executeMiddlewares(app));
+    instance.addHook('onResponse', Logger.getRequestEndHandler());
   }
 
   add(middleware: MiddlewareInstance): MiddlewareService {
