@@ -14,7 +14,7 @@ import handlebars from 'handlebars';
  * Importing user defined packages
  */
 import { AppModule } from './app.module';
-import { Config } from './services';
+import { Config, Middleware } from './services';
 
 /**
  * Defining types
@@ -36,6 +36,7 @@ async function bootstrap() {
 
   /** Configuring the nestjs application */
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);
+  Middleware.init(app);
   app.useStaticAssets({ root: publicDir });
   app.setViewEngine({ engine: { handlebars }, templates: templateDir });
   app.enableShutdownHooks([ShutdownSignal.SIGINT, ShutdownSignal.SIGUSR2, ShutdownSignal.SIGTERM]);
