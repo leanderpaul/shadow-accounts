@@ -26,8 +26,8 @@ import { Config, Logger, Middleware } from './services';
 
 async function bootstrap() {
   const logger = Logger.getNestLogger('Nest');
-  const publicDir = path.join(__dirname, '..', 'public');
-  const templateDir = path.join(__dirname, '..', 'views');
+  const publicDir = path.join(import.meta.dir, '..', 'public');
+  const templateDir = path.join(import.meta.dir, '..', 'views');
 
   /** Creating fasitfy instance and registering plugins */
   const adapter = new FastifyAdapter();
