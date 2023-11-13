@@ -51,6 +51,9 @@ export class User {
   static UserEmail = UserEmail;
   static UserSession = UserSession;
 
+  static Status = UserStatus;
+  static Role = UserRole;
+
   /** User ID, alias of _id */
   uid: Types.ObjectId;
 
@@ -88,7 +91,7 @@ export class User {
     trim: true,
     minlength: [1, 'should have at least 3 characters'],
     maxlength: [32, 'should have at most 32 characters'],
-    validate: [/^[a-zA-Z ]*$/, 'should only contain alphabets and spaces'],
+    validate: [/^[a-zA-Z \-']*$/, 'should only contain alphabets and spaces'],
   })
   lastName?: string;
 
