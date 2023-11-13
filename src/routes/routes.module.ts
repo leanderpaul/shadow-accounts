@@ -1,11 +1,14 @@
 /**
  * Importing npm packages
  */
-import { Module } from '@nestjs/common';
+import { Module, type ModuleMetadata } from '@nestjs/common';
 
 /**
  * Importing user defined packages
  */
+import { Config } from '@app/services';
+
+import { DevModule } from './dev';
 
 /**
  * Defining types
@@ -16,6 +19,12 @@ import { Module } from '@nestjs/common';
  */
 
 @Module({
-  imports: [],
+  imports: RoutesModule.getImports(),
 })
-export class RoutesModule {}
+export class RoutesModule {
+  static getImports(): ModuleMetadata['imports'] {
+    const imports: ModuleMetadata['imports'] = [];
+    if (Config.isDev()) imports.push(DevModule);
+    return imports;
+  }
+}
