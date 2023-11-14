@@ -18,7 +18,7 @@ import { DatabaseService } from './database.service';
  * Defining types
  */
 
-export type ID = string | Types.ObjectId;
+export type ID = Types.ObjectId;
 
 /**
  * Declaring the constants

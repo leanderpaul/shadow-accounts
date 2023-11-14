@@ -23,15 +23,32 @@ export class IAMErrorCode extends ErrorCode {
 
   /** Access denied */
   static readonly IAM001 = new IAMErrorCode('IAM001', ErrorType.UNAUTHORIZED, 'Access denied');
+  /** Invalid CSRF token */
+  static readonly IAM002 = new IAMErrorCode('IAM002', ErrorType.UNAUTHORIZED, 'Invalid CSRF token');
 
   /*!
-   * List of all server related errors
+   * List of all account related errors
    */
 
-  /** Unexpected server error */
-  static readonly S001 = new IAMErrorCode('S001', ErrorType.SERVER_ERROR, 'Unexpected server error');
-  /** Not found */
-  static readonly S002 = new IAMErrorCode('S002', ErrorType.NOT_FOUND, 'Not found');
-  /** Invalid input */
-  static readonly S003 = new IAMErrorCode('S003', ErrorType.VALIDATION_ERROR, 'Invalid input');
+  /** Account not found */
+  static readonly A001 = new IAMErrorCode('A001', ErrorType.NOT_FOUND, 'Account not found');
+
+  /*!
+   * List of all user related errors
+   */
+
+  /** User not found */
+  static readonly U001 = new IAMErrorCode('U001', ErrorType.NOT_FOUND, 'User not found');
+  /** User already exists */
+  static readonly U002 = new IAMErrorCode('U002', ErrorType.CLIENT_ERROR, 'User already exists');
+  /** User not verified */
+  static readonly U003 = new IAMErrorCode('U003', ErrorType.CLIENT_ERROR, 'User email address not verified');
+  /** User already verified */
+  static readonly U004 = new IAMErrorCode('U004', ErrorType.CLIENT_ERROR, 'Email address already verified');
+  /** Verification token invalid or expired */
+  static readonly U005 = new IAMErrorCode('U005', ErrorType.CLIENT_ERROR, 'Verification token invalid or expired');
+  /** User not active */
+  static readonly U006 = new IAMErrorCode('U006', ErrorType.CLIENT_ERROR, 'User not active');
+  /** Incorrect password */
+  static readonly U007 = new IAMErrorCode('U007', ErrorType.CLIENT_ERROR, 'Incorrect password');
 }

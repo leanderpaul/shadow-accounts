@@ -1,7 +1,9 @@
 /**
  * Importing npm packages
  */
+import { type Projection } from '@leanderpaul/shadow-service';
 import { MongooseModule, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import lodash from 'lodash';
 import { type Document, type Model, type Query, type Types } from 'mongoose';
 
 /**
@@ -27,20 +29,18 @@ export enum UserRole {
   SUPER_ADMIN = 2,
 }
 
-interface UserStaticMethods {
-  isNativeUser(user: User): user is NativeUser;
-  isOAuthUser(user: User): user is OAuthUser;
-}
+export type UserInfo = Pick<User, 'aid' | 'uid' | 'type' | 'firstName' | 'lastName' | 'role' | 'status'>;
 
-export interface UserModel extends Omit<Model<User>, 'create' | 'insert' | 'insertMany'>, UserStaticMethods {}
+export interface UserModel extends Omit<Model<User>, 'create' | 'insert' | 'insertMany'> {}
 
-export interface NativeUserModel extends Model<NativeUser>, UserStaticMethods {}
+export interface NativeUserModel extends Model<NativeUser> {}
 
-export interface OAuthUserModel extends Model<OAuthUser>, UserStaticMethods {}
+export interface OAuthUserModel extends Model<OAuthUser> {}
 
 /**
  * Declaring the constants
  */
+const defaultUserProjection: Projection<User> = { aid: 1, uid: 1, type: 1, firstName: 1, lastName: 1, role: 1, status: 1 };
 
 @Schema({
   timestamps: true,
@@ -53,6 +53,20 @@ export class User {
 
   static Status = UserStatus;
   static Role = UserRole;
+
+  /** contructs user projection on top of the default user projection */
+  static constructProjection(projection?: Projection<User | NativeUser | OAuthUser>): Projection<User | NativeUser | OAuthUser> {
+    return lodash.defaultsDeep(defaultUserProjection, projection);
+  }
+
+  /** returns user info from user object by removing other fields */
+  static getUserInfo = (user: User): UserInfo => lodash.pick(user, ['aid', 'uid', 'type', 'firstName', 'lastName', 'role', 'status']);
+
+  /** Checks whether user is a native user */
+  static isNativeUser = (user: User): user is NativeUser => 'password' in user;
+
+  /** Checks whether user is an OAuth user */
+  static isOAuthUser = (user: User): user is OAuthUser => 'refreshToken' in user;
 
   /** User ID, alias of _id */
   uid: Types.ObjectId;
@@ -185,9 +199,6 @@ export class OAuthUser extends User {
 export const UserSchema = SchemaFactory.createForClass(User);
 export const NativeUserSchema = SchemaFactory.createForClass(NativeUser);
 export const OAuthUserSchema = SchemaFactory.createForClass(OAuthUser);
-
-UserSchema.static('isNativeUser', (user: User) => 'password' in user);
-UserSchema.static('isOAuthUser', (user: User) => 'refreshToken' in user);
 
 /**
  * Setting up middlewares
