@@ -21,6 +21,8 @@ export interface ServerConfigRecords extends ConfigRecords {
   'db.uri': string;
 
   /** Authentication configs */
+  'cookie.name': string;
+  'cookie.max-age': number;
   'csrf.secret-key': Buffer;
   'refresh-token.secret-key': Buffer;
 }
@@ -42,6 +44,8 @@ class ServerConfigService extends ConfigService<ServerConfigRecords> {
     const arr = new Array(43);
     const transformSecretKey = (value: string): Buffer => Buffer.from(value, 'base64');
     const secretKeyValidator = (value: string): boolean => Buffer.from(value, 'base64').length === 32;
+    this.set('cookie.name', { defaultValue: 'sasid' });
+    this.set('cookie.max-age', { defaultValue: '864000', validateType: 'number' }); // 10 days
     this.set('csrf.secret-key', { defaultValue: arr.fill('A').join(''), validator: secretKeyValidator, transform: transformSecretKey });
     this.set('refresh-token.secret-key', { defaultValue: arr.fill('B').join(''), validator: secretKeyValidator, transform: transformSecretKey });
   }
