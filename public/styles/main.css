@@ -1,0 +1,95 @@
+body {
+  margin: 0px;
+  min-height: 100vh;
+  font-family: 'Roboto', sans-serif;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.w-full {
+  width: 100vw;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.h-full {
+  height: 100vh;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+.btn {
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  height: 44px;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: 600;
+  outline: none;
+  border: none;
+  margin: auto;
+  margin-bottom: 30px;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn.blue {
+  box-shadow: 0px 2px 2px #fff;
+  background-color: #159aff;
+  color: #fff;
+}
+
+.btn.blue:hover {
+  box-shadow: 0px 2px 2px rgba(90, 183, 254, 0.2);
+}
+
+.form-field {
+  margin-bottom: 30px;
+}
+
+.form-field input {
+  color: #212121;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 44px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  text-indent: 12px;
+  font-size: 16px;
+  outline: none;
+  border: none;
+  padding-right: 12px;
+  transition: all 0.2s ease-in-out;
+  background: #f8f8f8;
+  border: 1px solid #e4e4e4;
+}
+
+.form-field input::placeholder {
+  color: #aab2bb;
+  letter-spacing: 0.3px;
+  font-weight: 400;
+}
+
+.form-field .error {
+  display: none;
+}
+
+.form-field.error input {
+  border: 2px solid #ff8484 !important;
+}
+
+.form-field.error .error {
+  display: block;
+  font-size: 14px;
+  margin-top: 10px;
+  color: #e92b2b;
+}

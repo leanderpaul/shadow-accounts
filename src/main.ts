@@ -3,7 +3,6 @@
  */
 import path from 'node:path';
 
-import compression from '@fastify/compress';
 import { fastifyCookie } from '@fastify/cookie';
 import { ShutdownSignal } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
@@ -33,13 +32,18 @@ async function bootstrap() {
   const adapter = new FastifyAdapter();
   const instance = adapter.getInstance();
   await instance.register(fastifyCookie);
-  await instance.register(compression);
+  /**
+   * Disabling the compression plugin as it is `BrotliCompress` and `createBrotliCompress`
+   * are not yet supported by bun. and the other encoding result in an error in dependency package `stream-shift`.
+   * Add compression after these methods are implemented or the bug in package is fixed.
+   */
+  // await instance.register(compression, { encodings: ['deflate'] });
 
   /** Configuring the nestjs application */
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, { logger });
   Middleware.init(app);
   app.useStaticAssets({ root: publicDir });
-  app.setViewEngine({ engine: { handlebars }, templates: templateDir });
+  app.setViewEngine({ engine: { handlebars }, templates: templateDir, includeViewExtension: true, layout: 'layout' });
   app.enableShutdownHooks([ShutdownSignal.SIGINT, ShutdownSignal.SIGUSR2, ShutdownSignal.SIGTERM]);
 
   /** Starting the nestjs application */

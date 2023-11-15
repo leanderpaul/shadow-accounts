@@ -44,9 +44,7 @@ export class ErrorFilter implements ExceptionFilter {
   private constructErrorPayload(error: Error): [number, FormattedError] {
     const rid = Context.getRID();
 
-    if (error instanceof NotFoundException) error = new IAMError(IAMErrorCode.S002);
-    else if (error instanceof ForbiddenException) error = new IAMError(IAMErrorCode.IAM001);
-
+    if (error instanceof ForbiddenException) error = new IAMError(IAMErrorCode.IAM001);
     if (error instanceof ValidationError || error instanceof MongooseError.ValidationError) {
       const fields = error instanceof ValidationError ? error.getErrors() : Object.values(error.errors).map(err => ({ field: err.path, msg: err.message }));
       const code = IAMErrorCode.S003.getCode();
@@ -65,10 +63,12 @@ export class ErrorFilter implements ExceptionFilter {
   }
 
   catch(error: Error): FastifyReply {
+    const res = Context.getCurrentResponse();
+    if (error instanceof NotFoundException) return res.status(404).view('404', { title: 'Page not found' });
+
     this.logger.error(error);
     const [statusCode, payload] = this.constructErrorPayload(error);
 
-    const res = Context.getCurrentResponse();
     return res.status(statusCode).send(payload);
   }
 }

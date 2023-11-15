@@ -11,6 +11,7 @@ import { DatabaseModule } from '@app/modules/database';
 import { UserModule } from '@app/modules/user';
 
 import { AuthService } from './auth.service';
+import { CookieService } from './cookie.service';
 
 /**
  * Defining types
@@ -22,7 +23,7 @@ import { AuthService } from './auth.service';
 
 @Module({
   imports: [DatabaseModule, UserModule],
-  providers: [AuthService],
+  providers: [AuthService, CookieService],
   exports: [AuthService],
 })
 export class AuthModule {}
