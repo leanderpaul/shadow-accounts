@@ -3,6 +3,7 @@
  */
 import { type JSONData } from '@leanderpaul/shadow-service';
 import { Controller, Get } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 /**
  * Importing user defined packages
@@ -17,6 +18,7 @@ import { DatabaseService } from '@app/modules/database';
  * Declaring the constants
  */
 
+@ApiTags('dev')
 @Controller('dev')
 export class DevController {
   constructor(private readonly databaseService: DatabaseService) {}
