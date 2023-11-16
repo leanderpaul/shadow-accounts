@@ -19,5 +19,6 @@ import { type JSONData } from '@leanderpaul/shadow-service';
 export interface TemplateData {
   title: string;
   styles?: string[];
+  scripts?: string[];
   [key: string]: JSONData | undefined;
 }

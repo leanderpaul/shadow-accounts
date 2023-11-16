@@ -9,6 +9,7 @@ import { Error as MongooseError } from 'mongoose';
 /**
  * Importing user defined packages
  */
+import { FormattedError } from '@app/dtos/errors';
 import { Context, Logger } from '@app/services';
 
 import { IAMErrorCode } from './iam-error-code.error';
@@ -17,14 +18,6 @@ import { IAMError } from './iam.error';
 /**
  * Defining types
  */
-
-export interface FormattedError {
-  rid: string;
-  code: string;
-  type: string;
-  message: string;
-  fields?: FieldError[];
-}
 
 /**
  * Declaring the constants

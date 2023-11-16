@@ -72,7 +72,7 @@ export class UserService {
   async getOAuthUser<T extends keyof Omit<OAuthUser, 'uid' | 'type'>>(uidOrEmail: ID | string, projection: T[]): Promise<Pick<OAuthUser, 'uid' | 'type' | T> | null>;
   async getOAuthUser(uidOrEmail: ID | string, projection: Projection<OAuthUser>): Promise<OAuthUser | null>;
   async getOAuthUser<T>(uidOrEmail: ID | string, projection: Projection<OAuthUser> | T[] = defaultUserProjection): Promise<OAuthUser | null> {
-    const query = typeof uidOrEmail === 'string' && uidOrEmail.includes('@') ? { email: uidOrEmail } : { uid: uidOrEmail };
+    const query = typeof uidOrEmail === 'string' && uidOrEmail.includes('@') ? { 'emails.email': uidOrEmail } : { uid: uidOrEmail };
     return await this.oauthUserModel.findOne(query, projection).select('type').lean();
   }
 
@@ -80,7 +80,7 @@ export class UserService {
   async getUser<T extends keyof Omit<User, 'uid' | 'type'>>(uidOrEmail: ID | string, projection: T[]): Promise<Pick<User, 'uid' | 'type' | T> | null>;
   async getUser(uidOrEmail: ID | string, projection: Projection<User>): Promise<User | null>;
   async getUser<T>(uidOrEmail: ID | string, projection: T[] | Projection<User> = defaultUserProjection): Promise<User | null> {
-    const query = typeof uidOrEmail === 'string' && uidOrEmail.includes('@') ? { email: uidOrEmail } : { uid: uidOrEmail };
+    const query = typeof uidOrEmail === 'string' && uidOrEmail.includes('@') ? { 'emails.email': uidOrEmail } : { uid: uidOrEmail };
     return await this.userModel.findOne(query, projection).select('type').lean();
   }
 

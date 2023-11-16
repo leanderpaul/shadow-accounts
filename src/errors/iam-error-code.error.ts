@@ -51,4 +51,6 @@ export class IAMErrorCode extends ErrorCode {
   static readonly U006 = new IAMErrorCode('U006', ErrorType.CLIENT_ERROR, 'User not active');
   /** Incorrect password */
   static readonly U007 = new IAMErrorCode('U007', ErrorType.CLIENT_ERROR, 'Incorrect password');
+  /** User account closed */
+  static readonly U008 = new IAMErrorCode('U008', ErrorType.CLIENT_ERROR, 'User account closed');
 }

@@ -9,6 +9,7 @@ import moment from 'moment';
 /**
  * Importing user defined packages
  */
+import { AuthInfo } from '@app/dtos/auth';
 import { IAMError, IAMErrorCode } from '@app/errors';
 import { DatabaseService, type ID, User, UserVariant } from '@app/modules/database';
 import { type UserInfo, type UserSession } from '@app/modules/database/database.types';
@@ -47,10 +48,24 @@ export class UserAuthService {
   }
 
   private generateUserSession(user?: Pick<User, 'sessions'>): UserSession {
-    const prevId = user?.sessions[user.sessions.length - 1]?.id ?? 0;
+    const prevId = user?.sessions?.[user.sessions.length - 1]?.id ?? 0;
     const req = Context.getCurrentRequest();
     const token = crypto.randomBytes(32).toString('base64url');
-    return { id: prevId + 1, token, accessedAt: new Date(), ipAddr: req.ip, userAgent: req.headers['user-agent'] };
+    const session: UserSession = { id: prevId + 1, token, accessedAt: new Date() };
+    if (req.ip) session.ipAddr = req.ip;
+    if (req.headers['user-agent']) session.userAgent = req.headers['user-agent'];
+    return session;
+  }
+
+  async getAuthInfo(email: string): Promise<AuthInfo> {
+    const user = await this.userService.getUser(email, ['status']);
+    const authInfo: AuthInfo = { userExists: !!user, isLoginAllowed: false };
+    let error: IAMError | null = null;
+    if (!user) error = new IAMError(IAMErrorCode.U001);
+    else if (user.status === User.Status.ACTIVE) authInfo.isLoginAllowed = true;
+    else error = new IAMError(user.status === User.Status.INACTIVE ? IAMErrorCode.U006 : IAMErrorCode.U008);
+    if (error) authInfo.error = { code: error.getCode(), message: error.getMessage() };
+    return authInfo;
   }
 
   async registerNativeUser(newUser: ICreateUser): Promise<UserInfo> {
@@ -63,7 +78,7 @@ export class UserAuthService {
   }
 
   async loginUser(email: string, password: string): Promise<UserInfo> {
-    const projection = User.constructProjection({ password: 1 });
+    const projection = User.constructProjection({ password: 1, sessions: 1 });
     const user = await this.userService.getNativeUser(email, projection);
     if (!user) throw new IAMError(IAMErrorCode.U001);
     const isValidPassword = await Bun.password.verify(password, user.password);

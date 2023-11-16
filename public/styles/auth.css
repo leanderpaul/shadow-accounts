@@ -1,0 +1,155 @@
+.background-image {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  z-index: -1;
+  top: 0;
+  background-image: url('/images/auth-background.webp');
+  background-size: cover;
+}
+
+.auth-container {
+  width: 100%;
+  background-color: white;
+  padding: 30px;
+  box-sizing: border-box;
+  height: 100vh;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo span {
+  font-size: 24px;
+  text-transform: uppercase;
+  color: #525252;
+  margin-left: 5px;
+}
+
+.header {
+  margin-top: 16px;
+  margin-bottom: 30px;
+}
+
+.header span {
+  font-size: 1.5rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  color: #414141;
+}
+
+.form-field {
+  margin-bottom: 20px;
+}
+
+#email {
+  margin-bottom: 20px;
+}
+
+#password .link {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+#password .actions {
+  display: inline-block;
+  width: 100%;
+}
+
+#eye,
+#eye-slash {
+  fill: #bbb;
+  height: 20px;
+  margin-bottom: 7px;
+}
+
+#eye {
+  margin-right: 1.15px;
+}
+
+.toggle-password-view {
+  font-size: 34px;
+  color: #a7a7a7;
+  position: absolute;
+  top: 7px;
+  right: 13px;
+  float: right;
+  cursor: pointer;
+}
+
+.icon-hide::before {
+  content: '\e907';
+}
+
+.icon-show::before {
+  content: '\e908';
+}
+
+.line {
+  margin-bottom: 30px;
+}
+
+#forgot-password {
+  margin: 30px 0px;
+}
+
+.oauth .text {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.oauth .idp {
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+  /* cursor: pointer; */
+  filter: brightness(0.4);
+  overflow: hidden;
+  float: left;
+  border-radius: 3px;
+  margin-right: 10px;
+}
+
+.oauth .idp.google {
+  background-color: #fff;
+  box-shadow:
+    0px 0px 2px #00000012,
+    0px 2px 2px #00000024;
+}
+
+.oauth .idp.facebook {
+  background-color: #1874f4;
+}
+
+.oauth .idp.microsoft {
+  background-color: #302c2c;
+}
+
+.oauth .idp.twitter {
+  background-color: #03a9f4;
+}
+
+@media (min-width: 576px) {
+}
+
+@media (min-width: 768px) {
+  .auth-container {
+    max-width: 500px;
+    padding: 44px;
+    height: auto;
+  }
+}
+
+@media (min-width: 992px) {
+}
+
+@media (min-width: 1200px) {
+}
+
+@media (min-width: 1400px) {
+}
