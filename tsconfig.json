@@ -28,7 +28,7 @@
       "@app/*": ["src/*"]
     },
     "resolveJsonModule": true,
-    "types": ["bun-types"],
+    "types": ["bun-types", "@fastify/view"],
 
     /** Interop Constraints */
     "allowSyntheticDefaultImports": true,

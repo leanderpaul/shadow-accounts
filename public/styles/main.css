@@ -38,6 +38,11 @@ a {
   align-items: center;
 }
 
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
 .w-full {
   width: 100vw;
 }
