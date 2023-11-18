@@ -69,7 +69,9 @@ a {
 
 .btn {
   cursor: pointer;
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 44px;
   border-radius: 2px;
@@ -78,7 +80,9 @@ a {
   outline: none;
   border: none;
   margin: auto;
+  padding: 0px 20px;
   transition: all 0.2s ease-in-out;
+  box-sizing: border-box;
 }
 
 .btn.blue {
@@ -220,6 +224,43 @@ a {
   text-decoration: none;
 }
 
+.background-image {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  z-index: -1;
+  top: 0;
+  background-image: url('/images/light-background.svg');
+  background-size: cover;
+}
+
+.error-404 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-transform: uppercase;
+}
+
+.error-404 h1,
+.error-404 h3 {
+  letter-spacing: 10px;
+  margin: 0px;
+}
+
+.error-404 h1 {
+  font-size: 100px;
+  margin-top: calc(50vh - 300px);
+}
+
+.error-404 h3 {
+  font-size: 25px;
+}
+
+.error-404 .btn {
+  margin-top: 30px;
+  letter-spacing: 2px;
+}
+
 /** Small screen - sm */
 @media (min-width: 576px) {
 }
@@ -235,6 +276,16 @@ a {
 
 /** Large screen - lg */
 @media (min-width: 992px) {
+  .error-404 h1 {
+    font-size: 200px;
+    margin: 0px;
+    margin-top: calc(50vh - 300px);
+  }
+
+  .error-404 h3 {
+    font-size: 40px;
+    margin: 0px;
+  }
 }
 
 /** Extra Large screen - xl */

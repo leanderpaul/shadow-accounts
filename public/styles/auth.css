@@ -1,13 +1,3 @@
-.background-image {
-  position: fixed;
-  height: 100vh;
-  width: 100vw;
-  z-index: -1;
-  top: 0;
-  background-image: url('/images/auth-background.svg');
-  background-size: cover;
-}
-
 .auth-container {
   width: 100%;
   background-color: white;
