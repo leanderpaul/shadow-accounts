@@ -26,7 +26,7 @@ import { Config, Logger, Middleware } from './services';
  * Declaring the constants
  */
 
-async function bootstrap() {
+export async function initApp(listen?: boolean): Promise<NestFastifyApplication> {
   const logger = Logger.getNestLogger('Nest');
   const publicDir = path.join(import.meta.dir, '..', 'public');
   const templateDir = path.join(import.meta.dir, '..', 'views');
@@ -60,9 +60,14 @@ async function bootstrap() {
   }
 
   /** Starting the nestjs application */
-  const port = Config.get('app.port');
-  const hostname = Config.get('app.hostname');
-  await app.listen(port, hostname);
+  if (listen) {
+    const port = Config.get('app.port');
+    const hostname = Config.get('app.hostname');
+    await app.listen(port, hostname);
+    logger.debug(`Server is running on ${hostname}:${port}`);
+  }
+
+  return app;
 }
 
-bootstrap();
+if (import.meta.main) initApp();

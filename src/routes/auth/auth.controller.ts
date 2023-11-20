@@ -28,7 +28,7 @@ export class AuthController {
   @Render('auth/signin')
   @ApiExcludeEndpoint()
   getLoginPage(): TemplateData {
-    return { title: 'Login', styles: ['auth'], scripts: ['auth'] };
+    return { title: 'Sign In', styles: ['auth'], scripts: ['auth'] };
   }
 
   @Post('signin')

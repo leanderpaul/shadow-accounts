@@ -43,6 +43,7 @@ const MongoDBModule = MongooseModule.forRoot(Config.get('db.uri'), {
     if (Config.get('log.level') === 'debug') mongoose.set('debug', mongooseDebugLogger);
 
     /** Handling mongoose connection errors */
+    connection.on('open', () => logger.debug(`mongodb connection opened to ${Config.get('db.uri')}`));
     connection.on('error', (err: Error) => logger.error(err));
     connection.on('close', () => logger.debug(`mongodb connection closed`));
 
