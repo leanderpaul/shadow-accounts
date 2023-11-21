@@ -57,7 +57,7 @@ export class MockRequest {
     const opts: FetchRequestInit = { headers: this.headers, method: this.method };
     if (this.body) opts.body = JSON.stringify(this.body);
     const port = process.env.PORT ?? 8081;
-    const url = `http://localhost:${port}${this.url}`;
+    const url = `http://127.0.0.1:${port}${this.url}`;
     const response = await fetch(url, opts);
     const body = await response.text();
     const cookies = response.headers.get('Set-Cookie');
