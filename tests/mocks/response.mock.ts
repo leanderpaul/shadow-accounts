@@ -2,7 +2,7 @@
  * Importing npm packages
  */
 import { expect } from 'bun:test';
-import { load as loadDOM, type CheerioAPI } from 'cheerio';
+import { type CheerioAPI, load as loadDOM } from 'cheerio';
 
 /**
  * Importing user defined packages
