@@ -1,7 +1,8 @@
 /**
  * Importing npm packages
  */
-import { expect } from '@jest/globals';
+import { expect } from 'bun:test';
+import { load as loadDOM, type CheerioAPI } from 'cheerio';
 
 /**
  * Importing user defined packages
@@ -12,14 +13,19 @@ import { IAMErrorCode } from '@app/errors';
  * Defining types
  */
 
+export interface ExpectedHTML {
+  title?: string;
+  text?: string;
+}
+
 /**
  * Declaring the constants
  */
 
-fetch;
-
 export class MockResponse {
   static cookies = new Map<string, string>();
+
+  private dom: CheerioAPI | undefined;
 
   constructor(
     private readonly response: Response,
@@ -30,16 +36,35 @@ export class MockResponse {
     return JSON.parse(this.body);
   }
 
+  getHeaders(): Response['headers'] {
+    return this.response.headers;
+  }
+
+  getHTMLDOM(): CheerioAPI {
+    if (!this.dom) this.dom = loadDOM(this.body);
+    return this.dom;
+  }
+
   expectStatusCode(statusCode: number): void {
     expect(this.response.status).toBe(statusCode);
   }
 
-  expectHTML(text?: string): void {
-    expect(this.response.type).toMatch(/text\/html/);
-    if (text) expect(this.response.text).toContain(text);
+  expectHTML(expected: ExpectedHTML): void {
+    const contentType = this.getHeaders().get('Content-Type');
+    expect(contentType).toContain('text/html;');
+    const $ = this.getHTMLDOM();
+    if (expected?.title) {
+      const actualTitle = $('head title').text();
+      const expectedTitle = `${expected.title} - Shadow Accounts`;
+      expect(actualTitle).toBe(expectedTitle);
+    }
+    if (expected?.text) {
+      const actualText = $('body').text();
+      expect(actualText).toContain(expected.text);
+    }
   }
 
-  expectJSONData(obj: Record<string, unknown>): void {
+  expectData(obj: Record<string, unknown>): void {
     const { type } = this.response;
     const body = this.getBody();
     expect(type).toMatch(/application\/json/);
@@ -47,16 +72,24 @@ export class MockResponse {
     expect(body).toMatchObject(obj);
   }
 
-  expectJSONError(code: string): void {
+  expectError(code: string, fields?: string[]): void {
     const error = (IAMErrorCode as any)[code] as IAMErrorCode | undefined;
     if (!error) throw new Error(`Invalid error code: ${code}`);
-    const { type } = this.response;
-    const body = this.getBody();
+
+    const contentType = this.getHeaders().get('Content-Type');
+    expect(contentType).toContain('application/json;');
     this.expectStatusCode(error.getStatusCode());
-    expect(type).toMatch(/application\/json/);
-    expect(body.code).toBe(code);
-    expect(body.type).toBe(error.getType());
+
+    const body = this.getBody();
     expect(body.rid).toBeGreaterThan(0);
+    expect(body.type).toBe(error.getType());
+    expect(body.code).toBe(code);
+    expect(body.message).toBeString();
+    if (fields) {
+      const expected = fields.map(field => ({ field, msg: expect.any(String) }));
+      expect(body.fields).toHaveLength(fields.length);
+      expect(body.fields).toMatchObject(expected);
+    }
   }
 
   /**

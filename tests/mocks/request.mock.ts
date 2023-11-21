@@ -1,11 +1,12 @@
 /**
  * Importing npm packages
  */
+import { type JSONData } from '@leanderpaul/shadow-service';
 
 /**
  * Importing user defined packages
  */
-import { Config } from '@app/services';
+import { Config, Logger } from '@app/services';
 
 import { MockResponse } from './response.mock';
 
@@ -17,6 +18,7 @@ export type RestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 /**
  * Declaring the constants
  */
+const logger = Logger.getLogger('MockRequest');
 
 export class MockRequest {
   private readonly headers: Record<string, string> = {};
@@ -25,18 +27,26 @@ export class MockRequest {
   constructor(
     private readonly method: RestMethod,
     private readonly url: string,
-  ) {}
+  ) {
+    this.header('Accept', '*/*');
+    this.header('Accept-Language', 'en-GB,en;q=0.5');
+    this.header('Accept-Encoding', 'gzip, deflate, br');
+  }
 
   static get(url: string): MockRequest {
     return new MockRequest('GET', url);
   }
 
-  static post(url: string): MockRequest {
-    return new MockRequest('POST', url);
+  static post(url: string, body?: Record<string, JSONData>): MockRequest {
+    const request = new MockRequest('POST', url);
+    if (body) request.send(body);
+    return request;
   }
 
-  static put(url: string): MockRequest {
-    return new MockRequest('PUT', url);
+  static put(url: string, body?: Record<string, JSONData>): MockRequest {
+    const request = new MockRequest('PUT', url);
+    if (body) request.send(body);
+    return request;
   }
 
   static delete(url: string): MockRequest {
@@ -46,7 +56,7 @@ export class MockRequest {
   private async execute(): Promise<MockResponse> {
     const opts: FetchRequestInit = { headers: this.headers, method: this.method };
     if (this.body) opts.body = JSON.stringify(this.body);
-    const port = process.env.PORT ?? 8080;
+    const port = process.env.PORT ?? 8081;
     const url = `http://localhost:${port}${this.url}`;
     const response = await fetch(url, opts);
     const body = await response.text();
@@ -60,11 +70,12 @@ export class MockRequest {
         }
       }
     }
-
+    logger.debug(`${this.method} ${this.url} => ${response.status}`, { body, cookies });
     return new MockResponse(response, body);
   }
 
-  send(data: object): MockRequest {
+  send(data: Record<string, JSONData>): MockRequest {
+    this.header('Content-Type', 'application/json');
     this.body = data;
     return this;
   }

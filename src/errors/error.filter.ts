@@ -56,12 +56,11 @@ export class ErrorFilter implements ExceptionFilter {
   }
 
   catch(error: Error): FastifyReply {
+    this.logger.error(error);
+
     const res = Context.getCurrentResponse();
     if (error instanceof NotFoundException) return res.status(404).view('404', { title: 'Page not found' });
-
-    this.logger.error(error);
     const [statusCode, payload] = this.constructErrorPayload(error);
-
     return res.status(statusCode).send(payload);
   }
 }
