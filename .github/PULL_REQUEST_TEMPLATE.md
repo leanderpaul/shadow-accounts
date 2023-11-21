@@ -10,6 +10,7 @@ What kind of change does this PR introduce?
 
 - [ ] Bugfix
 - [ ] Feature
+- [ ] Tests
 - [ ] Code style update (formatting, local variables)
 - [ ] Refactoring (no functional changes, no api changes)
 - [ ] Build related changes
