@@ -3,11 +3,11 @@
  */
 import { type Subprocess } from 'bun';
 import { afterAll, beforeAll } from 'bun:test';
-import mongoose from 'mongoose';
 
 /**
  * Importing user defined packages
  */
+import { Seeder } from '@app/seeder';
 
 /**
  * Defining types
@@ -25,10 +25,10 @@ beforeAll(async () => {
   if (!uri) throw new Error('DB_URI not set for testing');
   if (watch) return;
 
-  /** Deleting old test data */
-  await mongoose.connect(uri);
-  await mongoose.connection.db.dropDatabase();
-  await mongoose.connection.close();
+  /** Deleting old test data and seeding the database */
+  const seeder = await Seeder.init();
+  await seeder.seedDatabase(true);
+  await seeder.close();
 
   const env = { ...process.env, NODE_ENV: 'test', PORT: '8081', APP_NAME: 'test:shadow-accounts' };
   const cwd = `${import.meta.dir}/..`;

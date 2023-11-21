@@ -24,13 +24,13 @@ describe('e2e: AuthController', () => {
       response.expectError('S003', ['email']);
     });
 
-    it.todo('should return auth info error for non-existing email', async () => {
+    it('should return auth info error for non-existing email', async () => {
       const response = await MockRequest.post('/auth/lookup', { email: 'unknown-user@shadow-apps.com' });
       response.expectStatusCode(200);
       response.expectData({ userExists: false, isLoginAllowed: false, error: { code: 'U001', message: 'User not found' } });
     });
 
-    it.todo('should return auth info for existing email', async () => {
+    it('should return auth info for existing email', async () => {
       const response = await MockRequest.post('/auth/lookup', { email: 'admin@shadow-apps.com' });
       response.expectStatusCode(200);
       response.expectData({ userExists: true, isLoginAllowed: true });
@@ -52,13 +52,13 @@ describe('e2e: AuthController', () => {
       response.expectError('S003', ['email']);
     });
 
-    it.todo('should return error for invalid credentials', async () => {
+    it('should return error for invalid credentials', async () => {
       const response = await MockRequest.post('/auth/signin', { email: 'admin@shadow-apps.com', password: 'invalid' });
       response.expectStatusCode(400);
-      response.expectError('S003', ['email']);
+      response.expectError('U007');
     });
 
-    it.todo('should return cookie for valid credentials', async () => {
+    it('should return cookie for valid credentials', async () => {
       const response = await MockRequest.post('/auth/signin', { email: 'admin@shadow-apps.com', password: 'Password@123' });
       response.expectStatusCode(200);
       response.expectData({ success: true });

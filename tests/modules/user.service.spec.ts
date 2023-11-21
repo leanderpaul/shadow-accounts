@@ -21,22 +21,24 @@ import { Seeder } from '@app/seeder';
 describe('UserService', () => {
   let userService: UserService;
   let moduleRef: TestingModule;
+  let seeder: Seeder;
 
   beforeAll(async () => {
     moduleRef = await Test.createTestingModule({ imports: [UserModule] }).compile();
     userService = moduleRef.get(UserService);
-    await Seeder.seed({ peronalUsers: 10 });
+    seeder = await Seeder.init();
+    await seeder.createUser({ email: 'user-one@shadow-apps.com', firstName: 'User One' });
   });
 
   describe('getTotalUserCount', () => {
     it('should return the total number of users', async () => {
       const totalUserCount = await userService.getTotalUserCount();
-      expect(totalUserCount).toBe(11);
+      expect(totalUserCount).toBe(2);
     });
   });
 
   afterAll(async () => {
     await moduleRef.close();
-    await Seeder.close();
+    await seeder.close();
   });
 });

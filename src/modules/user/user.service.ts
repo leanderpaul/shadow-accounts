@@ -16,7 +16,7 @@ import { Context } from '@app/services';
  * Defining types
  */
 
-interface CreateUser {
+export interface CreateUser {
   aid?: ID;
   accountName?: string;
   email: string;
@@ -84,16 +84,16 @@ export class UserService {
     return await this.userModel.findOne(query, projection).select('type').lean();
   }
 
-  async createUser(newUser: CreateNativeUser, session?: CreateUserSession): Promise<UserInfo>;
-  async createUser(newUser: CreateOAuthUser, session?: CreateUserSession): Promise<UserInfo>;
-  async createUser(newUser: CreateNativeUser | CreateOAuthUser, session?: CreateUserSession): Promise<UserInfo> {
-    const userData = { ...newUser, sessions: session ? [session] : [] };
+  async createUser(newUser: CreateNativeUser | CreateOAuthUser, session?: CreateUserSession | null): Promise<UserInfo> {
+    const emails = [{ email: newUser.email, isVerified: newUser.verified ?? false }];
+    const userData = { ...newUser, emails, sessions: session ? [session] : [] };
     if (newUser.aid) {
       const account = await this.accountModel.findOne({ aid: newUser.aid }).lean();
       if (!account) throw new IAMError(IAMErrorCode.A001);
     } else {
       const account = await this.accountModel.create({ accountName: newUser.accountName });
       userData.aid = account.aid;
+      userData.role = User.Role.SUPER_ADMIN;
     }
     const user = await ('password' in newUser ? this.nativeUserModel.create(userData) : this.oauthUserModel.create(userData));
     const userEmail = user.emails[0];

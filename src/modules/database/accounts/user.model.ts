@@ -84,7 +84,7 @@ export class User {
   @Prop({
     type: [UserEmailSchema],
     required: [true, 'required'],
-    minlength: [1, 'should have at least 1 email address'],
+    validate: [(emails: UserEmail[]) => emails.length > 0, 'should have at least 1 email address'],
   })
   emails: UserEmail[];
 

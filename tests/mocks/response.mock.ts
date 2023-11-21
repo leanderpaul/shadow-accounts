@@ -65,9 +65,10 @@ export class MockResponse {
   }
 
   expectData(obj: Record<string, unknown>): void {
-    const { type } = this.response;
+    const contentType = this.getHeaders().get('Content-Type');
+    expect(contentType).toContain('application/json;');
+
     const body = this.getBody();
-    expect(type).toMatch(/application\/json/);
     expect(body).toBeDefined();
     expect(body).toMatchObject(obj);
   }
