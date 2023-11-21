@@ -16,7 +16,7 @@ import { Context } from '@app/services';
  * Defining types
  */
 
-interface CreateUser {
+export interface CreateUser {
   aid?: ID;
   accountName?: string;
   email: string;
