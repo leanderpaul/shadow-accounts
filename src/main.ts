@@ -26,7 +26,7 @@ import { Config, Logger, Middleware } from './services';
  * Declaring the constants
  */
 
-export async function initApp(listen?: boolean): Promise<NestFastifyApplication> {
+export async function initApp(listen: boolean = true): Promise<NestFastifyApplication> {
   const logger = Logger.getNestLogger('Nest');
   const publicDir = path.join(import.meta.dir, '..', 'public');
   const templateDir = path.join(import.meta.dir, '..', 'views');
@@ -65,6 +65,7 @@ export async function initApp(listen?: boolean): Promise<NestFastifyApplication>
     const hostname = Config.get('app.hostname');
     await app.listen(port, hostname);
     logger.debug(`Server is running on ${hostname}:${port}`);
+    process.send?.('ready');
   }
 
   return app;

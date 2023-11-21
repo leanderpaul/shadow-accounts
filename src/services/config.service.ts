@@ -36,7 +36,7 @@ class ServerConfigService extends ConfigService<ServerConfigRecords> {
     super('shadow-accounts');
 
     this.set('app.hostname', { defaultValue: '0.0.0.0' });
-    this.set('app.port', { defaultValue: '8080', validateType: 'number' });
+    this.set('app.port', { envKey: 'PORT', defaultValue: '8080', validateType: 'number' });
     this.set('app.domain', { defaultValue: 'localhost' });
 
     this.set('db.uri', { defaultValue: 'mongodb://localhost/shadow-accounts' });
