@@ -1,9 +1,9 @@
 /**
  * Importing npm packages
  */
-import mongoose from 'mongoose';
-import { afterAll, beforeAll } from 'bun:test';
 import { type Subprocess } from 'bun';
+import { afterAll, beforeAll } from 'bun:test';
+import mongoose from 'mongoose';
 
 /**
  * Importing user defined packages

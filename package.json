@@ -6,9 +6,9 @@
   "main": "src/main.ts",
   "scripts": {
     "prepare": "husky install",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "lint": "eslint \"{src,test}/**/*.ts\"",
-    "lint:fix": "eslint \"{src,test}/**/*.ts\" --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "lint": "eslint \"{src,tests}/**/*.ts\"",
+    "lint:fix": "eslint \"{src,tests}/**/*.ts\" --fix",
     "dev": "bun run --watch src/main.ts",
     "start": "bun run src/main.ts",
     "seeder": "bun run src/seeder.ts"

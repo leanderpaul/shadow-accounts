@@ -2,7 +2,7 @@
  * Importing npm packages
  */
 import { Test, type TestingModule } from '@nestjs/testing';
-import { beforeAll, describe, it, expect, afterAll } from 'bun:test';
+import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
 
 /**
  * Importing user defined packages

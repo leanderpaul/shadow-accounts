@@ -93,7 +93,7 @@ export class MockRequest {
   }
 
   session(key: string): MockRequest {
-    let cookie = MockResponse.cookies.get(key);
+    const cookie = MockResponse.cookies.get(key);
     if (!cookie) throw new Error(`Cookie '${key}' not present in cookie store`);
     this.cookie(cookie);
     return this;
