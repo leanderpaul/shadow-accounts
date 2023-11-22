@@ -29,7 +29,7 @@ export class AuthController {
   @Render('auth/signin')
   @ApiExcludeEndpoint()
   getLoginPage(): TemplateData {
-    return { title: 'Sign In', styles: ['auth'], scripts: ['auth'] };
+    return { title: 'Sign In', styles: ['auth'] };
   }
 
   @Post('signin')
@@ -45,5 +45,12 @@ export class AuthController {
   @ApiResponse({ status: 200, type: AuthInfo })
   verifyEmail(@Body() body: LookUpDto): Promise<AuthInfo> {
     return this.userAuthService.getAuthInfo(body.email);
+  }
+
+  @Get('signup')
+  @Render('auth/signup')
+  @ApiExcludeEndpoint()
+  getRegisterPage(): TemplateData {
+    return { title: 'Create a Shadow account', styles: ['auth'] };
   }
 }

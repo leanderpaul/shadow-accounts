@@ -5,20 +5,24 @@
       <img src="/images/logo-with-title.png" alt="Shadow Apps" height="40">
     </div>
     <div class="header">
-      <span>Sign In</span>
+      <span>Create your Shadow account</span>
     </div>
     <div class="form">
+      <div class="name">
+        <div id="firstName" class="form-field">
+          <input type="text" name="firstName" placeholder="First Name">
+          <div class="error"></div>
+        </div>
+        <div id="lastName" class="form-field">
+          <input type="text" name="lastName" placeholder="Last Name">
+          <div class="error"></div>
+        </div>
+      </div>
       <div id="email" class="form-field">
         <input type="email" name="email" placeholder="Email address">
         <div class="error"></div>
       </div>
-      <div id="login-id" class="form-field hidden">
-        <div class="input">
-          <span class="value"></span>
-          <span class="action">Change</span>
-        </div>
-      </div>
-       <div id="password" class="form-field hidden relative">
+      <div id="password" class="form-field relative">
         <input type="password" name="password" placeholder="Email password">
         <span class="toggle-password-view">
           <svg id="eye" viewBox="0 0 576 512">
@@ -29,24 +33,21 @@
           </svg>
         </span>
         <div class="error"></div>
-        <div class="actions">
-          <span class="link f-right">Forgot Password?</span>
-        </div>
       </div>
-      <button id="next-btn" class="btn blue">
-        <span>Next</span>
+      <div id="terms" class="form-field">
+        <label class="flex align-start">
+          <input type="checkbox" name="terms" class="!hidden">
+          <span class="checkbox"></span>
+          <span>I agree to the <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a> of Shadow Apps</span>
+        </label>
+        <div class="error"></div>
+      </div>
+      <button id="sign-up" class="btn blue">
+        <span>Sign Up</span>
       </button>
     </div>
-    <div id="forgot-password" class="text-center">
-      <span class="link">Forgot Password?</span>
-    </div>
-    <div class="oauth">
-      <div class="line">
-        <div class="line-text">
-          <span>Or</span>
-        </div>
-      </div>
-      <div class="text">Sign in using</div>
+    <div class="oauth mt-lg">
+      <div class="text">Sign up using</div>
       <div class="flex-center idp microsoft">
         <svg width="28" height="28" viewBox="0 0 48 48">
           <title>Not yet implemented</title>
@@ -80,77 +81,4 @@
       </div>
     </div>
   </div>
-  <div class="sign-up">
-    <span>Don't have a Shadow account?</span>
-    <a href="/auth/signup">Sign Up Now</a>
-  </div>
 </div>
-<script>
-  const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
-  
-  function errorField(selector, message) {
-    $(selector).addClass('error');
-    $(`${selector} .error`).text(message);
-    $(`${selector} input`).one('keydown', () => $(selector).removeClass('error'));
-    return false;
-  }
-
-  function showForgotPassword() {
-    alert('Forgot password not yet implemented');
-  }
-
-  function handleVerifyEmailSuccess(email) {
-    $('.oauth').addClass('hidden');
-    $('#email').addClass('hidden');
-    $('#forgot-password').addClass('hidden');
-
-    $('#login-id').removeClass('hidden');
-    $('#password').removeClass('hidden');
-
-    $('#login-id .value').text(email);
-    $('#next-btn span').text('Verify');
-  }
-
-  function handleVerifyEmailError(data) {
-    let message = data.error.message;
-    if (!data.userExists) message = 'This account cannot be found. Please use a different account or <a href="/auth/signup">sign up</a> for a new account.';
-    else if (data.error.code === 'U006') message = 'Your account is not active. Please contact your organization admin.';
-    else if (data.error.code === 'U008') message = 'Your account is closed. Please contact the support team.';
-    errorField('#email', message);
-  }
-
-  function verifyEmail() {
-    const email = $('#email input').val();
-    let errorMessage = null;
-    if (!email) errorMessage = 'Please enter your email address';
-    else if (!emailRegex.test(email)) errorMessage = 'Please enter a valid email address';
-    if (errorMessage) return errorField('#email', errorMessage);
-
-    $('#next-btn').addClass('loading');
-    return $.post('/auth/lookup', { email })
-      .then(data => (data.error ? handleVerifyEmailError(data) : handleVerifyEmailSuccess(email)))
-      .done(() => $('#next-btn').removeClass('loading'));
-  }
-
-  function loginWithPassword() {
-    const email = $('#email input').val();
-    const password = $('#password input').val();
-    if (!password) return errorField('#password', 'Please enter your password');
-
-    $('#next-btn').addClass('loading');
-    return $.post('/auth/signin', { email, password })
-      .then(() => window.location.replace('/'))
-      .catch(err => errorField('#password', err.responseJSON.message))
-      .done(() => $('#next-btn').removeClass('loading'));
-  }
-
-  $('#forgot-password .link').on('click', showForgotPassword);
-  $('#password .link').on('click', showForgotPassword);
-
-  $('.toggle-password-view').on('click', function () {
-    $(this).children('svg').toggleClass('hidden');
-    $('#password input').attr('type', $('#password input').attr('type') === 'password' ? 'text' : 'password');
-  });
-
-  $('#next-btn').on('click', () => ($('#next-btn span').text() === 'Next' ? verifyEmail() : loginWithPassword()));
-</script>

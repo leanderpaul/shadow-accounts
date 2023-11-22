@@ -29,12 +29,25 @@
 .header span {
   font-size: 1.5rem;
   line-height: 1.75rem;
-  font-weight: 600;
-  color: #414141;
+  font-weight: 400;
+  color: #212121;
 }
 
 .form-field {
   margin-bottom: 20px;
+}
+
+.mt-lg {
+  margin-top: 30px;
+}
+
+.name {
+  display: flex;
+  gap: 20px;
+}
+
+.name > div {
+  width: 50%;
 }
 
 #email {
