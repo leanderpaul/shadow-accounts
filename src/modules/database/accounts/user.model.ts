@@ -9,9 +9,11 @@ import { type Document, type Model, type Query, type Types } from 'mongoose';
 /**
  * Importing user defined packages
  */
+import { IAMError, IAMErrorCode } from '@app/errors';
+
 import { UserEmail, UserEmailSchema } from './schemas/user-email.schema';
 import { UserSession, UserSessionSchema } from './schemas/user-session.schema';
-import { defaultOptionsPlugin } from '../schema.utils';
+import { defaultOptionsPlugin, handleDuplicateKeyError } from '../schema.utils';
 
 /**
  * Defining types
@@ -207,6 +209,7 @@ export const OAuthUserSchema = SchemaFactory.createForClass(OAuthUser);
  */
 UserSchema.alias('_id', 'uid');
 UserSchema.plugin(defaultOptionsPlugin);
+UserSchema.post('save', handleDuplicateKeyError(new IAMError(IAMErrorCode.U002)));
 
 /**
  * Setting up the indexes
