@@ -7,7 +7,7 @@ import { ApiExcludeEndpoint, ApiResponse, ApiTags } from '@nestjs/swagger';
 /**
  * Importing user defined packages
  */
-import { AuthInfo, LoginWithPasswordDto, LookUpDto } from '@app/dtos/auth';
+import { AuthInfo, LoginWithPasswordDto, LookUpDto, RegisterDto } from '@app/dtos/auth';
 import { OperationResponse } from '@app/dtos/responses';
 import { type TemplateData } from '@app/interfaces';
 import { UserAuthService } from '@app/modules/auth';
@@ -52,5 +52,13 @@ export class AuthController {
   @ApiExcludeEndpoint()
   getRegisterPage(): TemplateData {
     return { title: 'Create a Shadow account', styles: ['auth'] };
+  }
+
+  @Post('signup')
+  @HttpCode(200)
+  @ApiResponse({ status: 200, type: OperationResponse })
+  async register(@Body() body: RegisterDto): Promise<OperationResponse> {
+    await this.userAuthService.registerNativeUser(body);
+    return { success: true };
   }
 }

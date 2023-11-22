@@ -24,7 +24,7 @@ import { CookieService } from './cookie.service';
 
 export interface ICreateUser {
   firstName: string;
-  lastName: string;
+  lastName?: string;
   email: string;
   password: string;
 }

@@ -41,6 +41,8 @@ export interface OAuthUserModel extends Model<OAuthUser> {}
  * Declaring the constants
  */
 const defaultUserProjection: Projection<User> = { aid: 1, uid: 1, type: 1, firstName: 1, lastName: 1, role: 1, status: 1 };
+const nameRegex = /^[a-zA-Z0-9 \-_.']+$/;
+const nameRegexMessage = 'must contain only letters, numbers, spaces, and the following characters: -_.';
 
 @Schema({
   timestamps: true,
@@ -93,9 +95,9 @@ export class User {
     type: 'string',
     trim: true,
     required: [true, 'required'],
-    minlength: [2, 'should have at least 3 characters'],
+    minlength: [1, 'should have at least 1 character'],
     maxlength: [32, 'should have at most 32 characters'],
-    validate: [/^[a-zA-Z ]*$/, 'should only contain alphabets and spaces'],
+    validate: [nameRegex, nameRegexMessage],
   })
   firstName: string;
 
@@ -103,9 +105,9 @@ export class User {
   @Prop({
     type: 'string',
     trim: true,
-    minlength: [1, 'should have at least 3 characters'],
+    minlength: [1, 'should have at least 1 character'],
     maxlength: [32, 'should have at most 32 characters'],
-    validate: [/^[a-zA-Z \-']*$/, 'should only contain alphabets and spaces'],
+    validate: [nameRegex, nameRegexMessage],
   })
   lastName?: string;
 
