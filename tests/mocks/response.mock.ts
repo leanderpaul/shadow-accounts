@@ -99,7 +99,7 @@ export class MockResponse {
    */
   expectCookies(key?: string): void {
     const cookie = this.response.headers.get('Set-Cookie');
-    expect(cookie).toMatch(/^sasid=[a-zA-Z0-9%= \-/\\;]{30,}$/);
+    expect(cookie).toMatch(/^sasid=[a-zA-Z0-9%= _\-/\\;]{30,}$/);
     if (key && cookie) MockResponse.cookies.set(key, cookie);
   }
 }

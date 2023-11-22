@@ -61,6 +61,39 @@ describe('e2e: AuthController', () => {
     it('should return cookie for valid credentials', async () => {
       const response = await MockRequest.post('/auth/signin', { email: 'admin@shadow-apps.com', password: 'Password@123' });
       response.expectStatusCode(200);
+      response.expectCookies();
+      response.expectData({ success: true });
+    });
+  });
+
+  describe('GET /auth/signup', () => {
+    it('should return the sign up page', async () => {
+      const response = await MockRequest.get('/auth/signup');
+      response.expectStatusCode(200);
+      response.expectHTML({ title: 'Create a Shadow account' });
+    });
+  });
+
+  describe('POST /auth/signup', () => {
+    it('should return error for invalid inputs', async () => {
+      const body = { firstName: '@#$', email: 'invalid-email', password: 'invalid-password' };
+      const response = await MockRequest.post('/auth/signup', body);
+      response.expectStatusCode(400);
+      response.expectError('S003', ['firstName', 'email', 'password']);
+    });
+
+    it('should return error for existing account', async () => {
+      const body = { firstName: 'Admin', email: 'admin@shadow-apps.com', password: 'Password@123' };
+      const response = await MockRequest.post('/auth/signup', body);
+      response.expectStatusCode(400);
+      response.expectError('U002');
+    });
+
+    it('should return cookie for valid input', async () => {
+      const body = { firstName: 'John', lastName: 'Doe', email: 'john-doe@shadow-apps.com', password: 'Password@123' };
+      const response = await MockRequest.post('/auth/signup', body);
+      response.expectStatusCode(200);
+      response.expectCookies();
       response.expectData({ success: true });
     });
   });

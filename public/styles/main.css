@@ -14,12 +14,24 @@ a {
   display: none;
 }
 
+.\!hidden {
+  display: none !important;
+}
+
 .relative {
   position: relative;
 }
 
 .block {
   display: block;
+}
+
+.flex {
+  display: flex;
+}
+
+.align-start {
+  align-items: flex-start;
 }
 
 .flex-center {
@@ -129,7 +141,6 @@ a {
 
 .form-field input {
   color: #212121;
-  appearance: none;
   display: block;
   width: 100%;
   height: 44px;
@@ -138,17 +149,53 @@ a {
   text-indent: 12px;
   font-size: 16px;
   outline: none;
-  border: none;
   padding-right: 12px;
   transition: all 0.2s ease-in-out;
   background: #f8f8f8;
   border: 1px solid #e4e4e4;
 }
 
+.form-field label {
+  font-size: 14px;
+  font-weight: 400;
+  color: #212121;
+  cursor: pointer;
+}
+
 .form-field input::placeholder {
   color: #aab2bb;
   letter-spacing: 0.3px;
   font-weight: 400;
+}
+
+.form-field .checkbox {
+  width: 13px;
+  height: 13px;
+  border: 2px solid #e4e4e4;
+  border-radius: 2px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.form-field .checkbox:hover {
+  border: 2px solid #159aff;
+}
+
+.form-field input:checked + .checkbox {
+  border: 2px solid #159aff;
+  background-color: #159aff;
+}
+
+.form-field input:checked + .checkbox:after {
+  content: '';
+  display: block;
+  width: 3px;
+  height: 8px;
+  margin-left: 4px;
+  margin-top: 1px;
+  border: 0px solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 .form-field .input {
