@@ -11,7 +11,7 @@ import moment from 'moment';
  */
 import { IAMError, IAMErrorCode } from '@app/errors';
 import { DatabaseService, User } from '@app/modules/database';
-import { type UserInfo, type UserSession } from '@app/modules/database/database.types';
+import { type UserEmail, type UserInfo, type UserSession } from '@app/modules/database/database.types';
 import { Config, Context, Logger } from '@app/services';
 
 import { CookieService, type UserCookie } from './cookie.service';
@@ -21,6 +21,7 @@ import { CookieService, type UserCookie } from './cookie.service';
  */
 
 interface AuthUser extends UserInfo {
+  emails: UserEmail[];
   sessions: UserSession[];
 }
 
@@ -44,7 +45,7 @@ export class AuthService {
   private async authenticateUser(cookieData: UserCookie): Promise<void> {
     /** Verifying the cookie data */
     const maxAge = Config.get('cookie.max-age');
-    const projection = User.constructProjection({ sessions: 1 });
+    const projection = User.constructProjection({ emails: 1, sessions: 1 });
     const promise = this.userModel.findOneAndUpdate({ uid: cookieData.uid }, {}, { runValidators: false, projection });
     promise.setUpdate({ $pull: { sessions: { accessedAt: { $lt: moment().subtract(maxAge, 'seconds').toDate() } } } });
     const user = await promise.lean<AuthUser>();
@@ -60,6 +61,13 @@ export class AuthService {
     /** Setting up the request context values */
     Context.setCurrentUser(user);
     Context.setCurrentSession(session);
+  }
+
+  getRedirectUrl(): string {
+    const req = Context.getCurrentRequest();
+    const query = req.query as Record<string, string>;
+    const redirectUrl = query.redirectUrl ?? '/';
+    return redirectUrl;
   }
 
   async authenticate(): Promise<void> {
