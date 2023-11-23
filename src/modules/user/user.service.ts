@@ -108,7 +108,7 @@ export class UserService {
       const user = await this.userModel.findOneAndUpdate({ 'emails.email': codeOrEmail }, { $set: { 'emails.$.isVerified': true } }, { new: false });
       if (!user) throw new IAMError(IAMErrorCode.U001);
       const userEmail = user.emails.find(e => e.email === codeOrEmail) as UserEmail;
-      if (userEmail.isVerified) throw new IAMError(IAMErrorCode.U004);
+      if (userEmail.verified) throw new IAMError(IAMErrorCode.U004);
       return;
     }
 

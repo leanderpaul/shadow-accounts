@@ -1,8 +1,9 @@
 /**
  * Importing npm packages
  */
-import { Body, Controller, Get, HttpCode, Post, Render } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Render, Res } from '@nestjs/common';
 import { ApiExcludeEndpoint, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { type FastifyReply } from 'fastify';
 
 /**
  * Importing user defined packages
@@ -10,7 +11,8 @@ import { ApiExcludeEndpoint, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthInfo, LoginWithPasswordDto, LookUpDto, RegisterDto } from '@app/dtos/auth';
 import { OperationResponse } from '@app/dtos/responses';
 import { type TemplateData } from '@app/interfaces';
-import { UserAuthService } from '@app/modules/auth';
+import { AuthService, UserAuthService } from '@app/modules/auth';
+import { Context } from '@app/services';
 
 /**
  * Defining types
@@ -23,12 +25,20 @@ import { UserAuthService } from '@app/modules/auth';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly userAuthService: UserAuthService) {}
+  constructor(
+    private readonly userAuthService: UserAuthService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Get('signin')
   @Render('auth/signin')
   @ApiExcludeEndpoint()
-  getLoginPage(): TemplateData {
+  getLoginPage(@Res() res: FastifyReply): FastifyReply | TemplateData {
+    const user = Context.getCurrentUser();
+    if (user) {
+      const redirectUrl = this.authService.getRedirectUrl();
+      return res.status(302).redirect(redirectUrl);
+    }
     return { title: 'Sign In', styles: ['main', 'auth'], scripts: ['jquery'] };
   }
 
@@ -50,7 +60,12 @@ export class AuthController {
   @Get('signup')
   @Render('auth/signup')
   @ApiExcludeEndpoint()
-  getRegisterPage(): TemplateData {
+  getRegisterPage(@Res() res: FastifyReply): FastifyReply | TemplateData {
+    const user = Context.getCurrentUser();
+    if (user) {
+      const redirectUrl = this.authService.getRedirectUrl();
+      return res.status(302).redirect(redirectUrl);
+    }
     return { title: 'Create a Shadow account', styles: ['main', 'auth'], scripts: ['jquery', 'notiflix'] };
   }
 

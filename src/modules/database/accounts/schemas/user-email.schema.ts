@@ -36,11 +36,11 @@ export class UserEmail {
     required: true,
     default: false,
   })
-  isVerified: boolean;
+  verified: boolean;
 
   @Prop({
     type: 'string',
-    default: (doc: UserEmail) => (doc.isVerified ? undefined : crypto.randomBytes(32).toString('base64url')),
+    default: (doc: UserEmail) => (doc.verified ? undefined : crypto.randomBytes(32).toString('base64url')),
   })
   verificationCode?: string;
 }
