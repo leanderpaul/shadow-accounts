@@ -7,8 +7,6 @@ import { fastifyCookie } from '@fastify/cookie';
 import { ShutdownSignal } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import handlebars from 'handlebars';
 
 /**
  * Importing user defined packages
@@ -16,7 +14,7 @@ import handlebars from 'handlebars';
 import { AppModule } from './app.module';
 import { ErrorFilter } from './errors';
 import { ValidationPipe } from './pipes';
-import { Config, Logger, Middleware } from './services';
+import { Config, Logger, Middleware, TemplateService } from './services';
 
 /**
  * Defining types
@@ -30,6 +28,7 @@ export async function initApp(listen: boolean = true): Promise<NestFastifyApplic
   const logger = Logger.getNestLogger('Nest');
   const publicDir = path.join(import.meta.dir, '..', 'public');
   const templateDir = path.join(import.meta.dir, '..', 'views');
+  const templateService = new TemplateService({ root: templateDir, viewExt: 'hbs', layout: 'layout' });
 
   /** Creating fasitfy instance and registering plugins */
   const adapter = new FastifyAdapter();
@@ -48,11 +47,12 @@ export async function initApp(listen: boolean = true): Promise<NestFastifyApplic
   app.useGlobalFilters(new ErrorFilter());
   app.useGlobalPipes(new ValidationPipe());
   app.useStaticAssets({ root: publicDir });
-  app.setViewEngine({ engine: { handlebars }, templates: templateDir, includeViewExtension: true, layout: 'layout' });
+  app.setViewEngine(templateService.getViewEngine());
   app.enableShutdownHooks([ShutdownSignal.SIGINT, ShutdownSignal.SIGUSR2, ShutdownSignal.SIGTERM]);
 
   /** Configuring the swagger */
   if (Config.isDev()) {
+    const { DocumentBuilder, SwaggerModule } = await import('@nestjs/swagger');
     const cookieName = Config.get('cookie.name');
     const config = new DocumentBuilder().setTitle('Shadow Accounts API').addCookieAuth(cookieName).build();
     const document = SwaggerModule.createDocument(app, config);
