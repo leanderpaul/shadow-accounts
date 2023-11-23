@@ -15,7 +15,7 @@
       <div id="login-id" class="form-field hidden">
         <div class="input">
           <span class="value"></span>
-          <span class="action">Change</span>
+          <span id="change-btn" class="action">Change</span>
         </div>
       </div>
        <div id="password" class="form-field hidden relative">
@@ -91,12 +91,24 @@
   function errorField(selector, message) {
     $(selector).addClass('error');
     $(`${selector} .error`).text(message);
-    $(`${selector} input`).one('keydown', () => $(selector).removeClass('error'));
+    $(`${selector} input`).one('input', () => $(selector).removeClass('error'));
     return false;
   }
 
   function showForgotPassword() {
     alert('Forgot password not yet implemented');
+  }
+
+  function resetForm() {
+    $('.oauth').removeClass('hidden');
+    $('#email').removeClass('hidden');
+    $('#forgot-password').removeClass('hidden');
+
+    $('#login-id').addClass('hidden');
+    $('#password').addClass('hidden');
+
+    $('#password input').val('');
+    $('#next-btn span').text('Next');
   }
 
   function handleVerifyEmailSuccess(email) {
@@ -153,4 +165,5 @@
   });
 
   $('#next-btn').on('click', () => ($('#next-btn span').text() === 'Next' ? verifyEmail() : loginWithPassword()));
+  $('#change-btn').on('click', resetForm);
 </script>
