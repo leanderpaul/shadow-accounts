@@ -84,7 +84,7 @@ export class UserService {
     return await this.userModel.findOne(query, projection).select('type').lean();
   }
 
-  async createUser(newUser: CreateNativeUser | CreateOAuthUser, session?: CreateUserSession | null): Promise<UserInfo> {
+  async createUser(newUser: CreateNativeUser | CreateOAuthUser, session?: CreateUserSession | null): Promise<User> {
     const emails = [{ email: newUser.email, isVerified: newUser.verified ?? false }];
     const userData = { ...newUser, emails, sessions: session ? [session] : [] };
     if (newUser.aid) {
@@ -100,7 +100,7 @@ export class UserService {
     if (userEmail?.verificationCode) {
       /** @TODO send email to the user */
     }
-    return User.getUserInfo(user);
+    return user;
   }
 
   async verifyUserEmail(codeOrEmail: string): Promise<void> {

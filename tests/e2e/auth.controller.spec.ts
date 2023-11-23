@@ -1,7 +1,7 @@
 /**
  * Importing npm packages
  */
-import { describe, it } from 'bun:test';
+import { describe, expect, it } from 'bun:test';
 
 /**
  * Importing user defined packages
@@ -37,14 +37,6 @@ describe('e2e: AuthController', () => {
     });
   });
 
-  describe('GET /auth/signin', () => {
-    it('should return the sign in page', async () => {
-      const response = await MockRequest.get('/auth/signin');
-      response.expectStatusCode(200);
-      response.expectHTML({ title: 'Sign In' });
-    });
-  });
-
   describe('POST /auth/signin', () => {
     it('should return error for non-existing email', async () => {
       const response = await MockRequest.post('/auth/signin', { email: 'invalid', password: 'invalid' });
@@ -61,16 +53,21 @@ describe('e2e: AuthController', () => {
     it('should return cookie for valid credentials', async () => {
       const response = await MockRequest.post('/auth/signin', { email: 'admin@shadow-apps.com', password: 'Password@123' });
       response.expectStatusCode(200);
-      response.expectCookies();
+      response.expectCookies('admin');
       response.expectData({ success: true });
     });
   });
 
-  describe('GET /auth/signup', () => {
-    it('should return the sign up page', async () => {
-      const response = await MockRequest.get('/auth/signup');
+  describe('GET /auth/signin', () => {
+    it('should return the sign in page', async () => {
+      const response = await MockRequest.get('/auth/signin');
       response.expectStatusCode(200);
-      response.expectHTML({ title: 'Create a Shadow account' });
+      response.expectHTML({ title: 'Sign In' });
+    });
+
+    it('should redirect when accessed with cookie', async () => {
+      const response = await MockRequest.get('/auth/signin').session('admin').setFetchOptions({ redirect: 'manual' });
+      response.expectStatusCode(302);
     });
   });
 
@@ -95,6 +92,33 @@ describe('e2e: AuthController', () => {
       response.expectStatusCode(200);
       response.expectCookies();
       response.expectData({ success: true });
+    });
+  });
+
+  describe('GET /auth/signup', () => {
+    it('should return the sign up page', async () => {
+      const response = await MockRequest.get('/auth/signup');
+      response.expectStatusCode(200);
+      response.expectHTML({ title: 'Create a Shadow account' });
+    });
+
+    it('should redirect when accessed with cookie', async () => {
+      const response = await MockRequest.get('/auth/signup').session('admin').setFetchOptions({ redirect: 'manual' });
+      response.expectStatusCode(302);
+    });
+  });
+
+  describe('GET /auth/signout', () => {
+    it('should redirect to home page when accessed without cookie', async () => {
+      const response = await MockRequest.get('/auth/signout').setFetchOptions({ redirect: 'manual' });
+      response.expectStatusCode(302);
+    });
+
+    it('should redirect to home page when accessed with cookie', async () => {
+      const response = await MockRequest.get('/auth/signout').session('admin').setFetchOptions({ redirect: 'manual' });
+      response.expectStatusCode(302);
+      const cookie = response.getHeader('Set-Cookie');
+      expect(cookie).toContain('sasid=;');
     });
   });
 });

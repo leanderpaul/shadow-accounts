@@ -1,7 +1,7 @@
 /**
  * Importing npm packages
  */
-import { Body, Controller, Get, HttpCode, Post, Render, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Redirect, Render, Res } from '@nestjs/common';
 import { ApiExcludeEndpoint, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { type FastifyReply } from 'fastify';
 
@@ -75,5 +75,14 @@ export class AuthController {
   async register(@Body() body: RegisterDto): Promise<OperationResponse> {
     await this.userAuthService.registerNativeUser(body);
     return { success: true };
+  }
+
+  @Get('signout')
+  @Redirect('/')
+  async logout(): Promise<void> {
+    const session = Context.getCurrentSession();
+    if (!session) return;
+    const user = Context.getCurrentUser(true);
+    await this.userAuthService.logout(user.uid, session.id);
   }
 }

@@ -74,7 +74,7 @@ export class UserAuthService {
     Context.setCurrentUser(user);
     Context.setCurrentSession(session);
     this.cookieService.setUserCookies(user.uid, session.token);
-    return user;
+    return User.getUserInfo(user);
   }
 
   async loginUser(email: string, password: string): Promise<UserInfo> {

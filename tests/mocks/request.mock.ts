@@ -2,6 +2,7 @@
  * Importing npm packages
  */
 import { type JSONData } from '@leanderpaul/shadow-service';
+import lodash from 'lodash';
 
 /**
  * Importing user defined packages
@@ -22,6 +23,7 @@ const logger = Logger.getLogger('MockRequest');
 
 export class MockRequest {
   private readonly headers: Record<string, string> = {};
+  private fetchOptions: FetchRequestInit = {};
   private body: object | null = null;
 
   constructor(
@@ -54,7 +56,7 @@ export class MockRequest {
   }
 
   private async execute(): Promise<MockResponse> {
-    const opts: FetchRequestInit = { headers: this.headers, method: this.method };
+    const opts: FetchRequestInit = lodash.merge(this.fetchOptions, { headers: this.headers, method: this.method });
     if (this.body) opts.body = JSON.stringify(this.body);
     const port = process.env.PORT ?? 8081;
     const url = `http://127.0.0.1:${port}${this.url}`;
@@ -72,6 +74,11 @@ export class MockRequest {
     }
     logger.debug(`${this.method} ${this.url} => ${response.status}`, { body, cookies });
     return new MockResponse(response, body);
+  }
+
+  setFetchOptions(opts: FetchRequestInit): MockRequest {
+    this.fetchOptions = opts;
+    return this;
   }
 
   send(data: Record<string, JSONData>): MockRequest {
