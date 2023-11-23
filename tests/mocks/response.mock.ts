@@ -40,6 +40,10 @@ export class MockResponse {
     return this.response.headers;
   }
 
+  getHeader(key: string): string | null {
+    return this.getHeaders().get(key);
+  }
+
   getHTMLDOM(): CheerioAPI {
     if (!this.dom) this.dom = loadDOM(this.body);
     return this.dom;
@@ -50,7 +54,7 @@ export class MockResponse {
   }
 
   expectHTML(expected: ExpectedHTML): void {
-    const contentType = this.getHeaders().get('Content-Type');
+    const contentType = this.getHeader('Content-Type');
     expect(contentType).toContain('text/html;');
     const $ = this.getHTMLDOM();
     if (expected?.title) {
@@ -65,7 +69,7 @@ export class MockResponse {
   }
 
   expectData(obj: Record<string, unknown>): void {
-    const contentType = this.getHeaders().get('Content-Type');
+    const contentType = this.getHeader('Content-Type');
     expect(contentType).toContain('application/json;');
 
     const body = this.getBody();
@@ -77,7 +81,7 @@ export class MockResponse {
     const error = (IAMErrorCode as any)[code] as IAMErrorCode | undefined;
     if (!error) throw new Error(`Invalid error code: ${code}`);
 
-    const contentType = this.getHeaders().get('Content-Type');
+    const contentType = this.getHeader('Content-Type');
     expect(contentType).toContain('application/json;');
     this.expectStatusCode(error.getStatusCode());
 

@@ -3,6 +3,7 @@
  */
 import { ContextService, NeverError } from '@leanderpaul/shadow-service';
 import { type FastifyReply, type FastifyRequest } from 'fastify';
+import lodash from 'lodash';
 
 /**
  * Importing user defined packages
@@ -39,7 +40,8 @@ class AppContextService extends ContextService<FastifyRequest, FastifyReply> {
       if (!primaryEmail) throw new NeverError('Primary email not found');
       user = { ...user, verified: primaryEmail.verified, primaryEmail: primaryEmail.email };
     }
-    this.set('CURRENT_USER', user);
+    const userObj = lodash.pick(user, ['aid', 'uid', 'firstName', 'lastName', 'role', 'status', 'type', 'verified', 'primaryEmail']);
+    this.set('CURRENT_USER', userObj);
     return this;
   }
 
@@ -50,7 +52,8 @@ class AppContextService extends ContextService<FastifyRequest, FastifyReply> {
   }
 
   setCurrentSession(session: CurrentSession): AppContextService {
-    this.set('CURRENT_SESSION', session);
+    const sessionObj = lodash.pick(session, ['id', 'token']);
+    this.set('CURRENT_SESSION', sessionObj);
     return this;
   }
 }
