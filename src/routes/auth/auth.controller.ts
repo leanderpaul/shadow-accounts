@@ -29,7 +29,7 @@ export class AuthController {
   @Render('auth/signin')
   @ApiExcludeEndpoint()
   getLoginPage(): TemplateData {
-    return { title: 'Sign In', styles: ['auth'] };
+    return { title: 'Sign In', styles: ['main', 'auth'], scripts: ['jquery'] };
   }
 
   @Post('signin')
@@ -51,7 +51,7 @@ export class AuthController {
   @Render('auth/signup')
   @ApiExcludeEndpoint()
   getRegisterPage(): TemplateData {
-    return { title: 'Create a Shadow account', styles: ['auth'] };
+    return { title: 'Create a Shadow account', styles: ['main', 'auth'], scripts: ['jquery', 'notiflix'] };
   }
 
   @Post('signup')

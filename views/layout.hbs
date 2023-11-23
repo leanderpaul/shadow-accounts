@@ -6,21 +6,19 @@
   <title>{{ title }} - Shadow Accounts</title>
   {{!-- Loading fonts --}}
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   
   {{!-- Loading styles --}}
-  <link rel="stylesheet" href="/styles/main.css">
   {{#each styles}}
     <link rel="stylesheet" href="/styles/{{ this }}.css">
   {{/each}}
   
   {{!-- Loading scripts --}}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdn.jsdelivr.net/npm/notiflix@3.2.6/dist/notiflix-aio-3.2.6.min.js"></script>
   {{#each scripts}}
-    <link rel="stylesheet" href="/styles/{{ this }}.css">
-    <script src="/scripts/{{ this }}.js" async="true"></script>
+    {{#alias this}}
+      <script src="/scripts/{{ this }}.js" async="true"></script>
+    {{/alias}}
   {{/each}}
 </head>
 <body>
