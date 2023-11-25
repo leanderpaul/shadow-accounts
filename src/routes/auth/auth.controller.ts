@@ -39,7 +39,12 @@ export class AuthController {
       const redirectUrl = this.authService.getRedirectUrl();
       return res.status(302).redirect(redirectUrl);
     }
-    return { title: 'Sign In', styles: ['main', 'auth'], scripts: ['jquery'] };
+    return {
+      title: 'Sign In',
+      description: 'Sign in to your Shadow account',
+      styles: ['main', 'auth'],
+      scripts: ['jquery'],
+    };
   }
 
   @Post('signin')
@@ -66,7 +71,12 @@ export class AuthController {
       const redirectUrl = this.authService.getRedirectUrl();
       return res.status(302).redirect(redirectUrl);
     }
-    return { title: 'Create a Shadow account', styles: ['main', 'auth'], scripts: ['jquery', 'notiflix'] };
+    return {
+      title: 'Create a Shadow account',
+      description: 'Create a Shadow account',
+      styles: ['main', 'auth'],
+      scripts: ['jquery', 'notiflix'],
+    };
   }
 
   @Post('signup')

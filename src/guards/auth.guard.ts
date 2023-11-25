@@ -1,7 +1,7 @@
 /**
  * Importing npm packages
  */
-import { mixin } from '@nestjs/common';
+import { UseGuards, mixin } from '@nestjs/common';
 
 /**
  * Importing user defined packages
@@ -26,9 +26,18 @@ const cache: Partial<Record<AuthType, Guard>> = {};
 
 function createAuthGuard(requiredAuth: AuthType): Guard {
   class MixinAuthGuard implements CanActivate {
+    redirect(url: string): boolean {
+      const req = Context.getCurrentRequest();
+      const res = Context.getCurrentResponse();
+      const query = new URLSearchParams(req.query as Record<string, string>);
+      query.set('redirectUrl', encodeURIComponent(req.url));
+      res.redirect(`${url}?${query.toString()}`);
+      return false;
+    }
+
     canActivate(): boolean {
       const user = Context.getCurrentUser();
-      if (!user) throw new IAMError(IAMErrorCode.U003);
+      if (!user) return this.redirect('/auth/signin');
       if (requiredAuth === AuthType.VERIFIED && !user.verified) throw new IAMError(IAMErrorCode.U003);
       return true;
     }
@@ -37,10 +46,12 @@ function createAuthGuard(requiredAuth: AuthType): Guard {
   return mixin(MixinAuthGuard);
 }
 
-export function AuthGuard(requiredAuth: AuthType = AuthType.VERIFIED): Guard {
+export function AuthGuard(requiredAuth: AuthType): Guard {
   const cachedResult = cache[requiredAuth];
   if (cachedResult) return cachedResult;
   const result = createAuthGuard(requiredAuth);
   cache[requiredAuth] = result;
   return result;
 }
+
+export const UseAuthGuard = (authType: AuthType = AuthType.VERIFIED): MethodDecorator & ClassDecorator => UseGuards(AuthGuard(authType));
