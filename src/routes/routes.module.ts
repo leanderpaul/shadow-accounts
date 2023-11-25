@@ -10,6 +10,7 @@ import { Config } from '@app/services';
 
 import { AuthRouterModule } from './auth';
 import { DevModule } from './dev';
+import { RouterController } from './router.controller';
 
 /**
  * Defining types
@@ -22,6 +23,7 @@ const imports: Type<any>[] = [AuthRouterModule];
 
 @Module({
   imports: RoutesModule.getImports(),
+  controllers: [RouterController],
 })
 export class RoutesModule {
   static getImports(): ModuleMetadata['imports'] {

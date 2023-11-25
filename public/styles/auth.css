@@ -145,6 +145,10 @@
   color: #525252;
 }
 
+.sign-up a {
+  margin-left: 5px;
+}
+
 @media (min-width: 576px) {
 }
 

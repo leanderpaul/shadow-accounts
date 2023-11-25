@@ -79,6 +79,10 @@ a {
   text-align: center;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 .btn {
   cursor: pointer;
   display: flex;
@@ -306,6 +310,11 @@ a {
 .error-404 .btn {
   margin-top: 30px;
   letter-spacing: 2px;
+}
+
+.divider {
+  height: 1px;
+  background-color: #eee;
 }
 
 /** Small screen - sm */
