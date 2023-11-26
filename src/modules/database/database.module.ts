@@ -13,6 +13,7 @@ import { Config, Logger } from '@app/services';
 import { AccountMongooseModule } from './accounts/account.model';
 import { UserMongooseModule } from './accounts/user.model';
 import { DatabaseService } from './database.service';
+import { DigestMongooseModule } from './system/digest.model';
 
 /**
  * Defining types
@@ -52,7 +53,7 @@ const MongoDBModule = MongooseModule.forRoot(Config.get('db.uri'), {
 });
 
 @Module({
-  imports: [MongoDBModule, AccountMongooseModule, UserMongooseModule],
+  imports: [MongoDBModule, AccountMongooseModule, UserMongooseModule, DigestMongooseModule],
   providers: [DatabaseService],
   exports: [DatabaseService],
 })
