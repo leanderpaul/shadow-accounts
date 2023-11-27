@@ -169,13 +169,6 @@ export class NativeUser extends User {
     },
   })
   password: string;
-
-  /** Password reset code sent to the user to verify the password reset link. It is of the format '<expiry date in unix timestamp>|<base64 code>' */
-  @Prop({
-    type: 'string',
-    select: false,
-  })
-  passwordResetCode?: string;
 }
 
 @Schema()

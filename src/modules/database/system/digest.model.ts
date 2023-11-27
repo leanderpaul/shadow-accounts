@@ -4,7 +4,6 @@
 import crypto from 'crypto';
 
 import { MongooseModule, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import moment from 'moment';
 import { type Model, type Types } from 'mongoose';
 
 /**
@@ -48,7 +47,6 @@ export class Digest {
   @Prop({
     type: 'date',
     required: true,
-    default: () => moment().add(1, 'day').toDate(),
   })
   expiresAt: Date;
 

@@ -7,6 +7,7 @@ import { Module } from '@nestjs/common';
  * Importing user defined packages
  */
 import { DatabaseModule } from '@app/modules/database';
+import { MailService } from '@app/services';
 
 import { UserService } from './user.service';
 
@@ -20,7 +21,7 @@ import { UserService } from './user.service';
 
 @Module({
   imports: [DatabaseModule],
-  providers: [UserService],
+  providers: [UserService, MailService],
   exports: [UserService],
 })
 export class UserModule {}

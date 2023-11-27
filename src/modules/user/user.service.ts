@@ -3,14 +3,15 @@
  */
 import { NeverError, type Projection } from '@leanderpaul/shadow-service';
 import { Injectable } from '@nestjs/common';
+import moment from 'moment';
 
 /**
  * Importing user defined packages
  */
 import { IAMError, IAMErrorCode } from '@app/errors';
-import { DatabaseService, type ID, User, UserVariant } from '@app/modules/database';
+import { DatabaseService, DigestVariant, type ID, User, UserVariant } from '@app/modules/database';
 import { type NativeUser, type OAuthUser, type UserEmail, type UserInfo, type UserRole, type UserSession } from '@app/modules/database/database.types';
-import { Context } from '@app/services';
+import { Context, MailService } from '@app/services';
 
 /**
  * Defining types
@@ -49,11 +50,18 @@ export class UserService {
   private readonly oauthUserModel;
   private readonly nativeUserModel;
 
-  constructor(databaseService: DatabaseService) {
+  private readonly verifyEmailDigestModel;
+
+  constructor(
+    databaseService: DatabaseService,
+    private readonly mailService: MailService,
+  ) {
     this.accountModel = databaseService.getAccountModel();
     this.userModel = databaseService.getUserModel();
     this.oauthUserModel = databaseService.getUserModel(UserVariant.OAUTH);
     this.nativeUserModel = databaseService.getUserModel(UserVariant.NATIVE);
+
+    this.verifyEmailDigestModel = databaseService.getDigestModel(DigestVariant.VERIFY_EMAIL);
   }
 
   async getTotalUserCount(): Promise<number> {
@@ -96,31 +104,20 @@ export class UserService {
       userData.role = User.Role.SUPER_ADMIN;
     }
     const user = await ('password' in newUser ? this.nativeUserModel.create(userData) : this.oauthUserModel.create(userData));
-    const userEmail = user.emails[0];
-    if (userEmail?.verificationCode) {
-      /** @TODO send email to the user */
+    if (!newUser.verified) {
+      const expiresAt = moment().add(30, 'day').toDate();
+      const digestObj = await this.verifyEmailDigestModel.create({ uid: user.uid, email: newUser.email, expiresAt });
+      this.mailService.sendEmailVerificationMail(newUser.email, newUser.firstName, digestObj.digest);
     }
     return user;
   }
 
-  async verifyUserEmail(codeOrEmail: string): Promise<void> {
-    if (codeOrEmail.includes('@')) {
-      const user = await this.userModel.findOneAndUpdate({ 'emails.email': codeOrEmail }, { $set: { 'emails.$.isVerified': true } }, { new: false });
-      if (!user) throw new IAMError(IAMErrorCode.U001);
-      const userEmail = user.emails.find(e => e.email === codeOrEmail) as UserEmail;
-      if (userEmail.verified) throw new IAMError(IAMErrorCode.U004);
-      return;
-    }
-
-    const [encodedEmail, emailVerificationCode] = codeOrEmail.split('|');
-    if (!encodedEmail || !emailVerificationCode) throw new IAMError(IAMErrorCode.U005);
-    const email = Buffer.from(encodedEmail, 'base64').toString();
+  async verifyUserEmail(email: string): Promise<void> {
     const user = await this.nativeUserModel.findOne({ 'emails.email': email }).lean();
     if (!user) throw new IAMError(IAMErrorCode.U005);
     const userEmail = user.emails.find(e => e.email === email) as UserEmail;
-    if (!userEmail.verificationCode) throw new IAMError(IAMErrorCode.U004);
-    if (userEmail.verificationCode !== emailVerificationCode) throw new IAMError(IAMErrorCode.U005);
-    await this.nativeUserModel.updateOne({ uid: user.uid, 'emails.email': codeOrEmail }, { $set: { 'emails.$.isVerified': true }, $unset: { 'emails.$.verificationCode': '' } });
+    if (userEmail.verified) throw new IAMError(IAMErrorCode.U004);
+    await this.nativeUserModel.updateOne({ uid: user.uid, 'emails.email': email }, { $set: { 'emails.$.verified': true } });
   }
 
   async updatePassword(oldPassword: string, newPassword: string): Promise<void> {

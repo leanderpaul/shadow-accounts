@@ -1,8 +1,6 @@
 /**
  * Importing npm packages
  */
-import crypto from 'crypto';
-
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 /**
@@ -37,12 +35,6 @@ export class UserEmail {
     default: false,
   })
   verified: boolean;
-
-  @Prop({
-    type: 'string',
-    default: (doc: UserEmail) => (doc.verified ? undefined : crypto.randomBytes(32).toString('base64url')),
-  })
-  verificationCode?: string;
 }
 
 export const UserEmailSchema = SchemaFactory.createForClass(UserEmail);
