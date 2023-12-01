@@ -2,6 +2,7 @@
  * Importing npm packages
  */
 import { Controller, Get, Render } from '@nestjs/common';
+import { ApiExcludeEndpoint } from '@nestjs/swagger';
 
 /**
  * Importing user defined packages
@@ -22,6 +23,7 @@ export class RouterController {
   @Get()
   @Render('home')
   @UseAuthGuard(AuthType.AUTHENTICATED)
+  @ApiExcludeEndpoint()
   getHomePage(): TemplateData {
     return {
       title: 'Home',
