@@ -54,7 +54,7 @@ describe('e2e: AuthController', () => {
       const response = await MockRequest.post('/auth/signin', { email: 'admin@shadow-apps.com', password: 'Password@123' });
       response.expectStatusCode(200);
       response.expectCookies('admin');
-      response.expectData({ success: true });
+      response.expectData({ success: true, redirectUrl: '/' });
     });
   });
 
@@ -91,7 +91,7 @@ describe('e2e: AuthController', () => {
       const response = await MockRequest.post('/auth/signup', body);
       response.expectStatusCode(200);
       response.expectCookies();
-      response.expectData({ success: true });
+      response.expectData({ success: true, redirectUrl: '/' });
     });
   });
 

@@ -80,6 +80,10 @@
         </svg>
       </div>
     </div>
+    <div class="verify-email hidden">
+      <p>A verification email has been sent to&nbsp;<span class="success"></span>. Please click the link given in that email to confirm your registeration.</p>
+      <a class="btn blue mt-lg" href="/">Continue</a>
+    </div>
   </div>
 </div>
 <script>
@@ -154,7 +158,16 @@
 
     $('#sign-up').addClass('loading');
     return $.post('/auth/signup', body)
-      .then(() => window.location.replace('/'))
+      .then((data) => {
+        $('.header span').text('Verify your email address');
+        $('.auth-container .form').remove();
+        $('.auth-container .oauth').remove();
+
+        $('.verify-email').removeClass('hidden');
+        $('.verify-email .success').text(body.email);
+        $('.verify-email .btn').attr('href', data.redirectUrl);
+        setTimeout(() => (window.location.href = data.redirectUrl), 5000);
+      })
       .catch(err => NotifyError(err.responseJSON.message))
       .done(() => $('#sign-up').removeClass('loading'));
   }

@@ -8,8 +8,7 @@ import { type FastifyReply } from 'fastify';
 /**
  * Importing user defined packages
  */
-import { AuthInfo, LoginWithPasswordDto, LookUpDto, RegisterDto } from '@app/dtos/auth';
-import { OperationResponse } from '@app/dtos/responses';
+import { AuthInfo, LoginResponse, LoginWithPasswordDto, LookUpDto, RegisterDto } from '@app/dtos/auth';
 import { type TemplateData } from '@app/interfaces';
 import { AuthService, UserAuthService } from '@app/modules/auth';
 import { Context } from '@app/services';
@@ -49,10 +48,11 @@ export class AuthController {
 
   @Post('signin')
   @HttpCode(200)
-  @ApiResponse({ status: 200, type: OperationResponse })
-  async login(@Body() body: LoginWithPasswordDto): Promise<OperationResponse> {
+  @ApiResponse({ status: 200, type: LoginResponse })
+  async login(@Body() body: LoginWithPasswordDto): Promise<LoginResponse> {
     await this.userAuthService.loginUser(body.email, body.password);
-    return { success: true };
+    const redirectUrl = this.authService.getRedirectUrl();
+    return { success: true, redirectUrl };
   }
 
   @Post('lookup')
@@ -81,10 +81,11 @@ export class AuthController {
 
   @Post('signup')
   @HttpCode(200)
-  @ApiResponse({ status: 200, type: OperationResponse })
-  async register(@Body() body: RegisterDto): Promise<OperationResponse> {
+  @ApiResponse({ status: 200, type: LoginResponse })
+  async register(@Body() body: RegisterDto): Promise<LoginResponse> {
     await this.userAuthService.registerNativeUser(body);
-    return { success: true };
+    const redirectUrl = this.authService.getRedirectUrl();
+    return { success: true, redirectUrl };
   }
 
   @Get('signout')
