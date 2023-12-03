@@ -151,7 +151,7 @@
 
     $('#next-btn').addClass('loading');
     return $.post('/auth/signin', { email, password })
-      .then(() => window.location.replace('/'))
+      .then((data) => (window.location.href = data.redirectUrl))
       .catch(err => errorField('#password', err.responseJSON.message))
       .done(() => $('#next-btn').removeClass('loading'));
   }

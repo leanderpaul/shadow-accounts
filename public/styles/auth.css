@@ -149,6 +149,11 @@
   margin-left: 5px;
 }
 
+.verify-email {
+  font-size: 14px;
+  line-height: 2;
+}
+
 @media (min-width: 576px) {
 }
 

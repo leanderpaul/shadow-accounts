@@ -83,6 +83,10 @@ a {
   cursor: pointer;
 }
 
+.success {
+  color: #08a83b;
+}
+
 .btn {
   cursor: pointer;
   display: flex;
