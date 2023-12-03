@@ -9,7 +9,7 @@ import moment from 'moment';
  * Importing user defined packages
  */
 import { IAMError, IAMErrorCode } from '@app/errors';
-import { DatabaseService, DigestVariant, type ID, User, UserVariant } from '@app/modules/database';
+import { DatabaseService, Digest, type ID, User, UserVariant } from '@app/modules/database';
 import { type NativeUser, type OAuthUser, type UserEmail, type UserInfo, type UserRole, type UserSession } from '@app/modules/database/database.types';
 import { Context, MailService } from '@app/services';
 
@@ -50,7 +50,7 @@ export class UserService {
   private readonly oauthUserModel;
   private readonly nativeUserModel;
 
-  private readonly verifyEmailDigestModel;
+  private readonly digestModel;
 
   constructor(
     databaseService: DatabaseService,
@@ -61,7 +61,7 @@ export class UserService {
     this.oauthUserModel = databaseService.getUserModel(UserVariant.OAUTH);
     this.nativeUserModel = databaseService.getUserModel(UserVariant.NATIVE);
 
-    this.verifyEmailDigestModel = databaseService.getDigestModel(DigestVariant.VERIFY_EMAIL);
+    this.digestModel = databaseService.getDigestModel();
   }
 
   async getTotalUserCount(): Promise<number> {
@@ -106,8 +106,10 @@ export class UserService {
     const user = await ('password' in newUser ? this.nativeUserModel.create(userData) : this.oauthUserModel.create(userData));
     if (!newUser.verified) {
       const expiresAt = moment().add(30, 'day').toDate();
-      const digestObj = await this.verifyEmailDigestModel.create({ uid: user.uid, email: newUser.email, expiresAt });
-      this.mailService.sendEmailVerificationMail(newUser.email, newUser.firstName, digestObj.digest);
+      const digest = Digest.generateDigest();
+      const data = { aid: user.aid.toString(), uid: user.uid.toString(), email: newUser.email };
+      await this.digestModel.create({ id: digest, type: Digest.Type.VERIFY_EMAIL, data, expiresAt });
+      this.mailService.sendEmailVerificationMail(newUser.email, newUser.firstName, digest.toString('base64url'));
     }
     return user;
   }

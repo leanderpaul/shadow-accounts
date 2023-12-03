@@ -3,8 +3,9 @@
  */
 import crypto from 'crypto';
 
+import { type JSONData } from '@leanderpaul/shadow-service';
 import { MongooseModule, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { type Model, type Types } from 'mongoose';
+import { type Model } from 'mongoose';
 
 /**
  * Importing user defined packages
@@ -15,87 +16,83 @@ import { defaultOptionsPlugin } from '../schema.utils';
  * Defining types
  */
 
-export interface DigestModel extends Omit<Model<Digest>, 'create' | 'insert' | 'insertMany'> {}
+export enum DigestType {
+  VERIFY_EMAIL = 0,
+  RESET_PASSWORD = 1,
+}
 
-export interface VerifyEmailDigestModel extends Model<VerifyEmailDigest> {}
-
-export interface ResetPasswordDigestModel extends Model<ResetPasswordDigest> {}
+export interface DigestModel extends Model<Digest> {}
 
 /**
  * Declaring the constants
  */
-const generateDigest = (): Buffer => new Bun.CryptoHasher('md5').update(`${Date.now()}-${crypto.randomBytes(32)}`).digest() as Buffer;
 
 @Schema({
   timestamps: { updatedAt: false },
   versionKey: false,
 })
 export class Digest {
+  static readonly Type = DigestType;
+
+  /** Generates a new digest */
+  static generateDigest(): Buffer {
+    const hasher = new Bun.CryptoHasher('md5');
+    hasher.update(`${Date.now()}-${crypto.randomBytes(32)}`);
+    return hasher.digest() as Buffer;
+  }
+
+  /** The digest value stored as base64url */
   @Prop({
     type: 'string',
     required: true,
-    default: () => generateDigest().toString('base64url'),
+    default: () => Digest.generateDigest().toString(),
   })
-  digest: string;
+  _id: string;
 
+  /** The digest value stored as base64url */
+  id: string;
+
+  /** The type of digest */
   @Prop({
-    type: 'ObjectId',
+    type: 'number',
     required: true,
+    enum: Object.values(DigestType).filter(v => typeof v === 'number'),
   })
-  uid: Types.ObjectId;
+  type: DigestType;
 
+  /** The data associated with the digest */
+  @Prop({
+    type: 'mixed',
+  })
+  data?: Record<string, JSONData>;
+
+  /** The date-time when the digest expires */
   @Prop({
     type: 'date',
     required: true,
   })
   expiresAt: Date;
 
+  /** The date-time when the digest was created */
   createdAt: Date;
-}
-
-@Schema()
-export class VerifyEmailDigest extends Digest {
-  type: 'VerifyEmailDigest';
-
-  @Prop({
-    type: 'string',
-    required: true,
-  })
-  email: string;
-}
-
-@Schema()
-export class ResetPasswordDigest extends Digest {
-  type: 'ResetPasswordDigest';
 }
 
 /**
  * Creating the mongoose Schema
  */
 const DigestSchema = SchemaFactory.createForClass(Digest);
-const VerifyEmailDigestSchema = SchemaFactory.createForClass(VerifyEmailDigest);
-const ResetPasswordDigestSchema = SchemaFactory.createForClass(ResetPasswordDigest);
 
 /**
  * Setting up middlewares
  */
 DigestSchema.plugin(defaultOptionsPlugin);
+DigestSchema.alias('_id', 'id');
 
 /**
  * Setting up the indexes
  */
-DigestSchema.index({ digest: 1 }, { name: 'UNIQUE_DIGEST', unique: true, background: true });
 
 /**
  * Creating the mongoose module
  */
-export const DigestMongooseModule = MongooseModule.forFeature([
-  {
-    name: Digest.name,
-    schema: DigestSchema,
-    discriminators: [
-      { name: VerifyEmailDigest.name, schema: VerifyEmailDigestSchema },
-      { name: ResetPasswordDigest.name, schema: ResetPasswordDigestSchema },
-    ],
-  },
-]);
+export const DigestMongooseModule = MongooseModule.forFeature([{ name: Digest.name, schema: DigestSchema }]);
