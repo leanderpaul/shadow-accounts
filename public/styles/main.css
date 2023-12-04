@@ -1,3 +1,6 @@
+@tailwind base;
+@tailwind utilities;
+
 body {
   margin: 0px;
   font-size: 16px;
@@ -10,28 +13,8 @@ a {
   text-decoration: none;
 }
 
-.hidden {
-  display: none;
-}
-
-.\!hidden {
-  display: none !important;
-}
-
-.relative {
-  position: relative;
-}
-
-.block {
-  display: block;
-}
-
-.flex {
-  display: flex;
-}
-
-.align-start {
-  align-items: flex-start;
+.pointer {
+  cursor: pointer;
 }
 
 .flex-center {
@@ -48,39 +31,6 @@ a {
 .flex-v-center {
   display: flex;
   align-items: center;
-}
-
-.flex-col {
-  display: flex;
-  flex-direction: column;
-}
-
-.w-full {
-  width: 100vw;
-}
-
-.w-100 {
-  width: 100%;
-}
-
-.h-full {
-  height: 100vh;
-}
-
-.h-100 {
-  height: 100%;
-}
-
-.f-right {
-  float: right;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.pointer {
-  cursor: pointer;
 }
 
 .success {
