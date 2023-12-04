@@ -41,7 +41,7 @@ export class AuthController {
     return {
       title: 'Sign In',
       description: 'Sign in to your Shadow account',
-      styles: ['main', 'auth'],
+      styles: ['global', 'auth'],
       scripts: ['jquery'],
     };
   }
@@ -74,7 +74,7 @@ export class AuthController {
     return {
       title: 'Create a Shadow account',
       description: 'Create a Shadow account',
-      styles: ['main', 'auth'],
+      styles: ['global', 'auth'],
       scripts: ['jquery', 'notiflix'],
     };
   }

@@ -1,5 +1,5 @@
 <div class="background-image"></div>
-<div class="md:flex-center flex-col h-full">
+<div class="md:flex-center h-screen flex-col">
   <div class="auth-container">
     <div class="logo">
       <img src="/images/logo-with-title.png" alt="Shadow Apps" height="40">
@@ -90,7 +90,7 @@
   
   function errorField(selector, message) {
     $(selector).addClass('error');
-    $(`${selector} .error`).text(message);
+    $(`${selector} .error`).html(message);
     $(`${selector} input`).one('input', () => $(selector).removeClass('error'));
     return false;
   }

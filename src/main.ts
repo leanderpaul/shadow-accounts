@@ -59,6 +59,12 @@ export async function initApp(listen: boolean = true): Promise<NestFastifyApplic
     SwaggerModule.setup('dev/api-docs', app, document);
   }
 
+  /** Building the css */
+  const tailwindcssEnv = structuredClone(process.env);
+  if (Config.isProd()) tailwindcssEnv.NODE_ENV = 'production';
+  const result = Bun.spawnSync(['bun', 'run', 'build:css'], { env: tailwindcssEnv });
+  if (!result.success) throw new Error(result.stderr.toString());
+
   /** Starting the nestjs application */
   if (listen) {
     const port = Config.get('app.port');

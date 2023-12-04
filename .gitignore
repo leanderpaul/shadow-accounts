@@ -11,5 +11,8 @@ node_modules/
 # Local test code
 src/routes/dev
 
+# Build output
+public/styles/global.css
+
 # dotenv environment variable files
 .env*
