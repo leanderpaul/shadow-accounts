@@ -3,14 +3,6 @@
     background-color: #e9eaed;
   }
 
-  .text-sm {
-    font-size: 14px;
-  }
-
-  .disabled {
-    color: #999;
-  }
-
    #blur {
     height: 100%;
     width: 100%;
@@ -146,9 +138,16 @@
     margin-right: 10px;
   }
 
+  .logo .title {
+    color: #eee;
+    margin-bottom: 0px;
+  }
+
   .container {
-    padding: 10px;
-    padding-top: 60px;
+    padding: 20px;
+    padding-top: 80px;
+    max-width: 1280px;
+    margin: auto;
   }
 
   .mt-sm {
@@ -156,9 +155,48 @@
   }
 
   .title {
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 500;
-    color: #eee;
+    color: #000;
+    cursor: default;
+    margin-bottom: 10px;
+  }
+
+  .card {
+    margin-bottom: 20px;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0px 2px 2px #00000012;
+    box-sizing: border-box;
+  }
+
+  .profile.card {
+    padding: 20px;
+  }
+
+  .profile.card .avatar {
+    width: 75px;
+    height: 75px;
+  }
+
+  .form-field {
+    margin: 20px 0px;
+  }
+
+  .form-field label {
+    display: block;
+    font-size: 14px;
+    color: #444;
+    cursor: default;
+  }
+
+  #profile form input {
+    margin-top: 10px;
+  }
+
+  #edit {
+    height: 40px;
+    margin-top: 30px;
   }
 
   @media (min-width: 992px) {
@@ -181,6 +219,7 @@
     }
 
     .container {
+      padding: 50px;
       padding-left: 310px;
     }
   }
@@ -209,7 +248,7 @@
     </svg>
     <div>
       <div>Leander Paul</div>
-      <div class='text-sm disabled'>leanderpaul97@gmail.com</div>
+      <div class='text-sm text-neutral-500'>leanderpaul97@gmail.com</div>
     </div>
   </div>
   <div class='divider'></div>
@@ -224,7 +263,7 @@
 
 <div id='sidenav' class=''>
   <a class='logo flex-center flex-col' href='/'>
-    <img src="/images/logo.png" alt='Shadow Accounts Logo' height="100%" />
+    <img class="h-full" src="/images/logo.png" alt='Shadow Accounts Logo' />
     <span class="mt-sm title">Shadow Accounts</span>
   </a>
   <a class='item' href='#profile' data-tab='profile'>
@@ -248,8 +287,71 @@
 </div>
 
 <div class="container">
-  <h1>Content</h1>
-  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt vero pariatur optio culpa possimus minus, nisi quis aut consectetur cum commodi in soluta? Reprehenderit aspernatur eos esse sequi temporibus iusto!</p>
+  <div id="profile">
+    <div class="title">Profile</div>
+    <div class="card profile">
+      <div class="flex align-center">
+        <div>
+          <svg class="avatar" viewBox="0 0 24 24">
+            <path fill="#aaa" d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.232 7.232 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10z"></path>
+          </svg>
+        </div>
+        <div class="ml-2 my-auto">
+          <div class="bold text-xl">{{ user.fullName }}</div>
+          <div class="text-sm text-neutral-500">{{ user.email }}</div>
+        </div>
+      </div>
+      <form class="mx-2">
+        <div id="fullName" class="form-field">
+          <label>Full Name</label>
+          <span>{{ user.fullName }}</span>
+          <div class="error"></div>
+        </div>
+        <div id="firstName" class="form-field hidden">
+          <label>First Name</label>
+          <span class="hidden">{{ user.firstName }}</span>
+          <input type="text" name="firstName">
+          <div class="error"></div>
+        </div>
+        <div id="lastName" class="form-field hidden">
+          <label>Last Name</label>
+          <span class="hidden">{{ user.lastName }}</span>
+          <input type="text" name="lastName">
+          <div class="error"></div>
+        </div>
+        <div id="imageUrl" class="form-field hidden">
+          <label>Profile Picture URL</label>
+          <span class="hidden">{{ user.imageUrl }}</span>
+          <input type="text" name="imageUrl">
+          <div class="error"></div>
+        </div>
+        <div id="gender" class="form-field">
+          <label>Gender</label>
+          <span>Male</span>
+          <input class="pointer !hidden" type="text" data-value="{{ user.gender }}" readonly>
+          <div class="select">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"></path>
+            </svg>
+            <ul>
+              <li data-value="1">Male</li>
+              <li data-value="2">Female</li>
+              <li data-value="0">I'd prefer not to say</li>
+            </ul>
+          </div>
+          <div class="error"></div>
+        </div>
+        <div id="dob" class="form-field">
+          <label>Date of Birth</label>
+          <span>{{ user.dob }}</span>
+          <input type="date" name="dob" class="!hidden" data-value="{{ user.rawDob }}">
+          <div class="error"></div>
+        </div>
+        <button type="button" id="edit" class="btn blue">Edit</button>
+        <button type="button" id="cancel" class="btn grey mt-4 !hidden">Cancel</button>
+      </form>
+    </div>
+  </div>
 </div>
 <script>
   function showSelectedTab() {
@@ -259,12 +361,54 @@
     $(`#sidenav a[data-tab=${tab}]`).addClass('selected');
   }
 
+  function editProfile() {
+    $('#fullName').addClass('hidden');
+    $('#firstName').removeClass('hidden');
+    $('#firstName input').val($('#firstName span').text());
+    $('#lastName').removeClass('hidden');
+    $('#lastName input').val($('#lastName span').text());
+    $('#imageUrl').removeClass('hidden');
+    $('#imageUrl input').val($('#imageUrl span').text());
+
+    $('#gender span').addClass('hidden');
+    $('#gender input').removeClass('!hidden');
+    enableSelect('#gender');
+    $('#dob span').addClass('hidden');
+    $('#dob input').removeClass('!hidden');
+    $('#dob input').val($('#dob input').data('value'));
+
+    $('#edit').text('Save');
+    $('#cancel').removeClass('!hidden');
+  }
+
+  function saveProfile() {
+    resetProfile();
+  }
+
+  function resetProfile() {
+    $('#fullName').removeClass('hidden');
+    $('#firstName').addClass('hidden');
+    $('#lastName').addClass('hidden');
+    $('#imageUrl').addClass('hidden');
+
+    $('#gender span').removeClass('hidden');
+    $('#gender input').addClass('!hidden');
+    $('#dob span').removeClass('hidden');
+    $('#dob input').addClass('!hidden');
+
+    $('#edit').text('Edit');
+    $('#cancel').addClass('!hidden');
+  }
+
   $('#menu-btn').on('click', () => ($('#sidenav').addClass('show'), $('#blur').addClass('nav-blur')));
   const removeNavBlur = () => ($('#sidenav').removeClass('show'), $('#blur').removeClass('nav-blur'));
   $('#blur').on('click', removeNavBlur);
   $('#sidenav a').on('click', removeNavBlur);
 
-  $('#dropdown-btn').on('click', () => ($('#dropdown').toggleClass('hidden'), setTimeout(() => $(document).one('click', () => $('#dropdown').addClass('hidden')), 10)));
+  $('#edit').on('click', () => $('#edit').text() === 'Edit' ? editProfile() : saveProfile());
+  $('#cancel').on('click', resetProfile);
+
+  $('#dropdown-btn').on('click', () => toggleWithMask('#dropdown', 'hidden'));
   $(window).on('hashchange', showSelectedTab);
   $(document).ready(showSelectedTab);
 </script>

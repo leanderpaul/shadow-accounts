@@ -31,6 +31,12 @@ export enum UserRole {
   SUPER_ADMIN = 2,
 }
 
+export enum Gender {
+  UNKNOWN = 0,
+  MALE = 1,
+  FEMAILE = 2,
+}
+
 export type UserInfo = Pick<User, 'aid' | 'uid' | 'type' | 'firstName' | 'lastName' | 'role' | 'status'>;
 
 export interface UserModel extends Omit<Model<User>, 'create' | 'insert' | 'insertMany'> {}
@@ -55,6 +61,7 @@ export class User {
   static UserEmail = UserEmail;
   static UserSession = UserSession;
 
+  static Gender = Gender;
   static Status = UserStatus;
   static Role = UserRole;
 
@@ -137,6 +144,20 @@ export class User {
     validate: [/^(?:[a-z][a-z0-9+\-.]*:)(?:\/?\/)?[^\s]*$/i, 'should be a valid URI'],
   })
   imageUrl?: string;
+
+  /** User's gender */
+  @Prop({
+    type: 'number',
+    enum: Object.values(Gender).filter(v => typeof v === 'number'),
+  })
+  gender?: Gender;
+
+  /** User's date of birth */
+  @Prop({
+    type: 'string',
+    validate: [/^\d{4}-\d{2}-\d{2}$/, 'should be a valid date in YYYY-MM-DD format'],
+  })
+  dob?: string;
 
   /** Array storing the session details of the user */
   @Prop({

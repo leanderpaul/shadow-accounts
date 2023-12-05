@@ -20,6 +20,30 @@
       <script src="/scripts/{{ this }}.js" async="true"></script>
     {{/alias}}
   {{/each}}
+  <script>
+    function toggleWithMask(selector, className, addClass = true) {
+      $(selector).toggleClass(className);
+      const hasClass = $(selector).hasClass(className);
+      if (!hasClass && addClass) setTimeout(() => $(document).one('click', () => $(selector).addClass(className)), 10);
+      else if (hasClass && !addClass) setTimeout(() => $(document).one('click', () => $(selector).removeClass(className)), 10);
+    }
+
+    function enableSelect(selector) {
+      const options = $(`${selector} .select li`).toArray();
+      const input = $(`${selector} input`);
+      const value = $(`${selector} .select li[data-value="${input.data('value')}"]`).addClass('selected').text();
+      input.val(value);
+
+      $(`${selector} input`).on('click', () => toggleWithMask('#gender .select', 'open', false));
+      $(`${selector} .select li`).off('click').on('click', function() {
+        const value = $(this).text();
+        input.data('value', $(this).data('value'));
+        input.val(value);
+        $(`${selector} .select li`).removeClass('selected');
+        $(this).addClass('selected');
+      });
+    }
+  </script>
 </head>
 <body>
   {{{ body }}}
