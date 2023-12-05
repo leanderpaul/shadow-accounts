@@ -59,7 +59,7 @@ export class ErrorFilter implements ExceptionFilter {
     this.logger.error(error);
 
     const res = Context.getCurrentResponse();
-    if (error instanceof NotFoundException) return res.status(404).view('404', { title: 'Page not found' });
+    if (error instanceof NotFoundException) return res.status(404).view('404', { title: 'Page not found', styles: ['global'] });
     const [statusCode, payload] = this.constructErrorPayload(error);
     return res.status(statusCode).send(payload);
   }

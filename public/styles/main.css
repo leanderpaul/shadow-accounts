@@ -47,9 +47,6 @@ a {
   border-radius: 2px;
   font-size: 14px;
   font-weight: 600;
-  outline: none;
-  border: none;
-  margin: auto;
   padding: 0px 20px;
   transition: all 0.2s ease-in-out;
   box-sizing: border-box;
@@ -63,6 +60,12 @@ a {
 
 .btn.blue:hover {
   box-shadow: 0px 2px 2px rgba(90, 183, 254, 0.2);
+}
+
+.btn.grey {
+  box-shadow: 0px 2px 2px #fff;
+  background-color: #eeeeee;
+  color: #000;
 }
 
 .btn.loading {
@@ -156,34 +159,6 @@ a {
   transform: rotate(45deg);
 }
 
-.form-field .input {
-  display: inline-flex;
-  color: #212121;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid #e5e5e5;
-  border-radius: 2px;
-  cursor: pointer;
-  box-sizing: border-box;
-  width: 100%;
-}
-
-.form-field .input .value {
-  display: inline-block;
-  font-size: 16px;
-  padding: 12px 14px;
-  line-height: 20px;
-  width: auto;
-  word-break: break-all;
-}
-
-.form-field .input .action {
-  padding-right: 14px;
-  font-size: 14px;
-  color: #0091ff;
-  font-weight: 500;
-}
-
 .form-field .error {
   display: none;
 }
@@ -197,6 +172,54 @@ a {
   font-size: 14px;
   margin-top: 10px;
   color: #e92b2b;
+}
+
+.form-field .select {
+  position: relative;
+}
+
+.form-field .select svg {
+  display: none;
+  position: absolute;
+  width: 20px;
+  right: 10px;
+  top: -31px;
+  fill: #bbb;
+  cursor: pointer;
+}
+
+.form-field .select.open svg {
+  display: block;
+  fill: #444;
+}
+
+.form-field .select ul {
+  display: none;
+  position: absolute;
+  top: -1px;
+  width: 100%;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  background-color: #f8f8f8;
+  border: 1px solid #e4e4e4;
+  border-top: none;
+}
+
+.form-field .select.open ul {
+  display: block;
+}
+
+.form-field .select li {
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.form-field .select li:hover {
+  background-color: #fff;
+}
+
+.form-field .select li.selected {
+  color: #159aff;
+  background-color: #fff;
 }
 
 .line {

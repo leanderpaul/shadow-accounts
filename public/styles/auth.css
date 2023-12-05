@@ -101,6 +101,34 @@
   margin: 30px 0px;
 }
 
+.form-field .input {
+  display: inline-flex;
+  color: #212121;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #e5e5e5;
+  border-radius: 2px;
+  cursor: pointer;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.form-field .input .value {
+  display: inline-block;
+  font-size: 16px;
+  padding: 12px 14px;
+  line-height: 20px;
+  width: auto;
+  word-break: break-all;
+}
+
+.form-field .input .action {
+  padding-right: 14px;
+  font-size: 14px;
+  color: #0091ff;
+  font-weight: 500;
+}
+
 .oauth .text {
   display: block;
   font-size: 15px;

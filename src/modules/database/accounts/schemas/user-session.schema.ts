@@ -20,6 +20,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 @Schema({
   _id: false,
   versionKey: false,
+  timestamps: { updatedAt: false },
 })
 export class UserSession {
   /** User session ID used to identify the session */
@@ -57,6 +58,9 @@ export class UserSession {
     default: () => new Date(),
   })
   accessedAt: Date;
+
+  /** session created at */
+  createdAt: Date;
 }
 
 export const UserSessionSchema = SchemaFactory.createForClass(UserSession);

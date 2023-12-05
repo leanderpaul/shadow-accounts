@@ -6,6 +6,7 @@ import { Module, type ModuleMetadata, type Type } from '@nestjs/common';
 /**
  * Importing user defined packages
  */
+import { UserModule } from '@app/modules/user';
 import { Config } from '@app/services';
 
 import { AuthRouterModule } from './auth';
@@ -19,7 +20,7 @@ import { RouterController } from './router.controller';
 /**
  * Declaring the constants
  */
-const imports: Type<any>[] = [AuthRouterModule];
+const imports: Type<any>[] = [AuthRouterModule, UserModule];
 
 @Module({
   imports: RoutesModule.getImports(),
