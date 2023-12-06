@@ -1,13 +1,14 @@
 /**
  * Importing npm packages
  */
-import { NeverError, type Projection } from '@leanderpaul/shadow-service';
+import { type Projection } from '@leanderpaul/shadow-service';
 import { Injectable } from '@nestjs/common';
 import moment from 'moment';
 
 /**
  * Importing user defined packages
  */
+import { UpdateUserDto } from '@app/dtos/user';
 import { IAMError, IAMErrorCode } from '@app/errors';
 import { DatabaseService, Digest, type ID, User, UserVariant } from '@app/modules/database';
 import { type NativeUser, type OAuthUser, type UserEmail, type UserInfo, type UserRole, type UserSession } from '@app/modules/database/database.types';
@@ -53,7 +54,7 @@ export class UserService {
   private readonly digestModel;
 
   constructor(
-    databaseService: DatabaseService,
+    private readonly databaseService: DatabaseService,
     private readonly mailService: MailService,
   ) {
     this.accountModel = databaseService.getAccountModel();
@@ -69,27 +70,27 @@ export class UserService {
   }
 
   async getNativeUser(uidOrEmail: ID | string): Promise<UserInfo | null>;
-  async getNativeUser<T extends keyof Omit<NativeUser, 'uid' | 'type'>>(uidOrEmail: ID | string, projection: T[]): Promise<Pick<NativeUser, 'uid' | 'type' | T> | null>;
+  async getNativeUser<T extends keyof Omit<NativeUser, 'uid'>>(uidOrEmail: ID | string, projection: T[]): Promise<Pick<NativeUser, 'uid' | T> | null>;
   async getNativeUser(uidOrEmail: ID | string, projection: Projection<NativeUser>): Promise<NativeUser | null>;
   async getNativeUser<T>(uidOrEmail: ID | string, projection: Projection<NativeUser> | T[] = defaultUserProjection): Promise<NativeUser | null> {
     const query = typeof uidOrEmail === 'string' && uidOrEmail.includes('@') ? { 'emails.email': uidOrEmail } : { uid: uidOrEmail };
-    return await this.nativeUserModel.findOne(query, projection).select('type').lean();
+    return await this.nativeUserModel.findOne(query, projection).lean();
   }
 
   async getOAuthUser(uidOrEmail: ID | string): Promise<UserInfo | null>;
-  async getOAuthUser<T extends keyof Omit<OAuthUser, 'uid' | 'type'>>(uidOrEmail: ID | string, projection: T[]): Promise<Pick<OAuthUser, 'uid' | 'type' | T> | null>;
+  async getOAuthUser<T extends keyof Omit<OAuthUser, 'uid'>>(uidOrEmail: ID | string, projection: T[]): Promise<Pick<OAuthUser, 'uid' | T> | null>;
   async getOAuthUser(uidOrEmail: ID | string, projection: Projection<OAuthUser>): Promise<OAuthUser | null>;
   async getOAuthUser<T>(uidOrEmail: ID | string, projection: Projection<OAuthUser> | T[] = defaultUserProjection): Promise<OAuthUser | null> {
     const query = typeof uidOrEmail === 'string' && uidOrEmail.includes('@') ? { 'emails.email': uidOrEmail } : { uid: uidOrEmail };
-    return await this.oauthUserModel.findOne(query, projection).select('type').lean();
+    return await this.oauthUserModel.findOne(query, projection).lean();
   }
 
   async getUser(uidOrEmail: ID | string): Promise<UserInfo | null>;
-  async getUser<T extends keyof Omit<User, 'uid' | 'type'>>(uidOrEmail: ID | string, projection: T[]): Promise<Pick<User, 'uid' | 'type' | T> | null>;
+  async getUser<T extends keyof Omit<User, 'uid'>>(uidOrEmail: ID | string, projection: T[]): Promise<Pick<User, 'uid' | T> | null>;
   async getUser(uidOrEmail: ID | string, projection: Projection<User>): Promise<User | null>;
   async getUser<T>(uidOrEmail: ID | string, projection: T[] | Projection<User> = defaultUserProjection): Promise<User | null> {
     const query = typeof uidOrEmail === 'string' && uidOrEmail.includes('@') ? { 'emails.email': uidOrEmail } : { uid: uidOrEmail };
-    return await this.userModel.findOne(query, projection).select('type').lean();
+    return await this.userModel.findOne(query, projection).lean();
   }
 
   async createUser(newUser: CreateNativeUser | CreateOAuthUser, session?: CreateUserSession | null): Promise<User> {
@@ -131,11 +132,14 @@ export class UserService {
     await this.nativeUserModel.updateOne({ uid }, { $set: { password: newPassword } });
   }
 
-  async updateUser(uidOrEmail: ID, update: Partial<Pick<User, 'firstName' | 'lastName' | 'imageUrl'>>): Promise<Pick<User, 'firstName' | 'lastName' | 'imageUrl'>> {
+  async updateUser(uidOrEmail: ID, update: UpdateUserDto): Promise<UserInfo | null>;
+  async updateUser<T extends keyof Omit<User, 'uid'>>(uidOrEmail: ID, update: UpdateUserDto, projection: T[]): Promise<Pick<User, 'uid' | T> | null>;
+  async updateUser(uidOrEmail: ID, update: UpdateUserDto, projection: Projection<User>): Promise<User | null>;
+  async updateUser<T>(uidOrEmail: ID, update: UpdateUserDto, projection?: T[] | Projection<User>): Promise<User | null> {
+    if (Object.keys(update).length === 0) return this.getUser(uidOrEmail, projection as Projection<User>);
     const query = typeof uidOrEmail === 'string' ? { 'emails.email': uidOrEmail } : { uid: uidOrEmail };
-    const projection = { firstName: 1, lastName: 1, imageUrl: 1 };
-    const updatedUser = await this.userModel.findOneAndUpdate(query, { $set: update }, { projection }).lean();
-    if (!updatedUser) throw new NeverError('User not present after updated');
-    return updatedUser;
+    if (!projection) projection = defaultUserProjection;
+    const updateQuery = this.databaseService.getUpdateQuery(update);
+    return await this.userModel.findOneAndUpdate(query, updateQuery.getUpdate(), { projection }).lean();
   }
 }

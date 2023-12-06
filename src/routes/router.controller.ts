@@ -46,7 +46,7 @@ export class RouterController {
         lastName: user.lastName ?? '',
         fullName: `${user.firstName} ${user.lastName ?? ''}`,
         email: currentUser.primaryEmail,
-        gender: user.gender ?? User.Gender.UNKNOWN,
+        gender: user.gender ?? '',
         rawDob: user.dob ?? '1970-01-01',
         dob: moment(user.dob ?? '1970-01-01', 'YYYY-MM-DD').format('MMMM D, YYYY'),
       },

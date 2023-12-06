@@ -16,7 +16,7 @@ import { IsEmail, IsOptional, IsStrongPassword, Matches, MaxLength, MinLength } 
 /**
  * Declaring the constants
  */
-const nameRegex = /^[a-zA-Z0-9 \-_.']+$/;
+const nameRegex = /^[a-zA-Z0-9 \-_.']*$/;
 const nameRegexMessage = 'must contain only letters, numbers, spaces, and the following characters: -_.';
 
 export class RegisterDto {
@@ -28,7 +28,6 @@ export class RegisterDto {
   firstName: string;
 
   @ApiProperty()
-  @Transform(params => params.value.trim())
   @Matches(nameRegex, { message: nameRegexMessage })
   @MaxLength(32)
   @IsOptional()

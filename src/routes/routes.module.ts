@@ -12,6 +12,7 @@ import { Config } from '@app/services';
 import { AuthRouterModule } from './auth';
 import { DevModule } from './dev';
 import { RouterController } from './router.controller';
+import { UserRouterModule } from './user';
 
 /**
  * Defining types
@@ -20,7 +21,7 @@ import { RouterController } from './router.controller';
 /**
  * Declaring the constants
  */
-const imports: Type<any>[] = [AuthRouterModule, UserModule];
+const imports: Type<any>[] = [UserModule, AuthRouterModule, UserRouterModule];
 
 @Module({
   imports: RoutesModule.getImports(),
