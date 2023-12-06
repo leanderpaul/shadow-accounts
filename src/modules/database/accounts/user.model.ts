@@ -32,7 +32,6 @@ export enum UserRole {
 }
 
 export enum Gender {
-  UNKNOWN = 0,
   MALE = 1,
   FEMAILE = 2,
 }
@@ -48,11 +47,12 @@ export interface OAuthUserModel extends Model<OAuthUser> {}
 /**
  * Declaring the constants
  */
-const defaultUserProjection: Projection<User> = { aid: 1, uid: 1, type: 1, firstName: 1, lastName: 1, role: 1, status: 1 };
+const defaultUserProjection: Projection<User> = { aid: 1, uid: 1, firstName: 1, lastName: 1, role: 1, status: 1 };
 const nameRegex = /^[a-zA-Z0-9 \-_.']+$/;
 const nameRegexMessage = 'must contain only letters, numbers, spaces, and the following characters: -_.';
 
 @Schema({
+  id: false,
   timestamps: true,
   versionKey: false,
   discriminatorKey: 'type',

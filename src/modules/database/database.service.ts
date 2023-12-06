@@ -10,6 +10,7 @@ import { type Connection } from 'mongoose';
  */
 import { Account, type AccountModel } from './accounts/account.model';
 import { NativeUser, type NativeUserModel, OAuthUser, type OAuthUserModel, User, type UserModel } from './accounts/user.model';
+import { UpdateQueryHelper } from './helpers/update-query.helper';
 import { Digest, type DigestModel } from './system/digest.model';
 
 /**
@@ -59,5 +60,9 @@ export class DatabaseService implements OnApplicationShutdown {
 
   getDigestModel(): DigestModel {
     return this.digestModel;
+  }
+
+  getUpdateQuery(update?: object): UpdateQueryHelper {
+    return new UpdateQueryHelper(update);
   }
 }
