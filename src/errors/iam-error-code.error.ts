@@ -25,6 +25,8 @@ export class IAMErrorCode extends ErrorCode {
   static readonly IAM001 = new IAMErrorCode('IAM001', ErrorType.UNAUTHORIZED, 'Access denied');
   /** Invalid CSRF token */
   static readonly IAM002 = new IAMErrorCode('IAM002', ErrorType.UNAUTHORIZED, 'Invalid CSRF token');
+  /** Unauthenticated */
+  static readonly IAM003 = new IAMErrorCode('IAM003', ErrorType.UNAUTHENTICATED, 'Unauthenticated');
 
   /*!
    * List of all account related errors

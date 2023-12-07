@@ -2,13 +2,13 @@
  * Importing npm packages
  */
 import { NeverError } from '@leanderpaul/shadow-service';
-import { Controller, Get, Render } from '@nestjs/common';
-import { ApiExcludeEndpoint } from '@nestjs/swagger';
+import { Controller, Get } from '@nestjs/common';
 import moment from 'moment';
 
 /**
  * Importing user defined packages
  */
+import { Render } from '@app/decorators';
 import { AuthType, UseAuthGuard } from '@app/guards';
 import { type TemplateData } from '@app/interfaces';
 import { User } from '@app/modules/database';
@@ -30,7 +30,6 @@ export class RouterController {
   @Get()
   @Render('home')
   @UseAuthGuard(AuthType.AUTHENTICATED)
-  @ApiExcludeEndpoint()
   async getHomePage(): Promise<TemplateData> {
     const currentUser = Context.getCurrentUser(true);
     const projection = User.constructProjection({ gender: 1, dob: 1 });

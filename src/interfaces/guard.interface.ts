@@ -1,7 +1,7 @@
 /**
  * Importing npm packages
  */
-import { Type } from '@nestjs/common';
+import { ExecutionContext, Type } from '@nestjs/common';
 
 /**
  * Importing user defined packages
@@ -16,7 +16,7 @@ import { Type } from '@nestjs/common';
  */
 
 export interface CanActivate {
-  canActivate(): boolean;
+  canActivate(context: ExecutionContext): boolean;
 }
 
 /**
