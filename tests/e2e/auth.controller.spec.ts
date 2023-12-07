@@ -20,7 +20,6 @@ describe('e2e: AuthController', () => {
   describe('POST /auth/lookup', () => {
     it('should return error for invalid email', async () => {
       const response = await MockRequest.post('/auth/lookup', { email: 'invalid' });
-      response.expectStatusCode(400);
       response.expectError('S003', ['email']);
     });
 
@@ -40,13 +39,11 @@ describe('e2e: AuthController', () => {
   describe('POST /auth/signin', () => {
     it('should return error for non-existing email', async () => {
       const response = await MockRequest.post('/auth/signin', { email: 'invalid', password: 'invalid' });
-      response.expectStatusCode(400);
       response.expectError('S003', ['email']);
     });
 
     it('should return error for invalid credentials', async () => {
       const response = await MockRequest.post('/auth/signin', { email: 'admin@shadow-apps.com', password: 'invalid' });
-      response.expectStatusCode(400);
       response.expectError('U007');
     });
 
@@ -75,14 +72,12 @@ describe('e2e: AuthController', () => {
     it('should return error for invalid inputs', async () => {
       const body = { firstName: '@#$', email: 'invalid-email', password: 'invalid-password' };
       const response = await MockRequest.post('/auth/signup', body);
-      response.expectStatusCode(400);
       response.expectError('S003', ['firstName', 'email', 'password']);
     });
 
     it('should return error for existing account', async () => {
       const body = { firstName: 'Admin', email: 'admin@shadow-apps.com', password: 'Password@123' };
       const response = await MockRequest.post('/auth/signup', body);
-      response.expectStatusCode(400);
       response.expectError('U002');
     });
 

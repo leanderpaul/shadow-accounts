@@ -1,11 +1,15 @@
 /**
  * Importing npm packages
  */
-import { UseGuards, mixin } from '@nestjs/common';
+import { type ExecutionContext, Injectable, UseGuards, applyDecorators, mixin } from '@nestjs/common';
+import { RENDER_METADATA } from '@nestjs/common/constants';
+import { Reflector } from '@nestjs/core';
+import { ApiResponse } from '@nestjs/swagger';
 
 /**
  * Importing user defined packages
  */
+import { UnauthenticatedResponse, UnauthorizedResponse } from '@app/dtos/responses';
 import { IAMError, IAMErrorCode } from '@app/errors';
 import { type CanActivate, type Guard } from '@app/interfaces';
 import { Context } from '@app/services';
@@ -23,9 +27,14 @@ export enum AuthType {
  * Declaring the constants
  */
 const cache: Partial<Record<AuthType, Guard>> = {};
+const unauthenticatedResponse = ApiResponse({ status: 401, type: UnauthenticatedResponse, description: 'Unauthenticated' });
+const unauthorizedResponse = ApiResponse({ status: 403, type: UnauthorizedResponse, description: 'Unauthorized' });
 
 function createAuthGuard(requiredAuth: AuthType): Guard {
+  @Injectable()
   class MixinAuthGuard implements CanActivate {
+    constructor(private readonly reflector: Reflector) {}
+
     redirect(url: string): boolean {
       const req = Context.getCurrentRequest();
       const res = Context.getCurrentResponse();
@@ -35,9 +44,11 @@ function createAuthGuard(requiredAuth: AuthType): Guard {
       return false;
     }
 
-    canActivate(): boolean {
+    canActivate(context: ExecutionContext): boolean {
+      const isRender = this.reflector.get(RENDER_METADATA, context.getHandler()) !== undefined;
       const user = Context.getCurrentUser();
-      if (!user) return this.redirect('/auth/signin');
+      if (!user && isRender) return this.redirect('/auth/signin');
+      if (!user) throw new IAMError(IAMErrorCode.IAM003);
       if (requiredAuth === AuthType.VERIFIED && !user.verified) throw new IAMError(IAMErrorCode.U003);
       return true;
     }
@@ -54,4 +65,8 @@ export function AuthGuard(requiredAuth: AuthType): Guard {
   return result;
 }
 
-export const UseAuthGuard = (authType: AuthType = AuthType.VERIFIED): MethodDecorator & ClassDecorator => UseGuards(AuthGuard(authType));
+export function UseAuthGuard(authType: AuthType = AuthType.VERIFIED): MethodDecorator & ClassDecorator {
+  const decorators = [UseGuards(AuthGuard(authType)), unauthenticatedResponse];
+  if (authType === AuthType.VERIFIED) decorators.push(unauthorizedResponse);
+  return applyDecorators(...decorators);
+}

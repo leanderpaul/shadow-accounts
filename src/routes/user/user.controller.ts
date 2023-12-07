@@ -2,14 +2,14 @@
  * Importing npm packages
  */
 import { NeverError, type Projection } from '@leanderpaul/shadow-service';
-import { Body, Controller, Get, HttpCode, Patch } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Patch } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import lodash from 'lodash';
 
 /**
  * Importing user defined packages
  */
-import { FormattedError } from '@app/dtos/errors';
+import { ApiResponse } from '@app/decorators';
 import { UpdateUserDto, UserResponse } from '@app/dtos/user';
 import { AuthType, UseAuthGuard } from '@app/guards';
 import { User } from '@app/modules/database';
@@ -39,7 +39,6 @@ const userProjection: Projection<User> = {
 @ApiTags('User')
 @Controller('user')
 @UseAuthGuard(AuthType.AUTHENTICATED)
-@ApiResponse({ status: 401, type: FormattedError })
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -50,8 +49,7 @@ export class UserController {
   }
 
   @Get()
-  @HttpCode(200)
-  @ApiResponse({ status: 200, type: UserResponse })
+  @ApiResponse(200, UserResponse)
   async getUser(): Promise<UserResponse> {
     const currentUser = Context.getCurrentUser(true);
     const user = await this.userService.getUser(currentUser.uid, userProjection);
@@ -59,10 +57,7 @@ export class UserController {
   }
 
   @Patch()
-  @HttpCode(200)
-  @ApiResponse({ status: 200, type: UserResponse })
-  @ApiResponse({ status: 400, type: FormattedError })
-  @ApiResponse({ status: 422, type: FormattedError })
+  @ApiResponse(200, UserResponse, 422)
   async updateUser(@Body() body: UpdateUserDto): Promise<UserResponse> {
     const currentUser = Context.getCurrentUser(true);
     const user = await this.userService.updateUser(currentUser.uid, body, userProjection);

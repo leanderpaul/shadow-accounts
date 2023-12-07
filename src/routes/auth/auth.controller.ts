@@ -1,13 +1,14 @@
 /**
  * Importing npm packages
  */
-import { Body, Controller, Get, HttpCode, Post, Redirect, Render, Res } from '@nestjs/common';
-import { ApiExcludeEndpoint, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Post, Redirect, Res } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { type FastifyReply } from 'fastify';
 
 /**
  * Importing user defined packages
  */
+import { ApiResponse, Render } from '@app/decorators';
 import { AuthInfo, LoginResponse, LoginWithPasswordDto, LookUpDto, RegisterDto } from '@app/dtos/auth';
 import { type TemplateData } from '@app/interfaces';
 import { AuthService, UserAuthService } from '@app/modules/auth';
@@ -31,7 +32,6 @@ export class AuthController {
 
   @Get('signin')
   @Render('auth/signin')
-  @ApiExcludeEndpoint()
   getLoginPage(@Res() res: FastifyReply): FastifyReply | TemplateData {
     const user = Context.getCurrentUser();
     if (user) {
@@ -47,8 +47,7 @@ export class AuthController {
   }
 
   @Post('signin')
-  @HttpCode(200)
-  @ApiResponse({ status: 200, type: LoginResponse })
+  @ApiResponse(200, LoginResponse, 422)
   async login(@Body() body: LoginWithPasswordDto): Promise<LoginResponse> {
     await this.userAuthService.loginUser(body.email, body.password);
     const redirectUrl = this.authService.getRedirectUrl();
@@ -56,15 +55,13 @@ export class AuthController {
   }
 
   @Post('lookup')
-  @HttpCode(200)
-  @ApiResponse({ status: 200, type: AuthInfo })
+  @ApiResponse(200, AuthInfo, 422)
   verifyEmail(@Body() body: LookUpDto): Promise<AuthInfo> {
     return this.userAuthService.getAuthInfo(body.email);
   }
 
   @Get('signup')
   @Render('auth/signup')
-  @ApiExcludeEndpoint()
   getRegisterPage(@Res() res: FastifyReply): FastifyReply | TemplateData {
     const user = Context.getCurrentUser();
     if (user) {
@@ -80,8 +77,7 @@ export class AuthController {
   }
 
   @Post('signup')
-  @HttpCode(200)
-  @ApiResponse({ status: 200, type: LoginResponse })
+  @ApiResponse(200, LoginResponse, [400, 409, 422])
   async register(@Body() body: RegisterDto): Promise<LoginResponse> {
     await this.userAuthService.registerNativeUser(body);
     const redirectUrl = this.authService.getRedirectUrl();
@@ -90,6 +86,7 @@ export class AuthController {
 
   @Get('signout')
   @Redirect('/')
+  @ApiResponse(302)
   async logout(): Promise<void> {
     const session = Context.getCurrentSession();
     if (!session) return;
