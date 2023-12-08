@@ -9,6 +9,8 @@ import { afterAll, beforeAll } from 'bun:test';
  */
 import { Seeder } from '@app/seeder';
 
+import { MockAuth } from './mocks/auth.mock';
+
 /**
  * Defining types
  */
@@ -28,6 +30,8 @@ beforeAll(async () => {
   /** Deleting old test data and seeding the database */
   const seeder = await Seeder.init();
   await seeder.seedDatabase(true);
+  await seeder.createUser({ email: 'test-user-1@shadow-apps.test', firstName: 'Tester One', verified: true });
+  await seeder.createUser({ email: 'test-user-2@shadow-apps.test', firstName: 'Tester Two' });
   await seeder.close();
 
   const env = { ...process.env, NODE_ENV: 'test', PORT: '8081', APP_NAME: 'test:shadow-accounts' };
@@ -36,6 +40,10 @@ beforeAll(async () => {
     const ipc = (message: string, proc: Subprocess) => message === 'ready' && resolve(proc);
     Bun.spawn(['bun', 'run', 'src/main.ts'], { env, cwd, ipc, stdout: 'ignore' });
   });
+
+  /** Initializing the mock sessions */
+  await MockAuth.initSession('tester-1', 'test-user-1@shadow-apps.test');
+  await MockAuth.initSession('tester-2', 'test-user-2@shadow-apps.test');
 });
 
 afterAll(() => proc?.kill(2));

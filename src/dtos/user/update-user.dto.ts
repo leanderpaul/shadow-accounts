@@ -2,7 +2,7 @@
  * Importing npm packages
  */
 import { ApiProperty, PartialType, PickType } from '@nestjs/swagger';
-import { IsDateString, IsEnum, IsOptional, IsUrl, MaxDate } from 'class-validator';
+import { IsDateString, IsEnum, IsInt, IsOptional, IsUrl } from 'class-validator';
 
 /**
  * Importing user defined packages
@@ -10,6 +10,7 @@ import { IsDateString, IsEnum, IsOptional, IsUrl, MaxDate } from 'class-validato
 import { User } from '@app/modules/database';
 
 import { RegisterDto } from '../auth';
+import { MaxDateString } from '../validators';
 
 /**
  * Defining types
@@ -21,18 +22,19 @@ import { RegisterDto } from '../auth';
 
 export class UpdateUserDto extends PickType(PartialType(RegisterDto), ['firstName', 'lastName'] as const) {
   @ApiProperty({ required: false })
-  @IsOptional()
   @IsUrl()
+  @IsOptional()
   imageUrl?: string;
 
   @ApiProperty({ required: false })
-  @IsOptional()
+  @IsInt()
   @IsEnum(User.Gender)
-  gender?: string;
+  @IsOptional()
+  gender?: number;
 
   @ApiProperty({ required: false })
-  @IsOptional()
+  @MaxDateString(() => new Date())
   @IsDateString()
-  @MaxDate(new Date())
+  @IsOptional()
   dob?: string;
 }

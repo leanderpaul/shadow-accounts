@@ -20,6 +20,7 @@ import { type ValidationError as ClassValidationError, type ValidatorOptions, va
 const validatorOptions: ValidatorOptions = {
   forbidNonWhitelisted: true,
   forbidUnknownValues: true,
+  stopAtFirstError: true,
   validationError: { target: false, value: false },
 };
 
