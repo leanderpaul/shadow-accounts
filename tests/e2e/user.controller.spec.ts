@@ -19,8 +19,10 @@ import { MockRequest } from '@tests/mocks';
 
 describe('e2e: UserController', () => {
   describe('GET /user', () => {
-    const authTest = Expect.getTest('UNAUTHENTICATED_REQUEST');
-    it(authTest.name, authTest.test);
+    it('should return error for unauthenticated request', async () => {
+      const response = await MockRequest.get('/user');
+      response.expectError('IAM003');
+    });
 
     it('should return the user info', async () => {
       const response = await MockRequest.get('/user').session('tester-1');
@@ -37,8 +39,10 @@ describe('e2e: UserController', () => {
   });
 
   describe('PATCH /user', () => {
-    const authTest = Expect.getTest('UNAUTHENTICATED_REQUEST');
-    it(authTest.name, authTest.test);
+    it('should return error for unauthenticated request', async () => {
+      const response = await MockRequest.patch('/user', { lastName: 'Test' });
+      response.expectError('IAM003');
+    });
 
     it('should return error for invalid input', async () => {
       const body = { firstName: '', gender: 'MALE', dob: '2100-01-01' };
