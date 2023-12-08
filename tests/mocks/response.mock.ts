@@ -1,6 +1,7 @@
 /**
  * Importing npm packages
  */
+import { type FieldError } from '@leanderpaul/shadow-service';
 import { expect } from 'bun:test';
 import { type CheerioAPI, load as loadDOM } from 'cheerio';
 
@@ -8,6 +9,8 @@ import { type CheerioAPI, load as loadDOM } from 'cheerio';
  * Importing user defined packages
  */
 import { IAMErrorCode } from '@app/errors';
+
+import { MockAuth } from './auth.mock';
 
 /**
  * Defining types
@@ -21,10 +24,7 @@ export interface ExpectedHTML {
 /**
  * Declaring the constants
  */
-
 export class MockResponse {
-  static cookies = new Map<string, string>();
-
   private dom: CheerioAPI | undefined;
 
   constructor(
@@ -51,6 +51,12 @@ export class MockResponse {
 
   expectStatusCode(statusCode: number): void {
     expect(this.response.status).toBe(statusCode);
+  }
+
+  expectRedirect(url: string): void {
+    const location = this.getHeader('Location');
+    this.expectStatusCode(302);
+    expect(location).toBe(url);
   }
 
   expectHTML(expected: ExpectedHTML): void {
@@ -91,9 +97,10 @@ export class MockResponse {
     expect(body.code).toBe(code);
     expect(body.message).toBeString();
     if (fields) {
-      const expected = fields.map(field => ({ field, msg: expect.any(String) }));
+      const expected = fields.reduce((obj, field) => ({ ...obj, [field]: expect.any(String) }), {});
+      const actual = body.fields.reduce((obj: object, item: FieldError) => ({ ...obj, [item.field]: item.msg }), {});
       expect(body.fields).toHaveLength(fields.length);
-      expect(body.fields).toMatchObject(expected);
+      expect(actual).toMatchObject(expected);
     }
   }
 
@@ -104,6 +111,6 @@ export class MockResponse {
   expectCookies(key?: string): void {
     const cookie = this.response.headers.get('Set-Cookie');
     expect(cookie).toMatch(/^sasid=[a-zA-Z0-9%= _\-/\\;]{30,}$/);
-    if (key && cookie) MockResponse.cookies.set(key, cookie);
+    if (key && cookie) MockAuth.setSession(key, cookie);
   }
 }

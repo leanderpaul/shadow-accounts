@@ -106,7 +106,7 @@ export class User {
     required: [true, 'required'],
     minlength: [1, 'should have at least 1 character'],
     maxlength: [32, 'should have at most 32 characters'],
-    validate: [nameRegex, nameRegexMessage],
+    match: [nameRegex, nameRegexMessage],
   })
   firstName: string;
 
@@ -116,7 +116,7 @@ export class User {
     trim: true,
     minlength: [1, 'should have at least 1 character'],
     maxlength: [32, 'should have at most 32 characters'],
-    validate: [nameRegex, nameRegexMessage],
+    match: [nameRegex, nameRegexMessage],
   })
   lastName?: string;
 
@@ -155,7 +155,7 @@ export class User {
   /** User's date of birth */
   @Prop({
     type: 'string',
-    validate: [/^\d{4}-\d{2}-\d{2}$/, 'should be a valid date in YYYY-MM-DD format'],
+    match: [/^\d{4}-\d{2}-\d{2}$/, 'should be a valid date in YYYY-MM-DD format'],
   })
   dob?: string;
 

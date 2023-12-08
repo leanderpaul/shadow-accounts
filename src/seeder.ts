@@ -29,7 +29,6 @@ class SeederModule {}
 
 export class Seeder {
   private readonly seededData = new Map<string, unknown>();
-  private readonly sessions = new Map<string, string>();
 
   constructor(private readonly app: INestApplicationContext) {}
 
@@ -49,16 +48,11 @@ export class Seeder {
     return data as T;
   }
 
-  async createUser(user: CreateUser, initSession: boolean = false): Promise<User> {
+  async createUser(user: CreateUser): Promise<User> {
     const userService = this.getService(UserService);
-    const userModel = this.getService(DatabaseService).getUserModel();
-    const createdUser = await userService.createUser({ ...user, password }, initSession ? { id: 1 } : null);
-    const userData = await userModel.findOne({ uid: createdUser.uid }).lean();
-    if (!userData) throw new NeverError('User not found');
-    const session = userData.sessions[0];
-    this.seededData.set(user.email, userData);
-    if (session) this.sessions.set(user.email, session.token);
-    return userData;
+    const createdUser = await userService.createUser({ ...user, password });
+    this.seededData.set(user.email, createdUser);
+    return createdUser;
   }
 
   async seedDatabase(clean: boolean = false): Promise<void> {

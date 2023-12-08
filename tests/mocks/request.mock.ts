@@ -7,14 +7,15 @@ import lodash from 'lodash';
 /**
  * Importing user defined packages
  */
-import { Config, Logger } from '@app/services';
+import { Logger } from '@app/services';
 
+import { MockAuth } from './auth.mock';
 import { MockResponse } from './response.mock';
 
 /**
  * Defining types
  */
-export type RestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+export type RestMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
 
 /**
  * Declaring the constants
@@ -23,7 +24,7 @@ const logger = Logger.getLogger('MockRequest');
 
 export class MockRequest {
   private readonly headers: Record<string, string> = {};
-  private fetchOptions: FetchRequestInit = {};
+  private fetchOptions: FetchRequestInit = { redirect: 'manual' };
   private body: object | null = null;
 
   constructor(
@@ -45,6 +46,12 @@ export class MockRequest {
     return request;
   }
 
+  static patch(url: string, body?: Record<string, JSONData>): MockRequest {
+    const request = new MockRequest('PATCH', url);
+    if (body) request.send(body);
+    return request;
+  }
+
   static put(url: string, body?: Record<string, JSONData>): MockRequest {
     const request = new MockRequest('PUT', url);
     if (body) request.send(body);
@@ -62,17 +69,9 @@ export class MockRequest {
     const url = `http://127.0.0.1:${port}${this.url}`;
     const response = await fetch(url, opts);
     const body = await response.text();
-    const cookies = response.headers.get('Set-Cookie');
-    if (cookies?.startsWith(Config.get('cookie.name') + '=;')) {
-      const cookie = this.headers['Cookie'];
-      for (const [name, value] of MockResponse.cookies.entries()) {
-        if (value === cookie) {
-          MockResponse.cookies.delete(name);
-          break;
-        }
-      }
-    }
-    logger.debug(`${this.method} ${this.url} => ${response.status}`, { body, cookies });
+    const cookies = response.headers.get('Set-Cookie') ?? null;
+    if (cookies?.startsWith('sasid=;')) MockAuth.deleteSession(this.headers['Cookie'] as string);
+    logger.debug(`${this.method} ${this.url} => ${response.status}`, { reqBody: this.body, resBody: body, cookies });
     return new MockResponse(response, body);
   }
 
@@ -87,26 +86,18 @@ export class MockRequest {
     return this;
   }
 
-  cookie(cookie: string): MockRequest {
-    const cookieName = Config.get('cookie.name');
-    const value = cookie.startsWith(cookieName) ? cookie : cookieName + '=' + cookie;
-    this.header('Cookie', value);
-    return this;
-  }
-
   header(key: string, value: string): MockRequest {
     this.headers[key] = value;
     return this;
   }
 
   session(key: string): MockRequest {
-    const cookie = MockResponse.cookies.get(key);
-    if (!cookie) throw new Error(`Cookie '${key}' not present in cookie store`);
-    this.cookie(cookie);
+    const cookie = MockAuth.getSession(key);
+    this.header('Cookie', cookie);
     return this;
   }
 
-  then(resolve: (value: MockResponse) => MockResponse, reject: (reason: any) => void): Promise<MockResponse | void> {
+  then<T>(resolve: (value: MockResponse) => T, reject?: (reason: any) => void): Promise<T | void> {
     return this.execute().then(resolve, reject);
   }
 
