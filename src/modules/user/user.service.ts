@@ -11,7 +11,7 @@ import moment from 'moment';
 import { UpdateUserDto } from '@app/dtos/user';
 import { IAMError, IAMErrorCode } from '@app/errors';
 import { DatabaseService, Digest, type ID, User, UserVariant } from '@app/modules/database';
-import { type NativeUser, type OAuthUser, type UserEmail, type UserInfo, type UserRole, type UserSession } from '@app/modules/database/database.types';
+import { type NativeUser, type OAuthUser, type UserInfo, type UserRole, type UserSession } from '@app/modules/database/database.types';
 import { Context, MailService } from '@app/services';
 
 /**
@@ -94,7 +94,7 @@ export class UserService {
   }
 
   async createUser(newUser: CreateNativeUser | CreateOAuthUser, session?: CreateUserSession | null): Promise<User> {
-    const emails = [{ email: newUser.email, isVerified: newUser.verified ?? false }];
+    const emails = [{ email: newUser.email, verified: newUser.verified, primary: true }];
     const userData = { ...newUser, emails, sessions: session ? [session] : [] };
     if (newUser.aid) {
       const account = await this.accountModel.findOne({ aid: newUser.aid }).lean();
@@ -113,14 +113,6 @@ export class UserService {
       this.mailService.sendEmailVerificationMail(newUser.email, newUser.firstName, digest.toString('base64url'));
     }
     return user;
-  }
-
-  async verifyUserEmail(email: string): Promise<void> {
-    const user = await this.nativeUserModel.findOne({ 'emails.email': email }).lean();
-    if (!user) throw new IAMError(IAMErrorCode.U005);
-    const userEmail = user.emails.find(e => e.email === email) as UserEmail;
-    if (userEmail.verified) throw new IAMError(IAMErrorCode.U004);
-    await this.nativeUserModel.updateOne({ uid: user.uid, 'emails.email': email }, { $set: { 'emails.$.verified': true } });
   }
 
   async updatePassword(oldPassword: string, newPassword: string): Promise<void> {

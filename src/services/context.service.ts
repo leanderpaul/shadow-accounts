@@ -36,7 +36,7 @@ class AppContextService extends ContextService<FastifyRequest, FastifyReply> {
   setCurrentUser(user: CurrentUser): AppContextService;
   setCurrentUser(user: CurrentUser | Pick<User, 'aid' | 'uid' | 'emails' | 'firstName' | 'lastName' | 'role' | 'status' | 'type'>): AppContextService {
     if ('emails' in user) {
-      const primaryEmail = user.emails[0];
+      const primaryEmail = user.emails.find(e => e.primary);
       if (!primaryEmail) throw new NeverError('Primary email not found');
       user = { ...user, verified: primaryEmail.verified, primaryEmail: primaryEmail.email };
     }
