@@ -16,7 +16,7 @@ import moment from 'moment';
  * Declaring the constants
  */
 
-export function MaxDateString(date: Date | (() => Date), validationOptions?: ValidationOptions): MethodDecorator {
+export function MaxDateString(date: Date | (() => Date), validationOptions?: ValidationOptions): PropertyDecorator {
   return function (object, propertyName) {
     registerDecorator({
       name: 'maxDateString',

@@ -3,6 +3,7 @@
  */
 import { NeverError } from '@leanderpaul/shadow-service';
 import { Controller, Get } from '@nestjs/common';
+import lodash from 'lodash';
 import moment from 'moment';
 
 /**
@@ -35,19 +36,21 @@ export class RouterController {
     const projection = User.constructProjection({ gender: 1, dob: 1 });
     const user = await this.userService.getUser(currentUser.uid, projection);
     if (!user) throw new NeverError('User not found');
+    const gender = user.gender ? User.Gender[user.gender] : 'Prefer not to say';
     return {
       title: 'Home',
       description: 'Manage your Shadow account',
       styles: ['global'],
-      scripts: ['jquery'],
+      scripts: ['jquery', 'notiflix'],
       user: {
         firstName: user.firstName,
-        lastName: user.lastName ?? '',
+        lastName: user.lastName ?? '-',
         fullName: `${user.firstName} ${user.lastName ?? ''}`,
         email: currentUser.primaryEmail,
-        gender: user.gender ?? '',
-        rawDob: user.dob ?? '1970-01-01',
-        dob: moment(user.dob ?? '1970-01-01', 'YYYY-MM-DD').format('MMMM D, YYYY'),
+        rawGender: user.gender ?? '-1',
+        gender: lodash.capitalize(gender),
+        rawDob: user.dob ?? '',
+        dob: user.dob ? moment(user.dob, 'YYYY-MM-DD').format('MMMM D, YYYY') : '-',
       },
     };
   }

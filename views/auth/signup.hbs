@@ -42,7 +42,7 @@
         </label>
         <div class="error"></div>
       </div>
-      <button id="sign-up" class="btn blue">
+      <button id="sign-up" class="btn blue w-full">
         <span>Sign Up</span>
       </button>
     </div>
@@ -93,13 +93,6 @@
   const accountExistsMessage = 'An account already exists for this email address. <a href="/auth/signin">Sign in</a> or use a different email address to sign up.';
   const NotifyError = (message, opts) => Notiflix.Notify.failure(message, { position: 'center-top', timeout: 5000, clickToClose: true, width: '350px', ...opts });
 
-  function errorField(selector, message) {
-    $(selector).addClass('error');
-    $(`${selector} .error`).html(message);
-    $(`${selector} input`).one('input', () => $(selector).removeClass('error'));
-    return false;
-  }
-  
   async function validateEmail(lookup) {
     const email = $('#email input').val().trim();
     const isPrevValid = validateEmail.isValid;
@@ -158,7 +151,7 @@
 
     $('#sign-up').addClass('loading');
     return $.post('/auth/signup', body)
-      .then((data) => {
+      .done((data) => {
         $('.header span').text('Verify your email address');
         $('.auth-container .form').remove();
         $('.auth-container .oauth').remove();
@@ -168,8 +161,8 @@
         $('.verify-email .btn').attr('href', data.redirectUrl);
         setTimeout(() => (window.location.href = data.redirectUrl), 5000);
       })
-      .catch(err => NotifyError(err.responseJSON.message))
-      .done(() => $('#sign-up').removeClass('loading'));
+      .fail(err => NotifyError(err.responseJSON.message))
+      .always(() => $('#sign-up').removeClass('loading'));
   }
 
   $('#sign-up').on('click', register);
