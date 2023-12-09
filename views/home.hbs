@@ -143,11 +143,14 @@
     margin-bottom: 0px;
   }
 
-  .container {
+  .content {
     padding: 20px;
     padding-top: 80px;
+  }
+
+  .container {
     max-width: 1280px;
-    margin: auto;
+    margin: 0px auto;
   }
 
   .mt-sm {
@@ -190,16 +193,47 @@
     cursor: default;
   }
 
+  button {
+    width: 100%;
+  }
+
   #profile form input {
     margin-top: 10px;
   }
 
-  #edit {
-    height: 40px;
-    margin-top: 30px;
+  #edit-lg {
+    display: none;
+  }
+  
+  .actions button {
+    margin-top: 10px;
   }
 
   @media (min-width: 992px) {
+    .profile.card {
+      padding: 40px;
+    }
+
+    button {
+      width: auto;
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 50px;
+      max-width: 800px;
+    }
+
+    form .form-field {
+      width: 40%;
+      margin: 10px 0px;
+    }
+
+    #edit-lg {
+      display: block;
+    }
+
     .navbar {
       padding: 0px 30px;
     }
@@ -218,9 +252,12 @@
       color: #fff;
     }
 
-    .container {
-      padding: 50px;
-      padding-left: 310px;
+    .content {
+      padding-left: 320px;
+    }
+
+    .actions button {
+      margin-top: 20px;
     }
   }
 </style>
@@ -286,74 +323,78 @@
   </a>
 </div>
 
-<div class="container">
-  <div id="profile">
-    <div class="title">Profile</div>
-    <div class="card profile">
-      <div class="flex align-center">
-        <div>
-          <svg class="avatar" viewBox="0 0 24 24">
-            <path fill="#aaa" d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.232 7.232 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10z"></path>
-          </svg>
+<div class="content">
+  <div class="container">
+    <div id="profile">
+      <div class="title">Profile</div>
+      <div class="card profile">
+        <div class="flex align-center">
+          <div>
+            <svg class="avatar" viewBox="0 0 24 24">
+              <path fill="#aaa" d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.232 7.232 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10z"></path>
+            </svg>
+          </div>
+          <div class="ml-2 my-auto">
+            <div class="bold text-2xl cursor-default">{{ user.fullName }}</div>
+            <div class="text-sm text-neutral-500">{{ user.email }}</div>
+          </div>
+          <button id="edit-lg" class="btn blue ml-auto compact">Edit</button>
         </div>
-        <div class="ml-2 my-auto">
-          <div class="bold text-xl">{{ user.fullName }}</div>
-          <div class="text-sm text-neutral-500">{{ user.email }}</div>
+        <form class="mx-2">
+          <div id="firstName" class="form-field">
+            <label>First Name</label>
+            <span>{{ user.firstName }}</span>
+            <input type="text" class="!hidden" name="firstName">
+            <div class="error"></div>
+          </div>
+          <div id="lastName" class="form-field">
+            <label>Last Name</label>
+            <span>{{ user.lastName }}</span>
+            <input type="text" class="!hidden" name="lastName">
+            <div class="error"></div>
+          </div>
+          <div id="imageUrl" class="form-field hidden">
+            <label>Profile Picture URL</label>
+            <span class="hidden">{{ user.imageUrl }}</span>
+            <input type="url" name="imageUrl">
+            <div class="error"></div>
+          </div>
+          <div id="gender" class="form-field">
+            <label>Gender</label>
+            <span>{{ user.gender }}</span>
+            <input class="pointer !hidden" type="text" data-current-value="{{ user.rawGender }}" readonly>
+            <div class="select">
+              <svg class="hidden" viewBox="0 0 24 24">
+                <path d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"></path>
+              </svg>
+              <ul>
+                <li data-value="1">Male</li>
+                <li data-value="2">Female</li>
+                <li data-value="-1">Prefer not to say</li>
+              </ul>
+            </div>
+            <div class="error"></div>
+          </div>
+          <div id="dob" class="form-field">
+            <label>Date of Birth</label>
+            <span>{{ user.dob }}</span>
+            <input type="date" name="dob" class="!hidden" data-current-value="{{ user.rawDob }}">
+            <div class="error"></div>
+          </div>
+        </form>
+        <div class="flex flex-wrap actions mx-2">
+          <button type="button" id="edit" class="btn blue compact md:hidden">Edit</button>
+          <button type="button" id="cancel" class="btn grey compact mt-4 md:mt-0 md:ml-4 !hidden">Cancel</button>
         </div>
       </div>
-      <form class="mx-2">
-        <div id="fullName" class="form-field">
-          <label>Full Name</label>
-          <span>{{ user.fullName }}</span>
-          <div class="error"></div>
-        </div>
-        <div id="firstName" class="form-field hidden">
-          <label>First Name</label>
-          <span class="hidden">{{ user.firstName }}</span>
-          <input type="text" name="firstName">
-          <div class="error"></div>
-        </div>
-        <div id="lastName" class="form-field hidden">
-          <label>Last Name</label>
-          <span class="hidden">{{ user.lastName }}</span>
-          <input type="text" name="lastName">
-          <div class="error"></div>
-        </div>
-        <div id="imageUrl" class="form-field hidden">
-          <label>Profile Picture URL</label>
-          <span class="hidden">{{ user.imageUrl }}</span>
-          <input type="text" name="imageUrl">
-          <div class="error"></div>
-        </div>
-        <div id="gender" class="form-field">
-          <label>Gender</label>
-          <span>Male</span>
-          <input class="pointer !hidden" type="text" data-value="{{ user.gender }}" readonly>
-          <div class="select">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z"></path>
-            </svg>
-            <ul>
-              <li data-value="1">Male</li>
-              <li data-value="2">Female</li>
-              <li data-value="0">I'd prefer not to say</li>
-            </ul>
-          </div>
-          <div class="error"></div>
-        </div>
-        <div id="dob" class="form-field">
-          <label>Date of Birth</label>
-          <span>{{ user.dob }}</span>
-          <input type="date" name="dob" class="!hidden" data-value="{{ user.rawDob }}">
-          <div class="error"></div>
-        </div>
-        <button type="button" id="edit" class="btn blue">Edit</button>
-        <button type="button" id="cancel" class="btn grey mt-4 !hidden">Cancel</button>
-      </form>
     </div>
   </div>
 </div>
 <script>
+  const nameRegex = /^[a-zA-Z0-9 \-_\.']+$/;
+  const NotifyError = (message, opts) => Notiflix.Notify.failure(message, { position: 'center-top', timeout: 5000, clickToClose: true, width: '350px', ...opts });
+  const NotifySuccess = (message, opts) => Notiflix.Notify.success(message, { position: 'center-top', timeout: 5000, clickToClose: true, width: '350px', ...opts });
+
   function showSelectedTab() {
     const tab = location.hash.slice(1) || 'profile';
     if (!tab) return;
@@ -361,44 +402,117 @@
     $(`#sidenav a[data-tab=${tab}]`).addClass('selected');
   }
 
+  function validationName(isFirst) {
+    const selector = isFirst ? '#firstName' : '#lastName';
+    const name = $(`${selector} input`).val().trim();
+    let errorMessage = null;
+    if (!name && !isFirst) return true;
+    else if (!name) errorMessage = 'First name cannot be empty';
+    else if (!nameRegex.test(name)) errorMessage = `Please enter a valid ${isFirst ? 'first' : 'last'} name`;
+    if (errorMessage) return errorField(selector, errorMessage);
+    return true;
+  }
+
+  function validateProfilePic() {
+    try {
+      const url = $('#imageUrl input').val().trim();
+      if (!url) return true;
+      new URL(url);
+      return true;
+    } catch (err) {
+      return errorField('#imageUrl', 'Please enter a valid URL');
+    }
+  }
+
+
   function editProfile() {
-    $('#fullName').addClass('hidden');
-    $('#firstName').removeClass('hidden');
-    $('#firstName input').val($('#firstName span').text());
-    $('#lastName').removeClass('hidden');
-    $('#lastName input').val($('#lastName span').text());
+    const firstName = $('#firstName span').text();
+    $('#firstName span').addClass('hidden');
+    $('#firstName input').removeClass('!hidden').val(firstName);
+    const lastName = $('#lastName span').text();
+    $('#lastName span').addClass('hidden');
+    $('#lastName input').removeClass('!hidden').val(lastName === '-' ? '' : lastName);
     $('#imageUrl').removeClass('hidden');
     $('#imageUrl input').val($('#imageUrl span').text());
-
     $('#gender span').addClass('hidden');
-    $('#gender input').removeClass('!hidden');
+    $('#gender input').removeClass('!hidden').data('value', $('#gender input').data('current-value'));
+    $('#gender .select svg').removeClass('hidden');
     enableSelect('#gender');
     $('#dob span').addClass('hidden');
     $('#dob input').removeClass('!hidden');
-    $('#dob input').val($('#dob input').data('value'));
-
-    $('#edit').text('Save');
+    $('#edit-lg').addClass('!hidden');
+    $('#edit').removeClass('md:hidden').text('Save');
     $('#cancel').removeClass('!hidden');
   }
 
+  function getChangedValue(selector) {
+    const input = $(`${selector} input`);
+    const value = input.data('current-value') ?? $(`${selector} span`).text();
+    const updatedValue = input.data('value') ?? input.val().trim();
+    if (updatedValue === value) return null;
+    return updatedValue;
+  }
+
   function saveProfile() {
-    resetProfile();
+    let validCounter = 0;
+    validCounter += validationName(true);
+    validCounter += validationName(false);
+    validCounter += validateProfilePic();
+    if (validCounter !== 3) return;
+
+    const update = {};
+    const fields = ['firstName', 'lastName', 'imageUrl', 'dob', 'gender'];
+    for (const field of fields) {
+      const value = getChangedValue(`#${field}`);
+      if (value !== null) update[field] = value || null;
+    }
+    if (update.gender) {
+      const gender = parseInt(update.gender);
+      update.gender = gender === -1 ? null : gender;
+    }
+
+    $('#edit').addClass('loading');
+    return $.ajax({ method: 'PATCH', url: '/user', data: JSON.stringify(update), dataType: 'json', contentType: 'application/json' })
+      .done((data) => handleUpdateSuccess(data))
+      .fail((err) => NotifyError(err.responseJSON.message))
+      .always(() => $('#edit').removeClass('loading'));
   }
 
   function resetProfile() {
-    $('#fullName').removeClass('hidden');
-    $('#firstName').addClass('hidden');
-    $('#lastName').addClass('hidden');
+    $('#firstName span').removeClass('hidden');
+    $('#firstName input').addClass('!hidden');
+    $('#lastName span').removeClass('hidden');
+    $('#lastName input').addClass('!hidden');
     $('#imageUrl').addClass('hidden');
-
     $('#gender span').removeClass('hidden');
-    $('#gender input').addClass('!hidden');
+    $('#gender input').addClass('!hidden').data('value', $('#gender input').data('current-value'));
+    $('#gender .select svg').addClass('hidden');
     $('#dob span').removeClass('hidden');
     $('#dob input').addClass('!hidden');
-
-    $('#edit').text('Edit');
+    $('#edit-lg').removeClass('!hidden');
+    $('#edit').addClass('md:hidden').text('Edit');
     $('#cancel').addClass('!hidden');
   }
+
+  function handleUpdateSuccess(data) {
+    NotifySuccess('Profile updated successfully');
+    $('#firstName span').text(data.firstName);
+    $('#lastName span').text(data.lastName || '-');
+    if(data.imageUrl) $('#imageUrl span').text(data.imageUrl);
+    const gender = data.gender === 1 ? 'Male' : data.gender === 2 ? 'Female' : 'Prefer not to say';
+    $('#gender span').text(gender);
+    $('#gender input').data('current-value', data.gender);
+    if (data.dob) {
+      const dob = new Date(data.dob);
+      const month = dob.toLocaleString('default', { month: 'long' });
+      const day = dob.getDate();
+      const year = dob.getFullYear();
+      $('#dob span').text(`${month} ${day}, ${year}`);
+      $('#dob input').data('current-value', data.dob);
+    } else $('#dob span').text('-');
+    resetProfile();
+  }
+
 
   $('#menu-btn').on('click', () => ($('#sidenav').addClass('show'), $('#blur').addClass('nav-blur')));
   const removeNavBlur = () => ($('#sidenav').removeClass('show'), $('#blur').removeClass('nav-blur'));
@@ -406,6 +520,7 @@
   $('#sidenav a').on('click', removeNavBlur);
 
   $('#edit').on('click', () => $('#edit').text() === 'Edit' ? editProfile() : saveProfile());
+  $('#edit-lg').on('click', editProfile);
   $('#cancel').on('click', resetProfile);
 
   $('#dropdown-btn').on('click', () => toggleWithMask('#dropdown', 'hidden'));

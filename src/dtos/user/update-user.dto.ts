@@ -34,7 +34,7 @@ export class UpdateUserDto extends PickType(PartialType(RegisterDto), ['firstNam
 
   @ApiProperty({ required: false })
   @MaxDateString(() => new Date())
-  @IsDateString()
+  @IsDateString({}, { message: 'must be a date string in the format YYYY-MM-DD' })
   @IsOptional()
   dob?: string;
 }
