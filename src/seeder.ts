@@ -48,6 +48,14 @@ export class Seeder {
     return data as T;
   }
 
+  async getUser(email: string): Promise<User> {
+    const userService = this.getService(UserService);
+    const user = await userService.getUser(email, {});
+    if (!user) throw new Error('User not found');
+    this.seededData.set(user.uid.toString(), user);
+    return user;
+  }
+
   async createUser(user: CreateUser): Promise<User> {
     const userService = this.getService(UserService);
     const createdUser = await userService.createUser({ ...user, password });
