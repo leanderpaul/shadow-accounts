@@ -35,6 +35,11 @@ export class UserEmail {
     default: false,
   })
   verified: boolean;
+
+  @Prop({
+    type: 'boolean',
+  })
+  primary?: boolean;
 }
 
 export const UserEmailSchema = SchemaFactory.createForClass(UserEmail);

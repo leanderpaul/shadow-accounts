@@ -1,8 +1,8 @@
 /**
  * Importing npm packages
  */
-import { HttpCode, type Type, applyDecorators } from '@nestjs/common';
-import { ApiResponse as SwaggerApiResponse } from '@nestjs/swagger';
+import { HttpCode, applyDecorators } from '@nestjs/common';
+import { type ApiResponseMetadata, ApiResponse as SwaggerApiResponse } from '@nestjs/swagger';
 
 /**
  * Importing user defined packages
@@ -16,6 +16,12 @@ import { ValidationErrorResponse } from '@app/dtos/responses';
 
 type ErrorStatusCode = 400 | 404 | 409 | 422;
 
+type SuccessStatusCode = 200 | 201 | 204;
+
+type SuccessType = ApiResponseMetadata['type'];
+
+type ErrorStatusCodes = ErrorStatusCode | ErrorStatusCode[];
+
 /**
  * Declaring the constants
  */
@@ -26,7 +32,7 @@ const descriptions: Record<ErrorStatusCode, string> = {
   422: 'Validation Failed',
 };
 
-export function ApiResponse(successStatusCode: number, successType?: Type, errorStatusCode: ErrorStatusCode | ErrorStatusCode[] = []): MethodDecorator {
+export function ApiResponse(successStatusCode: SuccessStatusCode, successType?: SuccessType, errorStatusCode: ErrorStatusCodes = []): MethodDecorator {
   const responses = [HttpCode(successStatusCode), SwaggerApiResponse({ status: successStatusCode, type: successType, description: 'Success' })];
   if (typeof errorStatusCode === 'number') errorStatusCode = [errorStatusCode];
   for (const code of errorStatusCode) {

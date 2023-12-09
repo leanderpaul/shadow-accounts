@@ -55,4 +55,12 @@ export class IAMErrorCode extends ErrorCode {
   static readonly U007 = new IAMErrorCode('U007', ErrorType.CLIENT_ERROR, 'Incorrect password');
   /** User account closed */
   static readonly U008 = new IAMErrorCode('U008', ErrorType.CLIENT_ERROR, 'User account closed');
+  /** User email address already exists */
+  static readonly U009 = new IAMErrorCode('U009', ErrorType.CONFLICT, 'User email address already exists');
+  /** User email address not found */
+  static readonly U010 = new IAMErrorCode('U010', ErrorType.NOT_FOUND, 'User email address not found');
+  /** Only verified email addresses can be set as primary */
+  static readonly U011 = new IAMErrorCode('U011', ErrorType.CLIENT_ERROR, 'Only verified email addresses can be set as primary');
+  /** Verified email address cannot be deleted */
+  static readonly U012 = new IAMErrorCode('U012', ErrorType.CLIENT_ERROR, 'Primary email address cannot be deleted');
 }

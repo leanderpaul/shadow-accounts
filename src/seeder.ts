@@ -48,6 +48,14 @@ export class Seeder {
     return data as T;
   }
 
+  async getUser(email: string): Promise<User> {
+    const userService = this.getService(UserService);
+    const user = await userService.getUser(email, {});
+    if (!user) throw new Error('User not found');
+    this.seededData.set(user.uid.toString(), user);
+    return user;
+  }
+
   async createUser(user: CreateUser): Promise<User> {
     const userService = this.getService(UserService);
     const createdUser = await userService.createUser({ ...user, password });
@@ -59,7 +67,7 @@ export class Seeder {
     if (clean) await this.getService(DatabaseService).getConnection().dropDatabase();
     const userService = this.getService(UserService);
     const admin = await userService.getUser('admin@shadow-apps.com');
-    if (!admin) await userService.createUser({ email: 'admin@shadow-apps.com', firstName: 'Administrator', password });
+    if (!admin) await userService.createUser({ email: 'admin@shadow-apps.com', firstName: 'Administrator', password, verified: true });
   }
 
   async close(): Promise<void> {
@@ -69,6 +77,7 @@ export class Seeder {
 
 if (import.meta.main) {
   const seeder = await Seeder.init();
-  await seeder.seedDatabase();
+  await seeder.seedDatabase(true);
   await seeder.close();
+  console.log('Database seeded successfully'); // eslint-disable-line no-console
 }

@@ -8,6 +8,7 @@ import { Module } from '@nestjs/common';
  */
 import { UserModule } from '@app/modules/user';
 
+import { UserEmailController } from './user-email.controller';
 import { UserController } from './user.controller';
 
 /**
@@ -20,6 +21,6 @@ import { UserController } from './user.controller';
 
 @Module({
   imports: [UserModule],
-  controllers: [UserController],
+  controllers: [UserController, UserEmailController],
 })
 export class UserRouterModule {}

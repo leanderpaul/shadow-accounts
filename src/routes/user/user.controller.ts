@@ -44,7 +44,8 @@ export class UserController {
 
   private getUserResponse(user?: User | null): UserResponse {
     if (!user) throw new NeverError('User not found');
-    const email = user.emails[0]?.email as string;
+    const email = user.emails.find(e => e.primary)?.email;
+    if (!email) throw new NeverError('Primary email not found');
     return { email, ...lodash.omit(user, ['_id', 'id', 'type', 'emails']) } as UserResponse;
   }
 
