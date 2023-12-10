@@ -1,0 +1,418 @@
+body {
+  background-color: #e9eaed;
+}
+
+#blur {
+  height: 100%;
+  width: 100%;
+  background-color: #00000080;
+  transition:
+    background-color 0.2s ease-in-out,
+    opacity 0.2s ease-in-out;
+  opacity: 0;
+  top: 0px;
+  left: 0px;
+}
+
+#blur.nav-blur {
+  position: fixed;
+  z-index: 4;
+  opacity: 1;
+}
+
+#blur.modal-blur {
+  position: fixed;
+  z-index: 6;
+  opacity: 1;
+}
+
+.navbar {
+  position: fixed;
+  top: 0px;
+  width: 100vw;
+  height: 50px;
+  background-color: #fff;
+  box-sizing: border-box;
+  padding: 0px 15px;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#dropdown-btn svg {
+  width: 40px;
+  height: 40px;
+}
+
+#menu-btn svg {
+  width: 32px;
+  height: 32px;
+}
+
+#dropdown {
+  position: absolute;
+  right: 10px;
+  top: 60px;
+  width: 300px;
+  border-radius: 2px;
+  background-color: #fff;
+  box-shadow:
+    rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+
+#dropdown::before {
+  content: '';
+  border-left: 0.75rem solid transparent;
+  border-right: 0.75rem solid transparent;
+  border-bottom: 0.75rem solid #fff;
+  position: absolute;
+  top: -10px;
+  right: 12px;
+}
+
+#dropdown .content {
+  display: flex;
+  gap: 10px;
+}
+
+#dropdown .content > div {
+  padding: 12px 0px;
+  flex: 1;
+}
+
+#dropdown .content > svg {
+  width: 48px;
+  height: 48px;
+  margin-left: 12px;
+}
+
+#dropdown .item {
+  cursor: pointer;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  color: #444;
+}
+
+#dropdown .item:hover {
+  background-color: #f4f4f4;
+}
+
+#dropdown .item svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+#sidenav {
+  position: fixed;
+  top: 0px;
+  left: -300px;
+  width: 300px;
+  height: 100vh;
+  background-color: #011722;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0px;
+  transition: all 0.2s ease-in-out;
+}
+
+#sidenav.show {
+  left: 0px;
+}
+
+#sidenav a {
+  color: #b3babd;
+}
+
+#sidenav .logo {
+  height: 200px;
+  margin-bottom: 30px;
+}
+
+#sidenav .item {
+  margin: 3px 0px;
+  align-items: center;
+  display: flex;
+  padding: 15px 35px;
+}
+
+#sidenav svg {
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+}
+
+.logo .title {
+  color: #eee;
+  margin-bottom: 0px;
+}
+
+body > .content {
+  padding: 20px;
+  padding-top: 80px;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0px auto;
+}
+
+.mt-sm {
+  margin-top: 10px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 500;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.card {
+  margin-bottom: 20px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0px 2px 2px #00000012;
+  box-sizing: border-box;
+}
+
+.card .header {
+  padding: 20px;
+  background-color: #fbfbfb;
+  border-bottom: 1px solid #f5f5f5;
+  border-radius: 2px 2px 0px 0px;
+}
+
+.card .header .title,
+.modal .header .title {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.card .header .subtitle {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #444;
+  display: none;
+}
+
+.card .content {
+  padding-bottom: 20px;
+}
+
+#profile .card {
+  padding: 20px;
+}
+
+#profile .card .avatar {
+  width: 75px;
+  height: 75px;
+}
+
+#profile .form-field {
+  margin: 20px 0px;
+}
+
+#profile .form-field label {
+  display: block;
+  font-size: 14px;
+  color: #444;
+  cursor: default;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 10%;
+  left: 0px;
+  right: 0px;
+  z-index: 7;
+  margin: 0px auto;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.modal.open {
+  display: block;
+}
+
+.modal .header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #f5f5f5;
+  border-radius: 4px 4px 0px 0px;
+}
+
+.modal .header .title {
+  margin-bottom: 0px;
+}
+
+.modal .content {
+  padding: 20px 30px;
+}
+
+.close {
+  width: 30px;
+  padding: 5px;
+  border-radius: 50%;
+  background-color: #eaeaea;
+  cursor: pointer;
+}
+
+.close svg {
+  fill: #444;
+}
+
+#profile form input {
+  margin-top: 10px;
+}
+
+#edit-lg {
+  display: none;
+}
+
+.actions button {
+  margin-top: 10px;
+}
+
+ul.email-addresses li {
+  display: flex;
+  padding: 20px 15px;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+ul.email-addresses li:hover {
+  background-color: #fbfbfb;
+}
+
+ul.email-addresses .icon {
+  width: 60px;
+  padding: 15px;
+  border-radius: 50%;
+}
+
+ul.email-addresses .actions > * {
+  display: none;
+  fill: #999;
+  color: #999;
+  height: 25px;
+}
+
+ul.email-addresses .actions span {
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  padding: 2px 10px;
+  border-radius: 50px;
+  height: auto;
+}
+
+ul.email-addresses .actions span:hover {
+  border-color: #444;
+  color: #222;
+}
+
+ul.email-addresses .actions svg:hover {
+  fill: red;
+}
+
+#add-email {
+  color: #0291ff;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+#email-options .options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0px;
+}
+
+#email-options button {
+  justify-content: flex-start;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+#email-options button svg {
+  margin-right: 15px;
+  width: 20px;
+}
+
+@media (min-width: 992px) {
+  .card .header {
+    padding: 24px 30px;
+  }
+
+  .card .header .subtitle {
+    display: block;
+  }
+
+  #profile .card {
+    padding: 40px;
+  }
+
+  button {
+    width: auto;
+  }
+
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 50px;
+    max-width: 800px;
+  }
+
+  form .form-field {
+    width: 40%;
+    margin: 10px 0px;
+  }
+
+  #edit-lg {
+    display: block;
+  }
+
+  .navbar {
+    padding: 0px 30px;
+  }
+
+  #dropdown {
+    right: 25px;
+  }
+
+  #sidenav {
+    left: 0px;
+  }
+
+  #sidenav .selected,
+  #sidenav .item:hover {
+    background-color: #091e29;
+    color: #fff;
+  }
+
+  body > .content {
+    padding-left: 320px;
+  }
+
+  .actions button {
+    margin-top: 20px;
+  }
+
+  ul.email-addresses li {
+    padding: 15px 30px;
+  }
+
+  ul.email-addresses li:hover .actions > * {
+    display: block;
+  }
+}

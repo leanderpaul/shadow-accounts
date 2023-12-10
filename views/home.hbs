@@ -1,266 +1,3 @@
-<style>
-  body {
-    background-color: #e9eaed;
-  }
-
-   #blur {
-    height: 100%;
-    width: 100%;
-    position: fixed;
-    z-index: -1;
-    background-color: #00000080;
-    transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
-    opacity: 0;
-    top: 0px;
-    left: 0px;
-  }
-
-  #blur.nav-blur {
-    z-index: 4;
-    opacity: 1;
-  }
-
-  .navbar {
-    position: fixed;
-    top: 0px;
-    width: 100vw;
-    height: 50px;
-    background-color: #fff;
-    box-sizing: border-box;
-    padding: 0px 15px;
-    z-index: 5;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  #dropdown-btn svg {
-    width: 40px;
-    height: 40px;
-  }
-
-  #menu-btn svg {
-    width: 32px;
-    height: 32px;
-  }
-
-  #dropdown {
-    position: absolute;
-    right: 10px;
-    top: 60px;
-    width: 300px;
-    border-radius: 2px;
-    background-color: #fff;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
-  }
-
-  #dropdown::before {
-    content: '';
-    border-left: 0.75rem solid transparent;
-    border-right: 0.75rem solid transparent;
-    border-bottom: 0.75rem solid #fff;
-    position: absolute;
-    top: -10px;
-    right: 12px;
-  }
-
-  #dropdown .content {
-    display: flex;
-    gap: 10px;
-  }
-
-  #dropdown .content > div {
-    padding: 12px 0px;
-    flex: 1;
-  }
-
-  #dropdown .content > svg {
-    width: 48px;
-    height: 48px;
-    margin-left: 12px;
-  }
-
-  #dropdown .item {
-    cursor: pointer;
-    padding: 12px;
-    display: flex;
-    align-items: center;
-    color: #444;
-  }
-
-  #dropdown .item:hover {
-    background-color: #f4f4f4;
-  }
-
-  #dropdown .item svg {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-  }
-
-  #sidenav {
-    position: fixed;
-    top: 0px;
-    left: -300px;
-    width: 300px;
-    height: 100vh;
-    background-color: #011722;
-    z-index: 5;
-    display: flex;
-    flex-direction: column;
-    padding: 20px 0px;
-    transition: all .2s ease-in-out;
-  }
-
-  #sidenav.show {
-    left: 0px;
-  }
-
-  #sidenav a {
-    color: #b3babd;
-  }
-
-  #sidenav .logo {
-    height: 200px;
-    margin-bottom: 30px;
-  }
-
-  #sidenav .item {
-    margin: 3px 0px;
-    align-items: center;
-    display: flex;
-    padding: 15px 35px;
-  }
-
-  #sidenav svg {
-    width: 25px;
-    height: 25px;
-    margin-right: 10px;
-  }
-
-  .logo .title {
-    color: #eee;
-    margin-bottom: 0px;
-  }
-
-  .content {
-    padding: 20px;
-    padding-top: 80px;
-  }
-
-  .container {
-    max-width: 1280px;
-    margin: 0px auto;
-  }
-
-  .mt-sm {
-    margin-top: 10px;
-  }
-
-  .title {
-    font-size: 24px;
-    font-weight: 500;
-    color: #000;
-    cursor: default;
-    margin-bottom: 10px;
-  }
-
-  .card {
-    margin-bottom: 20px;
-    background-color: #fff;
-    border-radius: 2px;
-    box-shadow: 0px 2px 2px #00000012;
-    box-sizing: border-box;
-  }
-
-  .profile.card {
-    padding: 20px;
-  }
-
-  .profile.card .avatar {
-    width: 75px;
-    height: 75px;
-  }
-
-  .form-field {
-    margin: 20px 0px;
-  }
-
-  .form-field label {
-    display: block;
-    font-size: 14px;
-    color: #444;
-    cursor: default;
-  }
-
-  button {
-    width: 100%;
-  }
-
-  #profile form input {
-    margin-top: 10px;
-  }
-
-  #edit-lg {
-    display: none;
-  }
-  
-  .actions button {
-    margin-top: 10px;
-  }
-
-  @media (min-width: 992px) {
-    .profile.card {
-      padding: 40px;
-    }
-
-    button {
-      width: auto;
-    }
-
-    form {
-      display: flex;
-      flex-wrap: wrap;
-      column-gap: 50px;
-      max-width: 800px;
-    }
-
-    form .form-field {
-      width: 40%;
-      margin: 10px 0px;
-    }
-
-    #edit-lg {
-      display: block;
-    }
-
-    .navbar {
-      padding: 0px 30px;
-    }
-
-    #dropdown {
-      right: 25px;
-    }
-
-    #sidenav {
-      left: 0px;
-    }
-
-    #sidenav .selected,
-    #sidenav .item:hover {
-      background-color: #091e29;
-      color: #fff;
-    }
-
-    .content {
-      padding-left: 320px;
-    }
-
-    .actions button {
-      margin-top: 20px;
-    }
-  }
-</style>
 <div id="blur"></div>
 <div class='navbar'>
   <div>
@@ -327,7 +64,7 @@
   <div class="container">
     <div id="profile">
       <div class="title">Profile</div>
-      <div class="card profile">
+      <div class="card">
         <div class="flex align-center">
           <div>
             <svg class="avatar" viewBox="0 0 24 24">
@@ -388,142 +125,101 @@
         </div>
       </div>
     </div>
+    <div id="emails">
+      <div class="card">
+        <div class="header">
+          <span class="title">My Email Addresses</span>
+          <span class="subtitle">You can use the following email addresses to sign in to your account and also to reset your password if you ever forget it.</span>
+        </div>
+        <div class="content">
+          <ul class="email-addresses">
+            {{#each user.emails}}
+              <li>
+                <div class="icon">
+                  <svg viewBox="0 0 24 24">
+                    <path fill="#fff" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <div class="email mb-1">{{ this.email }}</div>
+                  <div class="flex badges">
+                    {{#if this.primary}}
+                      <div class="badge bg-success">Primary</div>
+                    {{/if}}
+                    {{#unless this.verified}}
+                      <div class="badge bg-warn">Unverified</div>
+                    {{/unless}}
+                  </div>
+                </div>
+                <div class="actions ml-auto flex">
+                  {{#unless this.verified}}
+                    <span class="verify">Resend verification email</span>
+                  {{/unless}}
+                  {{#unless this.primary}}
+                    {{#if this.verified}}
+                      <span onclick="setAsPrimaryEmailAddress('{{ this.email }}')">Set as Primary address</span>
+                    {{/if}}
+                    <svg viewBox="0 0 24 24" onclick="deleteEmailAddress('{{ this.email }}')">
+                      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path>
+                    </svg>
+                  {{/unless}}
+                </div>
+              </li>
+            {{/each}}
+          </ul>
+          <button id="add-email" class="btn mx-auto">Add Email Address</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-<script>
-  const nameRegex = /^[a-zA-Z0-9 \-_\.']+$/;
-  const NotifyError = (message, opts) => Notiflix.Notify.failure(message, { position: 'center-top', timeout: 5000, clickToClose: true, width: '350px', ...opts });
-  const NotifySuccess = (message, opts) => Notiflix.Notify.success(message, { position: 'center-top', timeout: 5000, clickToClose: true, width: '350px', ...opts });
 
-  function showSelectedTab() {
-    const tab = location.hash.slice(1) || 'profile';
-    if (!tab) return;
-    $('#sidenav a').removeClass('selected');
-    $(`#sidenav a[data-tab=${tab}]`).addClass('selected');
-  }
+<div id="add-email-modal" class="modal">
+  <div class="header">
+    <span class="title">Add Email Address</span>
+    <div class="close">
+      <svg viewBox="0 0 24 24">
+        <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+      </svg>
+    </div>
+  </div>
+  <div class="content">
+    <div id="new-email" class="form-field mt-0">
+      <label class="mb-1">Enter your email address</label>
+      <input type="email" name="email">
+      <div class="error"></div>
+    </div>
+    <button class="btn blue mt-5 mb-2">Add</button>
+  </div>
+</div>
 
-  function validationName(isFirst) {
-    const selector = isFirst ? '#firstName' : '#lastName';
-    const name = $(`${selector} input`).val().trim();
-    let errorMessage = null;
-    if (!name && !isFirst) return true;
-    else if (!name) errorMessage = 'First name cannot be empty';
-    else if (!nameRegex.test(name)) errorMessage = `Please enter a valid ${isFirst ? 'first' : 'last'} name`;
-    if (errorMessage) return errorField(selector, errorMessage);
-    return true;
-  }
-
-  function validateProfilePic() {
-    try {
-      const url = $('#imageUrl input').val().trim();
-      if (!url) return true;
-      new URL(url);
-      return true;
-    } catch (err) {
-      return errorField('#imageUrl', 'Please enter a valid URL');
-    }
-  }
-
-
-  function editProfile() {
-    const firstName = $('#firstName span').text();
-    $('#firstName span').addClass('hidden');
-    $('#firstName input').removeClass('!hidden').val(firstName);
-    const lastName = $('#lastName span').text();
-    $('#lastName span').addClass('hidden');
-    $('#lastName input').removeClass('!hidden').val(lastName === '-' ? '' : lastName);
-    $('#imageUrl').removeClass('hidden');
-    $('#imageUrl input').val($('#imageUrl span').text());
-    $('#gender span').addClass('hidden');
-    $('#gender input').removeClass('!hidden').data('value', $('#gender input').data('current-value'));
-    $('#gender .select svg').removeClass('hidden');
-    enableSelect('#gender');
-    $('#dob span').addClass('hidden');
-    $('#dob input').removeClass('!hidden');
-    $('#edit-lg').addClass('!hidden');
-    $('#edit').removeClass('md:hidden').text('Save');
-    $('#cancel').removeClass('!hidden');
-  }
-
-  function getChangedValue(selector) {
-    const input = $(`${selector} input`);
-    const value = input.data('current-value') ?? $(`${selector} span`).text();
-    const updatedValue = input.data('value') ?? input.val().trim();
-    if (updatedValue === value) return null;
-    return updatedValue;
-  }
-
-  function saveProfile() {
-    let validCounter = 0;
-    validCounter += validationName(true);
-    validCounter += validationName(false);
-    validCounter += validateProfilePic();
-    if (validCounter !== 3) return;
-
-    const update = {};
-    const fields = ['firstName', 'lastName', 'imageUrl', 'dob', 'gender'];
-    for (const field of fields) {
-      const value = getChangedValue(`#${field}`);
-      if (value !== null) update[field] = value || null;
-    }
-    if (update.gender) {
-      const gender = parseInt(update.gender);
-      update.gender = gender === -1 ? null : gender;
-    }
-
-    $('#edit').addClass('loading');
-    return $.ajax({ method: 'PATCH', url: '/user', data: JSON.stringify(update), dataType: 'json', contentType: 'application/json' })
-      .done((data) => handleUpdateSuccess(data))
-      .fail((err) => NotifyError(err.responseJSON.message))
-      .always(() => $('#edit').removeClass('loading'));
-  }
-
-  function resetProfile() {
-    $('#firstName span').removeClass('hidden');
-    $('#firstName input').addClass('!hidden');
-    $('#lastName span').removeClass('hidden');
-    $('#lastName input').addClass('!hidden');
-    $('#imageUrl').addClass('hidden');
-    $('#gender span').removeClass('hidden');
-    $('#gender input').addClass('!hidden').data('value', $('#gender input').data('current-value'));
-    $('#gender .select svg').addClass('hidden');
-    $('#dob span').removeClass('hidden');
-    $('#dob input').addClass('!hidden');
-    $('#edit-lg').removeClass('!hidden');
-    $('#edit').addClass('md:hidden').text('Edit');
-    $('#cancel').addClass('!hidden');
-  }
-
-  function handleUpdateSuccess(data) {
-    NotifySuccess('Profile updated successfully');
-    $('#firstName span').text(data.firstName);
-    $('#lastName span').text(data.lastName || '-');
-    if(data.imageUrl) $('#imageUrl span').text(data.imageUrl);
-    const gender = data.gender === 1 ? 'Male' : data.gender === 2 ? 'Female' : 'Prefer not to say';
-    $('#gender span').text(gender);
-    $('#gender input').data('current-value', data.gender);
-    if (data.dob) {
-      const dob = new Date(data.dob);
-      const month = dob.toLocaleString('default', { month: 'long' });
-      const day = dob.getDate();
-      const year = dob.getFullYear();
-      $('#dob span').text(`${month} ${day}, ${year}`);
-      $('#dob input').data('current-value', data.dob);
-    } else $('#dob span').text('-');
-    resetProfile();
-  }
-
-
-  $('#menu-btn').on('click', () => ($('#sidenav').addClass('show'), $('#blur').addClass('nav-blur')));
-  const removeNavBlur = () => ($('#sidenav').removeClass('show'), $('#blur').removeClass('nav-blur'));
-  $('#blur').on('click', removeNavBlur);
-  $('#sidenav a').on('click', removeNavBlur);
-
-  $('#edit').on('click', () => $('#edit').text() === 'Edit' ? editProfile() : saveProfile());
-  $('#edit-lg').on('click', editProfile);
-  $('#cancel').on('click', resetProfile);
-
-  $('#dropdown-btn').on('click', () => toggleWithMask('#dropdown', 'hidden'));
-  $(window).on('hashchange', showSelectedTab);
-  $(document).ready(showSelectedTab);
-</script>
+<div id="email-options" class="modal">
+  <div class="header">
+    <div class="title"></div>
+    <div class="close">
+      <svg viewBox="0 0 24 24">
+        <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+      </svg>
+    </div>
+  </div>
+  <div class="options">
+    <button class="btn resend">
+      <svg class="" viewBox="0 0 24 24">
+        <path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"></path>
+      </svg>
+      <span>Resend verification email</span>
+    </button>
+    <button class="btn set-primary">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+      </svg>
+      <span>Set as Primary address</span>
+    </button>
+    <button class="btn delete">
+      <svg class="fill-error" viewBox="0 0 24 24">
+        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path>
+      </svg>
+      <span class="text-error">Delete Email Address</span>
+    </button>
+  </div>
+</div>

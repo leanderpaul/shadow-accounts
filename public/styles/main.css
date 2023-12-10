@@ -42,6 +42,7 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
   min-width: 100px;
   height: 44px;
   border-radius: 2px;
@@ -95,6 +96,14 @@ a {
   display: none;
 }
 
+.badge {
+  font-size: 14px;
+  width: fit-content;
+  padding: 0px 10px;
+  border-radius: 50px;
+  color: white;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -124,7 +133,6 @@ a {
   font-size: 14px;
   font-weight: 400;
   color: #212121;
-  cursor: pointer;
 }
 
 .form-field input::placeholder {
@@ -307,6 +315,10 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .btn {
+    width: auto;
   }
 }
 
