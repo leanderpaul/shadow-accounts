@@ -10,6 +10,7 @@ import { UserEmailService } from '@app/modules/user';
 import { Seeder } from '@app/seeder';
 import { MockRequest } from '@tests/mocks';
 import { MockAuth } from '@tests/mocks/auth.mock';
+import { Tests } from '@tests/utils';
 
 /**
  * Defining types
@@ -21,10 +22,7 @@ import { MockAuth } from '@tests/mocks/auth.mock';
 
 describe('e2e: UserEmailController', () => {
   describe('GET /user/emails', () => {
-    it('should return error for unauthenticated request', async () => {
-      const response = await MockRequest.get('/user/emails');
-      response.expectError('IAM003');
-    });
+    Tests.unauthenicatedAPI('GET', '/user/emails');
 
     it('should return the user emails', async () => {
       const response = await MockRequest.get('/user/emails').session('tester-1');
@@ -34,10 +32,7 @@ describe('e2e: UserEmailController', () => {
   });
 
   describe('POST /user/emails', () => {
-    it('should return error for unauthenticated request', async () => {
-      const response = await MockRequest.post('/user/emails');
-      response.expectError('IAM003');
-    });
+    Tests.unauthenicatedAPI('POST', '/user/emails');
 
     it('should return error for invalid email', async () => {
       const response = await MockRequest.post('/user/emails').session('tester-1').send({ email: 'invalid-email' });
@@ -58,10 +53,7 @@ describe('e2e: UserEmailController', () => {
   });
 
   describe('DELETE /user/emails', () => {
-    it('should return error for unauthenticated request', async () => {
-      const response = await MockRequest.delete('/user/emails');
-      response.expectError('IAM003');
-    });
+    Tests.unauthenicatedAPI('DELETE', '/user/emails');
 
     it('should return error for invalid email', async () => {
       const response = await MockRequest.delete('/user/emails').session('tester-1').send({ email: 'invalid-email' });
@@ -101,10 +93,7 @@ describe('e2e: UserEmailController', () => {
       await MockAuth.initSession(session, email);
     });
 
-    it('should return error for unauthenticated request', async () => {
-      const response = await MockRequest.post('/user/emails/primary');
-      response.expectError('IAM003');
-    });
+    Tests.unauthenicatedAPI('POST', '/user/emails/primary');
 
     it('should return error for invalid email', async () => {
       const response = await MockRequest.post('/user/emails/primary').session(session).send({ email: 'invalid-email' });
