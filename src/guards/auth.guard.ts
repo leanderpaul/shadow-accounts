@@ -39,7 +39,7 @@ function createAuthGuard(requiredAuth: AuthType): Guard {
       const req = Context.getCurrentRequest();
       const res = Context.getCurrentResponse();
       const query = new URLSearchParams(req.query as Record<string, string>);
-      query.set('redirectUrl', encodeURIComponent(req.url));
+      query.set('redirectUrl', req.url);
       res.redirect(`${url}?${query.toString()}`);
       return false;
     }

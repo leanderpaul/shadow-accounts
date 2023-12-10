@@ -7,6 +7,7 @@ import { describe, it } from 'bun:test';
  * Importing user defined packages
  */
 import { MockRequest } from '@tests/mocks';
+import { Tests } from '@tests/utils';
 
 /**
  * Defining types
@@ -18,10 +19,7 @@ import { MockRequest } from '@tests/mocks';
 
 describe('e2e: HomeController', () => {
   describe('GET /', () => {
-    it('should redirect to sign in page when unauthenticated', async () => {
-      const response = await MockRequest.get('/');
-      response.expectRedirect('/auth/signin?redirectUrl=%252F');
-    });
+    Tests.unauthenticatedPage('/');
 
     it('should return the home page when authenticated', async () => {
       const response = await MockRequest.get('/').session('tester-1');

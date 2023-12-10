@@ -1,7 +1,7 @@
 /**
  * Importing npm packages
  */
-import { type FieldError, type NonNullJSONData } from '@leanderpaul/shadow-service';
+import { type FieldError } from '@leanderpaul/shadow-service';
 import { expect } from 'bun:test';
 import { type CheerioAPI, load as loadDOM } from 'cheerio';
 
@@ -74,7 +74,7 @@ export class MockResponse {
     }
   }
 
-  expectData(obj: NonNullJSONData): void {
+  expectData(obj: Record<string, unknown> | Record<string, unknown>[]): void {
     const contentType = this.getHeader('Content-Type');
     expect(contentType).toContain('application/json;');
 

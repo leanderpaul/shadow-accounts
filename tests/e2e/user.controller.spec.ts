@@ -6,8 +6,8 @@ import { describe, it } from 'bun:test';
 /**
  * Importing user defined packages
  */
-import { Expect } from '@tests/expect.utils';
 import { MockRequest } from '@tests/mocks';
+import { Expect, Tests } from '@tests/utils';
 
 /**
  * Defining types
@@ -19,10 +19,7 @@ import { MockRequest } from '@tests/mocks';
 
 describe('e2e: UserController', () => {
   describe('GET /user', () => {
-    it('should return error for unauthenticated request', async () => {
-      const response = await MockRequest.get('/user');
-      response.expectError('IAM003');
-    });
+    Tests.unauthenicatedAPI('GET', '/user');
 
     it('should return the user info', async () => {
       const response = await MockRequest.get('/user').session('tester-1');
@@ -39,10 +36,7 @@ describe('e2e: UserController', () => {
   });
 
   describe('PATCH /user', () => {
-    it('should return error for unauthenticated request', async () => {
-      const response = await MockRequest.patch('/user', { lastName: 'Test' });
-      response.expectError('IAM003');
-    });
+    Tests.unauthenicatedAPI('PATCH', '/user');
 
     it('should return error for invalid input', async () => {
       const body = { firstName: '', gender: 'MALE', dob: '2100-01-01' };
