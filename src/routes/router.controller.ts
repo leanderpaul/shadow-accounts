@@ -33,16 +33,17 @@ export class RouterController {
   @UseAuthGuard(AuthType.AUTHENTICATED)
   async getHomePage(): Promise<TemplateData> {
     const currentUser = Context.getCurrentUser(true);
-    const projection = User.constructProjection({ gender: 1, dob: 1 });
+    const projection = User.constructProjection({ gender: 1, dob: 1, emails: 1 });
     const user = await this.userService.getUser(currentUser.uid, projection);
     if (!user) throw new NeverError('User not found');
     const gender = user.gender ? User.Gender[user.gender] : 'Prefer not to say';
     return {
       title: 'Home',
       description: 'Manage your Shadow account',
-      styles: ['global'],
-      scripts: ['jquery', 'notiflix'],
+      styles: ['global', 'home'],
+      scripts: ['jquery', 'notiflix', 'home'],
       user: {
+        emails: user.emails.sort(a => (a.primary ? -1 : 1)) as any,
         firstName: user.firstName,
         lastName: user.lastName ?? '-',
         fullName: `${user.firstName} ${user.lastName ?? ''}`,
