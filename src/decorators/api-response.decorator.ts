@@ -16,7 +16,7 @@ import { ValidationErrorResponse } from '@app/dtos/responses';
 
 type ErrorStatusCode = 400 | 404 | 409 | 422;
 
-type SuccessStatusCode = 200 | 201 | 204;
+type SuccessStatusCode = 200 | 201 | 204 | 302;
 
 type SuccessType = ApiResponseMetadata['type'];
 

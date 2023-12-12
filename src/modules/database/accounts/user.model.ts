@@ -58,8 +58,8 @@ const nameRegexMessage = 'must contain only letters, numbers, spaces, and the fo
   discriminatorKey: 'type',
 })
 export class User {
-  static UserEmail = UserEmail;
-  static UserSession = UserSession;
+  static Email = UserEmail;
+  static Session = UserSession;
 
   static Gender = Gender;
   static Status = UserStatus;

@@ -14,18 +14,24 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 /**
  * Declaring the constants
  */
+const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
 
 @Schema({
   _id: false,
   versionKey: false,
 })
 export class UserEmail {
+  static isEmail(email?: string): boolean {
+    if (!email) return false;
+    return emailRegex.test(email);
+  }
+
   @Prop({
     type: 'string',
     trim: true,
     lowercase: true,
     required: [true, 'required'],
-    validate: [/^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i, 'should be an email'],
+    validate: [emailRegex, 'should be an email'],
   })
   email: string;
 
