@@ -1,0 +1,126 @@
+<style>
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 460px;
+    background-color: white;
+    box-sizing: border-box;
+  }
+
+  .header {
+    position: relative;
+    height: 150px;
+  }
+
+  .header.error {
+    background-color: #fef7f7;
+  }
+
+  .header.success {
+    background-color: #f2f9f2;
+  }
+
+  .status {
+    position: absolute;
+    top: 125px;
+    padding: 10px;
+    border-radius: 50px;
+  }
+
+  .status svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .status.error {
+    background-color: #fbe0e0;
+  }
+
+  .status.success {
+    background-color: #e3f8de;
+  }
+
+  .content {
+    padding: 50px 30px 40px 30px;
+  }
+
+  .content h1 {
+    font-size: 24px;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .content p {
+    color: #444;
+  }
+
+  .btn {
+    width: 120px;
+    margin-top: 30px;
+  }
+
+  @media (max-width: 767px) {
+    .card {
+      height: 100%;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .card {
+      margin-top: 150px;
+      box-shadow:
+        rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+        rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+    }
+  }
+</style>
+<div class="background-image"></div>
+<div class="container">
+  <div class="card">
+    <div class="header flex-center {{ status }}">
+      <div class="logo mb-10">
+        <img class="h-11" src="/images/logo-with-title.png" alt="Shadow Apps">
+      </div>
+        <div class="status {{ status }}">
+          {{#if data.success}}
+            <svg fill="#3dbe1e" viewBox="0 0 24 24">
+              <path d="M16.59 7.58 10 14.17l-3.59-3.58L5 12l5 5 8-8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path>
+            </svg>
+          {{else}}
+            <svg fill="#f56565" viewBox="0 0 24 24">
+              <path d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path>
+            </svg>
+          {{/if}}
+        </div>
+    </div>
+    <div class="content">
+      {{#if data.success}}
+        {{#if data.verified}}
+          <h1>Email comfirmed</h1>
+          <p class="text-center">Your email address <b class="mx-1">{{ data.email }}</b> has been comfirmed. You can now sign into your Shadow account directly.</p>
+          <div class="flex-center">
+            <a class="btn success compact" href="/">Continue</a>
+          </div>
+        {{else}}
+          <h1>Email already comfirmed</h1>
+          <p class="text-center">Your email address <b class="mx-1">{{ data.email }}</b> is already comfirmed. You can now sign into your Shadow account directly.</p>
+          <div class="flex-center">
+            <a class="btn success compact" href="/">Continue</a>
+          </div>
+        {{/if}}
+      {{else}}
+        <h1>Email Verification Failed</h1>
+        <p class="text-center">The email verification link is invalid or expired.</p>
+      {{/if}}
+    </div>
+  </div>
+</div>

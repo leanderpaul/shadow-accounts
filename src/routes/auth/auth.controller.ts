@@ -1,7 +1,7 @@
 /**
  * Importing npm packages
  */
-import { Body, Controller, Get, Post, Redirect, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Redirect, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { type FastifyReply } from 'fastify';
 
@@ -12,6 +12,7 @@ import { ApiResponse, Render } from '@app/decorators';
 import { AuthInfo, LoginResponse, LoginWithPasswordDto, LookUpDto, RegisterDto } from '@app/dtos/auth';
 import { type TemplateData } from '@app/interfaces';
 import { AuthService, UserAuthService } from '@app/modules/auth';
+import { UserEmailService } from '@app/modules/user';
 import { Context } from '@app/services';
 
 /**
@@ -28,6 +29,7 @@ export class AuthController {
   constructor(
     private readonly userAuthService: UserAuthService,
     private readonly authService: AuthService,
+    private readonly userEmailService: UserEmailService,
   ) {}
 
   @Get('signin')
@@ -56,7 +58,7 @@ export class AuthController {
 
   @Post('lookup')
   @ApiResponse(200, AuthInfo, 422)
-  verifyEmail(@Body() body: LookUpDto): Promise<AuthInfo> {
+  lookup(@Body() body: LookUpDto): Promise<AuthInfo> {
     return this.userAuthService.getAuthInfo(body.email);
   }
 
@@ -82,6 +84,24 @@ export class AuthController {
     await this.userAuthService.registerNativeUser(body);
     const redirectUrl = this.authService.getRedirectUrl();
     return { success: true, redirectUrl };
+  }
+
+  @Get('verify-email')
+  @Render('auth/verify-email')
+  async getVerifyEmailPage(@Query('digest') digestQuery: string): Promise<TemplateData> {
+    let status = { success: false, email: '', verified: false };
+    const digest = await this.userEmailService.getVerifyEmailDigest(digestQuery);
+    if (digest) {
+      const verified = await this.userEmailService.verifyUserEmail(digest.identifier).catch(() => false);
+      status = { success: true, email: digest.identifier, verified };
+    }
+    return {
+      title: 'Verify your email',
+      description: 'Verify your email',
+      styles: ['global'],
+      data: status,
+      status: status.success ? 'success' : 'error',
+    };
   }
 
   @Get('signout')

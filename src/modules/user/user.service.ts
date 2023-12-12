@@ -3,16 +3,17 @@
  */
 import { type Projection } from '@leanderpaul/shadow-service';
 import { Injectable } from '@nestjs/common';
-import moment from 'moment';
 
 /**
  * Importing user defined packages
  */
 import { UpdateUserDto } from '@app/dtos/user';
 import { IAMError, IAMErrorCode } from '@app/errors';
-import { DatabaseService, Digest, type ID, User, UserVariant } from '@app/modules/database';
+import { DatabaseService, type ID, User, UserVariant } from '@app/modules/database';
 import { type NativeUser, type OAuthUser, type UserInfo, type UserRole, type UserSession } from '@app/modules/database/database.types';
 import { Context, MailService } from '@app/services';
+
+import { UserEmailService } from './user-email.service';
 
 /**
  * Defining types
@@ -55,6 +56,7 @@ export class UserService {
 
   constructor(
     private readonly databaseService: DatabaseService,
+    private readonly userEmailService: UserEmailService,
     private readonly mailService: MailService,
   ) {
     this.accountModel = databaseService.getAccountModel();
@@ -106,11 +108,8 @@ export class UserService {
     }
     const user = await ('password' in newUser ? this.nativeUserModel.create(userData) : this.oauthUserModel.create(userData));
     if (!newUser.verified) {
-      const expiresAt = moment().add(30, 'day').toDate();
-      const digest = Digest.generateDigest();
-      const data = { aid: user.aid.toString(), uid: user.uid.toString(), email: newUser.email };
-      await this.digestModel.create({ id: digest, type: Digest.Type.VERIFY_EMAIL, data, expiresAt });
-      this.mailService.sendEmailVerificationMail(newUser.email, newUser.firstName, digest.toString('base64url'));
+      const digest = await this.userEmailService.createVerifyEmailDigest(user.aid, user.uid, newUser.email);
+      this.mailService.sendEmailVerificationMail(newUser.email, newUser.firstName, digest);
     }
     return user;
   }

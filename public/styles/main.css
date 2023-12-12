@@ -69,6 +69,11 @@ a {
   color: #000;
 }
 
+.btn.success {
+  background-color: #69c585;
+  color: #fff;
+}
+
 .btn.compact {
   height: 38px;
 }
@@ -317,8 +322,8 @@ a {
     align-items: center;
   }
 
-  .btn {
-    width: auto;
+  .btn:not(.w-full) {
+    width: fit-content;
   }
 }
 
