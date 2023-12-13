@@ -38,13 +38,12 @@ export class UserEmailService {
     this.digestModel = databaseService.getDigestModel();
   }
 
-  async createVerifyEmailDigest(aid: ID, uid: ID, email: string): Promise<string> {
+  async createVerifyEmailDigest(aid: ID, uid: ID, email: string): Promise<Digest> {
     const type = Digest.Type.VERIFY_EMAIL;
     const expiresAt = moment().add(30, 'day').toDate();
     const data = { aid: aid.toString(), uid: uid.toString() };
     const digest = Digest.generateDigest();
-    await this.digestModel.create({ id: digest, type, identifier: email, data, expiresAt });
-    return digest;
+    return await this.digestModel.create({ id: digest, type, identifier: email, data, expiresAt });
   }
 
   async getVerifyEmailDigest(digestOrEmail: string): Promise<Digest | null> {
@@ -66,6 +65,17 @@ export class UserEmailService {
     return user.emails;
   }
 
+  async sendEmailVerificationMail(uid: ID, email: string): Promise<void> {
+    const user = await this.userModel.findOne({ uid }, 'aid emails firstName').lean();
+    if (!user) throw new IAMError(IAMErrorCode.U001);
+    const userEmail = user.emails.find(e => e.email === email);
+    if (!userEmail) throw new IAMError(IAMErrorCode.U010);
+    if (userEmail.verified) throw new IAMError(IAMErrorCode.U004);
+    let digest = await this.getVerifyEmailDigest(email);
+    if (!digest) digest = await this.createVerifyEmailDigest(user.aid, uid, email);
+    this.mailService.sendEmailVerificationMail(email, user.firstName, digest.id);
+  }
+
   async verifyUserEmail(email: string): Promise<boolean> {
     const user = await this.nativeUserModel.findOne({ 'emails.email': email }).lean();
     if (!user) throw new IAMError(IAMErrorCode.U005);
@@ -84,7 +94,7 @@ export class UserEmailService {
     await this.userModel.updateOne({ uid }, { $push: { emails: userEmail } });
     if (!verified) {
       const digest = await this.createVerifyEmailDigest(user.aid, uid, email);
-      this.mailService.sendEmailVerificationMail(email, user.firstName, digest);
+      this.mailService.sendEmailVerificationMail(email, user.firstName, digest.id);
     }
     return userEmail;
   }

@@ -50,6 +50,13 @@ export class UserEmailController {
     await this.userEmailService.deleteUserEmail(user.uid, body.email);
   }
 
+  @Post('resend')
+  @ApiResponse(204, undefined, [400, 404, 422])
+  async resendEmailVerificationMail(@Body() body: UserEmailInputDto): Promise<void> {
+    const user = Context.getCurrentUser(true);
+    await this.userEmailService.sendEmailVerificationMail(user.uid, body.email);
+  }
+
   @Post('primary')
   @ApiResponse(200, OperationResponse, [400, 404, 422])
   async setPrimaryUserEmail(@Body() body: UserEmailInputDto): Promise<OperationResponse> {
