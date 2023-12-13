@@ -109,7 +109,7 @@ export class UserService {
     const user = await ('password' in newUser ? this.nativeUserModel.create(userData) : this.oauthUserModel.create(userData));
     if (!newUser.verified) {
       const digest = await this.userEmailService.createVerifyEmailDigest(user.aid, user.uid, newUser.email);
-      this.mailService.sendEmailVerificationMail(newUser.email, newUser.firstName, digest);
+      this.mailService.sendEmailVerificationMail(newUser.email, newUser.firstName, digest.id);
     }
     return user;
   }

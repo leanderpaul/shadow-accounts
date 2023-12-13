@@ -43,9 +43,9 @@ export class IAMErrorCode extends ErrorCode {
   static readonly U001 = new IAMErrorCode('U001', ErrorType.NOT_FOUND, 'User not found');
   /** User already exists */
   static readonly U002 = new IAMErrorCode('U002', ErrorType.CLIENT_ERROR, 'User already exists');
-  /** User not verified */
+  /** User email address not verified */
   static readonly U003 = new IAMErrorCode('U003', ErrorType.CLIENT_ERROR, 'User email address not verified');
-  /** User already verified */
+  /** Email address already verified */
   static readonly U004 = new IAMErrorCode('U004', ErrorType.CLIENT_ERROR, 'Email address already verified');
   /** Verification token invalid or expired */
   static readonly U005 = new IAMErrorCode('U005', ErrorType.CLIENT_ERROR, 'Verification token invalid or expired');
@@ -61,6 +61,6 @@ export class IAMErrorCode extends ErrorCode {
   static readonly U010 = new IAMErrorCode('U010', ErrorType.NOT_FOUND, 'User email address not found');
   /** Only verified email addresses can be set as primary */
   static readonly U011 = new IAMErrorCode('U011', ErrorType.CLIENT_ERROR, 'Only verified email addresses can be set as primary');
-  /** Verified email address cannot be deleted */
+  /** Primary email address cannot be deleted */
   static readonly U012 = new IAMErrorCode('U012', ErrorType.CLIENT_ERROR, 'Primary email address cannot be deleted');
 }
