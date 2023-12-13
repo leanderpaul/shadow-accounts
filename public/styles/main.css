@@ -4,7 +4,6 @@
 body {
   margin: 0px;
   font-size: 16px;
-  min-height: 100vh;
   font-family: 'Roboto', sans-serif;
 }
 
@@ -76,13 +75,6 @@ a {
 
 .btn.compact {
   height: 38px;
-}
-
-.btn.loading {
-  display: block;
-  width: 44px;
-  border-radius: 22px;
-  padding: 0px;
 }
 
 .btn.loading::before {
@@ -167,10 +159,9 @@ a {
 .form-field input:checked + .checkbox:after {
   content: '';
   display: block;
-  width: 3px;
+  width: 5px;
   height: 8px;
-  margin-left: 4px;
-  margin-top: 1px;
+  margin-left: 2px;
   border: 0px solid white;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
@@ -270,7 +261,6 @@ a {
 
 .background-image {
   position: fixed;
-  height: 100vh;
   width: 100vw;
   z-index: -1;
   top: 0;
@@ -320,6 +310,10 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .background-image {
+    height: 100vh;
   }
 
   .btn:not(.w-full) {
