@@ -7,10 +7,9 @@ import { ApiTags } from '@nestjs/swagger';
 /**
  * Importing user defined packages
  */
-import { ApiResponse } from '@app/decorators';
+import { AccessGuard, ApiResponse } from '@app/decorators';
 import { OperationResponse } from '@app/dtos/responses';
 import { UserEmailInputDto, UserEmailResponse } from '@app/dtos/user';
-import { AuthType, UseAuthGuard } from '@app/guards';
 import { type UserEmail } from '@app/modules/database/database.types';
 import { UserEmailService } from '@app/modules/user';
 import { Context } from '@app/services';
@@ -25,7 +24,7 @@ import { Context } from '@app/services';
 
 @ApiTags('User Email')
 @Controller('user/emails')
-@UseAuthGuard(AuthType.AUTHENTICATED)
+@AccessGuard()
 export class UserEmailController {
   constructor(private readonly userEmailService: UserEmailService) {}
 

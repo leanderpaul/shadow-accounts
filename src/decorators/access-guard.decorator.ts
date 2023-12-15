@@ -18,19 +18,18 @@ import { Context } from '@app/services';
  * Defining types
  */
 
-export enum AuthType {
-  VERIFIED,
-  AUTHENTICATED,
+export interface AccessGuardOptions {
+  verified?: boolean;
 }
 
 /**
  * Declaring the constants
  */
-const cache: Partial<Record<AuthType, Guard>> = {};
+const cache: Record<string, Guard> = {};
 const unauthenticatedResponse = ApiResponse({ status: 401, type: UnauthenticatedResponse, description: 'Unauthenticated' });
 const unauthorizedResponse = ApiResponse({ status: 403, type: UnauthorizedResponse, description: 'Unauthorized' });
 
-function createAuthGuard(requiredAuth: AuthType): Guard {
+function createAccessGuard(opts: AccessGuardOptions): Guard {
   @Injectable()
   class MixinAuthGuard implements CanActivate {
     constructor(private readonly reflector: Reflector) {}
@@ -49,7 +48,7 @@ function createAuthGuard(requiredAuth: AuthType): Guard {
       const user = Context.getCurrentUser();
       if (!user && isRender) return this.redirect('/auth/signin');
       if (!user) throw new IAMError(IAMErrorCode.IAM003);
-      if (requiredAuth === AuthType.VERIFIED && !user.verified) throw new IAMError(IAMErrorCode.U003);
+      if (opts.verified && !user.verified) throw new IAMError(IAMErrorCode.U003);
       return true;
     }
   }
@@ -57,16 +56,22 @@ function createAuthGuard(requiredAuth: AuthType): Guard {
   return mixin(MixinAuthGuard);
 }
 
-export function AuthGuard(requiredAuth: AuthType): Guard {
-  const cachedResult = cache[requiredAuth];
-  if (cachedResult) return cachedResult;
-  const result = createAuthGuard(requiredAuth);
-  cache[requiredAuth] = result;
-  return result;
+function getAccessGuard(opts: AccessGuardOptions): Guard {
+  const cacheKeyArr: string[] = [];
+  if (opts.verified) cacheKeyArr.push('verified');
+
+  const cacheKey = cacheKeyArr.join('-');
+  const cachedGuard = cache[cacheKey];
+  if (cachedGuard) return cachedGuard;
+
+  const Guard = createAccessGuard(opts);
+  cache[cacheKey] = Guard;
+  return Guard;
 }
 
-export function UseAuthGuard(authType: AuthType = AuthType.VERIFIED): MethodDecorator & ClassDecorator {
-  const decorators = [UseGuards(AuthGuard(authType)), unauthenticatedResponse];
-  if (authType === AuthType.VERIFIED) decorators.push(unauthorizedResponse);
+export function AccessGuard(opts: AccessGuardOptions = {}): MethodDecorator & ClassDecorator {
+  const Guard = getAccessGuard(opts);
+  const decorators = [UseGuards(Guard), unauthenticatedResponse];
+  if (opts.verified) decorators.push(unauthorizedResponse);
   return applyDecorators(...decorators);
 }
