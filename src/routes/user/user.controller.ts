@@ -9,9 +9,8 @@ import lodash from 'lodash';
 /**
  * Importing user defined packages
  */
-import { ApiResponse } from '@app/decorators';
+import { AccessGuard, ApiResponse } from '@app/decorators';
 import { UpdateUserDto, UserResponse } from '@app/dtos/user';
-import { AuthType, UseAuthGuard } from '@app/guards';
 import { User } from '@app/modules/database';
 import { UserService } from '@app/modules/user';
 import { Context } from '@app/services';
@@ -38,7 +37,7 @@ const userProjection: Projection<User> = {
 
 @ApiTags('User')
 @Controller('user')
-@UseAuthGuard(AuthType.AUTHENTICATED)
+@AccessGuard()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

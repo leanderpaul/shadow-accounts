@@ -9,8 +9,7 @@ import moment from 'moment';
 /**
  * Importing user defined packages
  */
-import { Render } from '@app/decorators';
-import { AuthType, UseAuthGuard } from '@app/guards';
+import { AccessGuard, Render } from '@app/decorators';
 import { type TemplateData } from '@app/interfaces';
 import { User } from '@app/modules/database';
 import { UserService } from '@app/modules/user';
@@ -30,7 +29,7 @@ export class RouterController {
 
   @Get()
   @Render('home')
-  @UseAuthGuard(AuthType.AUTHENTICATED)
+  @AccessGuard()
   async getHomePage(): Promise<TemplateData> {
     const currentUser = Context.getCurrentUser(true);
     const projection = User.constructProjection({ gender: 1, dob: 1, emails: 1 });
