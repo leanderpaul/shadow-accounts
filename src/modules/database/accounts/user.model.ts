@@ -20,6 +20,7 @@ import { defaultOptionsPlugin, handleDuplicateKeyError } from '../schema.utils';
  */
 
 export enum UserStatus {
+  UNVERIFIED = -1,
   ACTIVE = 0,
   INACTIVE = 1,
   CLOSED = 2,
@@ -125,7 +126,7 @@ export class User {
     type: 'number',
     required: true,
     enum: Object.values(UserStatus).filter(v => typeof v === 'number'),
-    default: UserStatus.ACTIVE,
+    default: (user: User) => (user.emails.some(e => e.verified && e.primary) ? UserStatus.ACTIVE : UserStatus.UNVERIFIED),
   })
   status: UserStatus;
 
