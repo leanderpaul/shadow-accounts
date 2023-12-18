@@ -51,7 +51,7 @@ export class UserAuthService {
     const prevId = user?.sessions?.[user.sessions.length - 1]?.id ?? 0;
     const req = Context.getCurrentRequest();
     const token = crypto.randomBytes(32).toString('base64url');
-    const session: UserSession = { id: prevId + 1, token, accessedAt: new Date() };
+    const session: UserSession = { id: prevId + 1, token, accessedAt: new Date(), createdAt: new Date() };
     if (req.ip) session.ipAddr = req.ip;
     if (req.headers['user-agent']) session.userAgent = req.headers['user-agent'];
     return session;

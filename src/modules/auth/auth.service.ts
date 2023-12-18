@@ -45,7 +45,7 @@ export class AuthService {
   private async authenticateUser(cookieData: UserCookie): Promise<void> {
     /** Verifying the cookie data */
     const maxAge = Config.get('cookie.max-age');
-    const projection = User.constructProjection({ emails: 1, sessions: 1 });
+    const projection = User.constructProjection({ sessions: 1 });
     const promise = this.userModel.findOneAndUpdate({ uid: cookieData.uid }, {}, { runValidators: false, projection });
     promise.setUpdate({ $pull: { sessions: { accessedAt: { $lt: moment().subtract(maxAge, 'seconds').toDate() } } } });
     const user = await promise.lean<AuthUser>();

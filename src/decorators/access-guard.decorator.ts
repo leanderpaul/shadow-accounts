@@ -12,6 +12,7 @@ import { ApiResponse } from '@nestjs/swagger';
 import { UnauthenticatedResponse, UnauthorizedResponse } from '@app/dtos/responses';
 import { IAMError, IAMErrorCode } from '@app/errors';
 import { type CanActivate, type Guard } from '@app/interfaces';
+import { User } from '@app/modules/database';
 import { Context } from '@app/services';
 
 /**
@@ -48,7 +49,7 @@ function createAccessGuard(opts: AccessGuardOptions): Guard {
       const user = Context.getCurrentUser();
       if (!user && isRender) return this.redirect('/auth/signin');
       if (!user) throw new IAMError(IAMErrorCode.IAM003);
-      if (opts.verified && !user.verified) throw new IAMError(IAMErrorCode.U003);
+      if (opts.verified && user.status === User.Status.UNVERIFIED) throw new IAMError(IAMErrorCode.U003);
       return true;
     }
   }

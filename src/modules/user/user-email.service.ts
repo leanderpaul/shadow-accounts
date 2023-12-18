@@ -81,7 +81,9 @@ export class UserEmailService {
     if (!user) throw new IAMError(IAMErrorCode.U005);
     const userEmail = user.emails.find(e => e.email === email) as UserEmail;
     if (userEmail.verified) throw new IAMError(IAMErrorCode.U004);
-    await this.nativeUserModel.updateOne({ uid: user.uid, 'emails.email': email }, { $set: { 'emails.$.verified': true } });
+    const update: Record<string, boolean | number> = { 'emails.$.verified': true };
+    if (user.status === User.Status.UNVERIFIED && userEmail.primary) update.status = User.Status.ACTIVE;
+    await this.nativeUserModel.updateOne({ uid: user.uid, 'emails.email': email }, { $set: update });
     return true;
   }
 
