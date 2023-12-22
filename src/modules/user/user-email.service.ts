@@ -8,10 +8,12 @@ import moment from 'moment';
 /**
  * Importing user defined packages
  */
+import { RequestCache } from '@app/decorators';
 import { IAMError, IAMErrorCode } from '@app/errors';
-import { DatabaseService, Digest, ID, User, UserVariant } from '@app/modules/database';
+import { DatabaseService, Digest, type ID, User, UserVariant } from '@app/modules/database';
 import { UserEmail } from '@app/modules/database/database.types';
 import { MailService } from '@app/services';
+import { CacheKey } from '@app/services/cache';
 
 /**
  * Defining types
@@ -59,6 +61,7 @@ export class UserEmailService {
     return null;
   }
 
+  @RequestCache('get', CacheKey.getUserEmailListKey)
   async getUserEmails(uid: ID): Promise<UserEmail[]> {
     const user = await this.userModel.findOne({ uid }, 'emails').lean();
     if (!user) throw new IAMError(IAMErrorCode.U001);
@@ -76,6 +79,7 @@ export class UserEmailService {
     this.mailService.sendEmailVerificationMail(email, user.firstName, digest.id);
   }
 
+  @RequestCache('clear')
   async verifyUserEmail(email: string): Promise<boolean> {
     const user = await this.nativeUserModel.findOne({ 'emails.email': email }).lean();
     if (!user) throw new IAMError(IAMErrorCode.U005);
@@ -87,6 +91,7 @@ export class UserEmailService {
     return true;
   }
 
+  @RequestCache('del', CacheKey.getUserEmailListKey)
   async addUserEmail(uid: ID, email: string, verified: boolean = false): Promise<UserEmail> {
     const user = await this.userModel.findOne({ uid }, 'aid firstName emails').lean();
     if (!user) throw new IAMError(IAMErrorCode.U001);
@@ -101,6 +106,7 @@ export class UserEmailService {
     return userEmail;
   }
 
+  @RequestCache('del', CacheKey.getUserEmailListKey)
   async deleteUserEmail(uid: ID, email: string): Promise<boolean> {
     const user = await this.userModel.findOne({ uid }, 'emails').lean();
     if (!user) throw new IAMError(IAMErrorCode.U001);
@@ -111,6 +117,7 @@ export class UserEmailService {
     return result.modifiedCount === 1;
   }
 
+  @RequestCache('del', CacheKey.getUserEmailListKey)
   async setPrimaryUserEmail(uid: ID, email: string): Promise<boolean> {
     const user = await this.userModel.findOne({ uid }, 'emails').lean();
     if (!user) throw new IAMError(IAMErrorCode.U001);
