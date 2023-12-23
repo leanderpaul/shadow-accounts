@@ -2,13 +2,13 @@
  * Importing npm packages
  */
 import { type ExecutionContext, Injectable, UseGuards, applyDecorators, mixin } from '@nestjs/common';
-import { RENDER_METADATA } from '@nestjs/common/constants';
 import { Reflector } from '@nestjs/core';
 import { ApiResponse } from '@nestjs/swagger';
 
 /**
  * Importing user defined packages
  */
+import { RENDER_VIEW_METADATA } from '@app/constants';
 import { UnauthenticatedResponse, UnauthorizedResponse } from '@app/dtos/responses';
 import { IAMError, IAMErrorCode } from '@app/errors';
 import { type CanActivate, type Guard } from '@app/interfaces';
@@ -45,7 +45,7 @@ function createAccessGuard(opts: AccessGuardOptions): Guard {
     }
 
     canActivate(context: ExecutionContext): boolean {
-      const isRender = this.reflector.get(RENDER_METADATA, context.getHandler()) !== undefined;
+      const isRender = this.reflector.get(RENDER_VIEW_METADATA, context.getHandler()) as boolean;
       const user = Context.getCurrentUser();
       if (!user && isRender) return this.redirect('/auth/signin');
       if (!user) throw new IAMError(IAMErrorCode.IAM003);

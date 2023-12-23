@@ -9,7 +9,7 @@ import moment from 'moment';
 /**
  * Importing user defined packages
  */
-import { AccessGuard, Render } from '@app/decorators';
+import { AccessGuard, RenderView } from '@app/decorators';
 import { type TemplateData } from '@app/interfaces';
 import { User } from '@app/modules/database';
 import { UserService } from '@app/modules/user';
@@ -28,8 +28,8 @@ export class RouterController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  @Render('home')
   @AccessGuard()
+  @RenderView()
   async getHomePage(): Promise<TemplateData> {
     const currentUser = Context.getCurrentUser(true);
     const projection = User.constructProjection({ gender: 1, dob: 1, emails: 1 });
@@ -37,6 +37,7 @@ export class RouterController {
     if (!user) throw new NeverError('User not found');
     const gender = user.gender ? User.Gender[user.gender] : 'Prefer not to say';
     return {
+      template: 'home',
       title: 'Home',
       description: 'Manage your Shadow account',
       styles: ['global', 'home'],
@@ -46,7 +47,7 @@ export class RouterController {
         firstName: user.firstName,
         lastName: user.lastName ?? '-',
         fullName: `${user.firstName} ${user.lastName ?? ''}`,
-        email: currentUser.primaryEmail,
+        email: user.emails.find(a => a.primary)?.email ?? '-',
         rawGender: user.gender ?? '-1',
         gender: lodash.capitalize(gender),
         rawDob: user.dob ?? '',

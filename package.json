@@ -28,7 +28,6 @@
     "@fastify/compress": "^6.5.0",
     "@fastify/cookie": "^9.1.0",
     "@fastify/static": "^6.12.0",
-    "@fastify/view": "^8.2.0",
     "@leanderpaul/shadow-service": "^0.0.11",
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",

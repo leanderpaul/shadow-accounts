@@ -14,7 +14,7 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import { AppModule } from './app.module';
 import { ErrorFilter } from './errors';
 import { ValidationPipe } from './pipes';
-import { Config, Logger, Middleware, TemplateService } from './services';
+import { Config, Logger, Middleware } from './services';
 
 /**
  * Defining types
@@ -27,8 +27,6 @@ import { Config, Logger, Middleware, TemplateService } from './services';
 export async function initApp(listen: boolean = true): Promise<NestFastifyApplication> {
   const logger = Logger.getNestLogger('Nest');
   const publicDir = path.join(import.meta.dir, '..', 'public');
-  const templateDir = path.join(import.meta.dir, '..', 'views');
-  const templateService = new TemplateService({ root: templateDir, viewExt: 'hbs', layout: 'layout' });
 
   /** Creating fasitfy instance and registering plugins */
   const adapter = new FastifyAdapter();
@@ -47,7 +45,6 @@ export async function initApp(listen: boolean = true): Promise<NestFastifyApplic
   app.useGlobalFilters(new ErrorFilter());
   app.useGlobalPipes(new ValidationPipe());
   app.useStaticAssets({ root: publicDir });
-  app.setViewEngine(templateService.getViewEngine());
   app.enableShutdownHooks([ShutdownSignal.SIGINT, ShutdownSignal.SIGUSR2, ShutdownSignal.SIGTERM]);
 
   /** Configuring the swagger */

@@ -8,7 +8,7 @@ import { type FastifyReply } from 'fastify';
 /**
  * Importing user defined packages
  */
-import { ApiResponse, Render } from '@app/decorators';
+import { ApiResponse, RenderView } from '@app/decorators';
 import { AuthInfo, LoginResponse, LoginWithPasswordDto, LookUpDto, RegisterDto } from '@app/dtos/auth';
 import { type TemplateData } from '@app/interfaces';
 import { AuthService, UserAuthService } from '@app/modules/auth';
@@ -33,7 +33,7 @@ export class AuthController {
   ) {}
 
   @Get('signin')
-  @Render('auth/signin')
+  @RenderView()
   getLoginPage(@Res() res: FastifyReply): FastifyReply | TemplateData {
     const user = Context.getCurrentUser();
     if (user) {
@@ -41,6 +41,7 @@ export class AuthController {
       return res.status(302).redirect(redirectUrl);
     }
     return {
+      template: 'auth/signin',
       title: 'Sign In',
       description: 'Sign in to your Shadow account',
       styles: ['global', 'auth'],
@@ -63,7 +64,7 @@ export class AuthController {
   }
 
   @Get('signup')
-  @Render('auth/signup')
+  @RenderView()
   getRegisterPage(@Res() res: FastifyReply): FastifyReply | TemplateData {
     const user = Context.getCurrentUser();
     if (user) {
@@ -71,6 +72,7 @@ export class AuthController {
       return res.status(302).redirect(redirectUrl);
     }
     return {
+      template: 'auth/signup',
       title: 'Create a Shadow account',
       description: 'Create a Shadow account',
       styles: ['global', 'auth'],
@@ -87,7 +89,7 @@ export class AuthController {
   }
 
   @Get('verify-email')
-  @Render('auth/verify-email')
+  @RenderView()
   async getVerifyEmailPage(@Query('digest') digestQuery: string): Promise<TemplateData> {
     let status = { success: false, email: '', verified: false };
     const digest = await this.userEmailService.getVerifyEmailDigest(digestQuery);
@@ -96,6 +98,7 @@ export class AuthController {
       status = { success: true, email: digest.identifier, verified };
     }
     return {
+      template: 'auth/verify-email',
       title: 'Verify your email',
       description: 'Verify your email',
       styles: ['global'],

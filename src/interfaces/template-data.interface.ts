@@ -21,5 +21,6 @@ export interface TemplateData {
   description: string;
   styles?: string[];
   scripts?: string[];
+  template: string | string[];
   [key: string]: JSONData | undefined;
 }
