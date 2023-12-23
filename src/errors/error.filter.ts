@@ -10,7 +10,8 @@ import { Error as MongooseError } from 'mongoose';
  * Importing user defined packages
  */
 import { FormattedError } from '@app/dtos/errors';
-import { Context, Logger } from '@app/services';
+import { TemplateData } from '@app/interfaces';
+import { Context, Logger, Template } from '@app/services';
 
 import { IAMErrorCode } from './iam-error-code.error';
 import { IAMError } from './iam.error';
@@ -22,6 +23,12 @@ import { IAMError } from './iam.error';
 /**
  * Declaring the constants
  */
+const pageNotFoundData: TemplateData = {
+  template: 'error/404',
+  title: 'Page not found',
+  description: 'The page you are looking for does not exist',
+  styles: ['global'],
+};
 
 @Catch()
 export class ErrorFilter implements ExceptionFilter {
@@ -59,7 +66,10 @@ export class ErrorFilter implements ExceptionFilter {
     this.logger.error(error);
 
     const res = Context.getCurrentResponse();
-    if (error instanceof NotFoundException) return res.status(404).view('404', { title: 'Page not found', styles: ['global'] });
+    if (error instanceof NotFoundException) {
+      const html = Template.render(pageNotFoundData);
+      return res.status(404).type('text/html;').send(html);
+    }
     const [statusCode, payload] = this.constructErrorPayload(error);
     return res.status(statusCode).send(payload);
   }

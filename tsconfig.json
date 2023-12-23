@@ -29,7 +29,7 @@
       "@tests/*": ["tests/*"]
     },
     "resolveJsonModule": true,
-    "types": ["bun-types", "@fastify/view"],
+    "types": ["bun-types"],
 
     /** Interop Constraints */
     "allowSyntheticDefaultImports": true,
