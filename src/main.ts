@@ -14,7 +14,7 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import { AppModule } from './app.module';
 import { ErrorFilter } from './errors';
 import { ValidationPipe } from './pipes';
-import { Config, Logger, Middleware } from './services';
+import { Config, Logger, Middleware, Template } from './services';
 
 /**
  * Defining types
@@ -32,6 +32,7 @@ export async function initApp(listen: boolean = true): Promise<NestFastifyApplic
   const adapter = new FastifyAdapter();
   const instance = adapter.getInstance();
   await instance.register(fastifyCookie);
+  await instance.register(Template.getFastifyPlugin());
   /**
    * Disabling the compression plugin as it is `BrotliCompress` and `createBrotliCompress`
    * are not yet supported by bun. and the other encoding result in an error in dependency package `stream-shift`.

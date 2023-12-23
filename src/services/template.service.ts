@@ -1,8 +1,11 @@
 /**
  * Importing npm packages
  */
+import fs from 'node:fs';
 import path from 'node:path';
 
+import { type FastifyPluginCallback, type FastifyReply } from 'fastify';
+import { fastifyPlugin } from 'fastify-plugin';
 import Handlebars from 'handlebars';
 import { type Options as MinifierOptions, minify } from 'html-minifier';
 import lodash from 'lodash';
@@ -10,13 +13,20 @@ import lodash from 'lodash';
 /**
  * Importing user defined packages
  */
-import { TemplateData } from '@app/interfaces';
+import { type TemplateData } from '@app/interfaces';
 
 import { Config } from './config.service';
 
 /**
  * Defining types
  */
+
+declare module 'fastify' {
+  interface FastifyReply {
+    render(data: TemplateData): FastifyReply;
+    render(status: number, data: TemplateData): FastifyReply;
+  }
+}
 
 /**
  * Declaring the constants
@@ -59,12 +69,12 @@ class TemplateService {
     return { alias: true };
   }
 
-  private async getTemplate(templateName: string): Promise<HandlebarsTemplateDelegate> {
+  private getTemplate(templateName: string): HandlebarsTemplateDelegate {
     let template = this.templates.get(templateName);
     if (template) return template;
 
     const templatePath = path.join(process.cwd(), 'views', templateName + '.hbs');
-    const content = await Bun.file(templatePath).text();
+    const content = fs.readFileSync(templatePath, 'utf-8');
     const minifiedContent = minify(content, minifierOptions);
     template = Handlebars.compile(minifiedContent, this.compilerOptions);
 
@@ -72,13 +82,31 @@ class TemplateService {
     return template;
   }
 
-  async render(data: TemplateData) {
+  getFastifyPlugin(): FastifyPluginCallback {
+    return fastifyPlugin((fastify, _opts, done) => {
+      fastify.decorateReply('render', function (this: FastifyReply, status: number | TemplateData, data?: TemplateData): FastifyReply {
+        let statusCode = typeof status === 'number' ? status : 200;
+        if (!data) data = status as TemplateData;
+        if (typeof data.template === 'string' && data.template.startsWith('error/')) {
+          const code = data.template.substring(6, 9);
+          statusCode = parseInt(code) || 500;
+        }
+
+        const html = Template.render(data);
+        return this.status(statusCode).type('text/html; charset=utf-8').send(html);
+      });
+
+      done();
+    });
+  }
+
+  render(data: TemplateData) {
     const templateData = lodash.omit(data, ['template']);
     if (typeof data.template === 'string') data.template = ['layout', data.template];
     const templates = data.template.toReversed();
     let html = '';
     for (const template of templates) {
-      const compiledTemplate = await this.getTemplate(template);
+      const compiledTemplate = this.getTemplate(template);
       const data = { ...templateData, body: html };
       html = compiledTemplate(data);
     }

@@ -9,7 +9,7 @@ import { ApiExcludeEndpoint } from '@nestjs/swagger';
  */
 import { RENDER_VIEW_METADATA } from '@app/constants';
 import { Func, TemplateData } from '@app/interfaces';
-import { Context, Template } from '@app/services';
+import { Context } from '@app/services';
 
 /**
  * Defining types
@@ -30,17 +30,13 @@ function RenderTemplate(): MethodDecorator {
 
     descriptor.value = async function (this: any, ...args: any[]) {
       const response = Context.getCurrentResponse();
-      let html = '';
-      let statusCode = 200;
       try {
         const data = await method.apply(this, args);
         if (data === response) return data;
-        html = await Template.render(data);
+        return response.render(data);
       } catch (err) {
-        statusCode = 500;
-        html = await Template.render(serverErrorData);
+        return response.render(serverErrorData);
       }
-      return response.status(statusCode).type('text/html;').send(html);
     } as any;
 
     Reflect.defineMetadata(RENDER_VIEW_METADATA, true, descriptor.value as Func);
