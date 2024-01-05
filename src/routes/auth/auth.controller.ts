@@ -1,14 +1,13 @@
 /**
  * Importing npm packages
  */
-import { Body, Controller, Get, Post, Query, Redirect, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Redirect } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { type FastifyReply } from 'fastify';
 
 /**
  * Importing user defined packages
  */
-import { ApiResponse, RenderView } from '@app/decorators';
+import { ApiResponse, type DynamicRender, RenderView } from '@app/decorators';
 import { AuthInfo, LoginResponse, LoginWithPasswordDto, LookUpDto, RegisterDto } from '@app/dtos/auth';
 import { type TemplateData } from '@app/interfaces';
 import { AuthService, UserAuthService } from '@app/modules/auth';
@@ -34,9 +33,10 @@ export class AuthController {
 
   @Get('signin')
   @RenderView()
-  getLoginPage(@Res() res: FastifyReply): FastifyReply | TemplateData {
+  getLoginPage(): DynamicRender {
     const user = Context.getCurrentUser();
     if (user) {
+      const res = Context.getCurrentResponse();
       const redirectUrl = this.authService.getRedirectUrl();
       return res.status(302).redirect(redirectUrl);
     }
@@ -45,7 +45,7 @@ export class AuthController {
       title: 'Sign In',
       description: 'Sign in to your Shadow account',
       styles: ['global', 'auth'],
-      scripts: ['jquery'],
+      libs: { jquery: true },
     };
   }
 
@@ -65,9 +65,10 @@ export class AuthController {
 
   @Get('signup')
   @RenderView()
-  getRegisterPage(@Res() res: FastifyReply): FastifyReply | TemplateData {
+  getRegisterPage(): DynamicRender {
     const user = Context.getCurrentUser();
     if (user) {
+      const res = Context.getCurrentResponse();
       const redirectUrl = this.authService.getRedirectUrl();
       return res.status(302).redirect(redirectUrl);
     }
@@ -76,7 +77,7 @@ export class AuthController {
       title: 'Create a Shadow account',
       description: 'Create a Shadow account',
       styles: ['global', 'auth'],
-      scripts: ['jquery', 'notiflix'],
+      libs: { jquery: true, notiflix: true },
     };
   }
 

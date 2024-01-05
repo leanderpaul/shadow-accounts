@@ -3,6 +3,7 @@
  */
 import { applyDecorators } from '@nestjs/common';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
+import { type FastifyReply } from 'fastify';
 
 /**
  * Importing user defined packages
@@ -14,6 +15,8 @@ import { Context } from '@app/services';
 /**
  * Defining types
  */
+
+export type DynamicRender = TemplateData | FastifyReply;
 
 /**
  * Declaring the constants
