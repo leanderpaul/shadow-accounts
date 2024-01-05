@@ -41,7 +41,8 @@ export class RouterController {
       title: 'Home',
       description: 'Manage your Shadow account',
       styles: ['global', 'home'],
-      scripts: ['jquery', 'notiflix', 'home'],
+      scripts: ['home'],
+      libs: { jquery: true, notiflix: true },
       user: {
         emails: user.emails.sort(a => (a.primary ? -1 : 1)) as any,
         firstName: user.firstName,

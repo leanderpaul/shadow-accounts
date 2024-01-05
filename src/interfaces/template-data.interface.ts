@@ -12,15 +12,16 @@ import { type JSONData } from '@leanderpaul/shadow-service';
  * Defining types
  */
 
-/**
- * Declaring the constants
- */
-
 export interface TemplateData {
   title: string;
   description: string;
   styles?: string[];
   scripts?: string[];
-  template: string | string[];
+  layout?: string;
+  template: string;
+  libs?: {
+    jquery?: boolean;
+    notiflix?: boolean;
+  };
   [key: string]: JSONData | undefined;
 }
