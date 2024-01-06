@@ -26,5 +26,11 @@ describe('e2e: HomeController', () => {
       response.expectStatusCode(200);
       response.expectHTML({ title: 'Home' });
     });
+
+    it('should return the home page as a component', async () => {
+      const response = await MockRequest.get('/', true).session('tester-1');
+      response.expectStatusCode(200);
+      response.expectHTML({ title: 'Home', component: true });
+    });
   });
 });

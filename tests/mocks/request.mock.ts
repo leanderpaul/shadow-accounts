@@ -36,8 +36,10 @@ export class MockRequest {
     this.header('Accept-Encoding', 'gzip, deflate, br');
   }
 
-  static get(url: string): MockRequest {
-    return new MockRequest('GET', url);
+  static get(url: string, component?: boolean): MockRequest {
+    const request = new MockRequest('GET', url);
+    if (component) request.header('X-Requested-With', 'XMLHttpRequest');
+    return request;
   }
 
   static post(url: string, body?: Record<string, JSONData>): MockRequest {

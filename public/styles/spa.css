@@ -204,26 +204,6 @@ body > .content {
   padding-bottom: 20px;
 }
 
-#profile .card {
-  padding: 20px;
-}
-
-#profile .card .avatar {
-  width: 75px;
-  height: 75px;
-}
-
-#profile .form-field {
-  margin: 20px 0px;
-}
-
-#profile .form-field label {
-  display: block;
-  font-size: 14px;
-  color: #444;
-  cursor: default;
-}
-
 .modal {
   display: none;
   position: fixed;
@@ -271,114 +251,12 @@ body > .content {
   fill: #444;
 }
 
-#profile form input {
-  margin-top: 10px;
-}
-
-#edit-lg {
-  display: none;
-}
-
-.actions button {
-  margin-top: 10px;
-}
-
-ul.email-addresses li {
-  display: flex;
-  padding: 20px 15px;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-}
-
-ul.email-addresses li:hover {
-  background-color: #fbfbfb;
-}
-
-ul.email-addresses .icon {
-  width: 60px;
-  padding: 15px;
-  border-radius: 50%;
-}
-
-ul.email-addresses .actions > * {
-  display: none;
-  fill: #999;
-  color: #999;
-  height: 25px;
-}
-
-ul.email-addresses .actions span {
-  margin-right: 10px;
-  border: 1px solid #ccc;
-  padding: 2px 10px;
-  border-radius: 50px;
-  height: auto;
-}
-
-ul.email-addresses .actions span:hover {
-  border-color: #444;
-  color: #222;
-}
-
-ul.email-addresses .actions svg:hover {
-  fill: red;
-}
-
-#add-email {
-  color: #0291ff;
-  font-weight: 500;
-  font-size: 16px;
-}
-
-#email-options .options {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 20px 0px;
-}
-
-#email-options button {
-  justify-content: flex-start;
-  font-weight: 500;
-  font-size: 16px;
-}
-
-#email-options button svg {
-  margin-right: 15px;
-  width: 20px;
-}
-
 @media (min-width: 992px) {
   .card .header {
     padding: 24px 30px;
   }
 
   .card .header .subtitle {
-    display: block;
-  }
-
-  #profile .card {
-    padding: 40px;
-  }
-
-  button {
-    width: auto;
-  }
-
-  form {
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: 50px;
-    max-width: 800px;
-  }
-
-  form .form-field {
-    width: 40%;
-    margin: 10px 0px;
-  }
-
-  #edit-lg {
     display: block;
   }
 
@@ -402,17 +280,5 @@ ul.email-addresses .actions svg:hover {
 
   body > .content {
     padding-left: 320px;
-  }
-
-  .actions button {
-    margin-top: 20px;
-  }
-
-  ul.email-addresses li {
-    padding: 15px 30px;
-  }
-
-  ul.email-addresses li:hover .actions > * {
-    display: block;
   }
 }
