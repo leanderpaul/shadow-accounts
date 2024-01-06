@@ -17,6 +17,7 @@ import { MockAuth } from './auth.mock';
  */
 
 export interface ExpectedHTML {
+  component?: boolean;
   title?: string;
   text?: string;
 }
@@ -62,8 +63,15 @@ export class MockResponse {
   expectHTML(expected: ExpectedHTML): void {
     const contentType = this.getHeader('Content-Type');
     expect(contentType).toContain('text/html;');
+    const html = this.body;
     const $ = this.getHTMLDOM();
-    if (expected?.title) {
+    if (expected?.component) {
+      expect(html).not.toContain('<!DOCTYPE html>');
+      expect(html).not.toContain('</html>');
+      expect(html).not.toContain('</body>');
+      if (expected.title) expect(html).toContain(`<script>setPageMetadata("${expected.title}"`);
+    }
+    if (expected?.title && !expected.component) {
       const actualTitle = $('head title').text();
       const expectedTitle = `${expected.title} - Shadow Accounts`;
       expect(actualTitle).toBe(expectedTitle);

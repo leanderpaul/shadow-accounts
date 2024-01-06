@@ -24,11 +24,18 @@ import { Context } from '@app/services';
  */
 
 @Controller()
+@AccessGuard()
 export class RouterController {
   constructor(private readonly userService: UserService) {}
 
+  private getLayout(): string {
+    const request = Context.getCurrentRequest();
+    const requestedWith = request.headers['x-requested-with'] as string | undefined;
+    if (requestedWith?.toLowerCase() === 'xmlhttprequest') return 'spa-page';
+    return 'spa';
+  }
+
   @Get()
-  @AccessGuard()
   @RenderView()
   async getHomePage(): Promise<TemplateData> {
     const currentUser = Context.getCurrentUser(true);
@@ -37,12 +44,10 @@ export class RouterController {
     if (!user) throw new NeverError('User not found');
     const gender = user.gender ? User.Gender[user.gender] : 'Prefer not to say';
     return {
+      layout: this.getLayout(),
       template: 'home',
       title: 'Home',
       description: 'Manage your Shadow account',
-      styles: ['global', 'home'],
-      scripts: ['home'],
-      libs: { jquery: true, notiflix: true },
       user: {
         emails: user.emails.sort(a => (a.primary ? -1 : 1)) as any,
         firstName: user.firstName,
@@ -54,6 +59,28 @@ export class RouterController {
         rawDob: user.dob ?? '',
         dob: user.dob ? moment(user.dob, 'YYYY-MM-DD').format('MMMM D, YYYY') : '-',
       },
+    };
+  }
+
+  @Get('security')
+  @RenderView()
+  getSecurityPage(): TemplateData {
+    return {
+      layout: this.getLayout(),
+      template: 'security',
+      title: 'Security',
+      description: 'Manage your Shadow account security',
+    };
+  }
+
+  @Get('sessions')
+  @RenderView()
+  getSessionsPage(): TemplateData {
+    return {
+      layout: this.getLayout(),
+      template: 'sessions',
+      title: 'Sessions',
+      description: 'Manage your Shadow account sessions',
     };
   }
 }
