@@ -30,9 +30,9 @@ export class UserEmailController {
 
   @Get()
   @ApiResponse(200, [UserEmailResponse], 404)
-  getUserEmails(): Promise<UserEmail[]> {
+  getUserEmails(): UserEmail[] {
     const user = Context.getCurrentUser(true);
-    return this.userEmailService.getUserEmails(user.uid);
+    return user.emails;
   }
 
   @Post()

@@ -48,7 +48,7 @@ export interface OAuthUserModel extends Model<OAuthUser> {}
 /**
  * Declaring the constants
  */
-const defaultUserProjection: Projection<User> = { aid: 1, uid: 1, firstName: 1, lastName: 1, role: 1, status: 1 };
+const defaultUserProjection: Projection<User> = { aid: 1, uid: 1, emails: 1, firstName: 1, lastName: 1, role: 1, status: 1 };
 const nameRegex = /^[a-zA-Z0-9 \-_.']+$/;
 const nameRegexMessage = 'must contain only letters, numbers, spaces, and the following characters: -_.';
 
