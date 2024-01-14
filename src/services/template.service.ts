@@ -11,6 +11,8 @@ import lodash from 'lodash';
  */
 import { type TemplateData } from '@app/interfaces';
 
+import { Context } from './context.service';
+
 /**
  * Defining types
  */
@@ -33,6 +35,13 @@ class TemplateService {
     this.engine = new TemplateEngine({ dir: 'views', minify: true });
   }
 
+  getSPALayout(spa: 'user' | 'admin' = 'user'): TemplateData['layout'] {
+    const request = Context.getCurrentRequest();
+    const requestedWith = request.headers['x-requested-with'] as string | undefined;
+    if (requestedWith?.toLowerCase() === 'xmlhttprequest') return 'component';
+    return spa;
+  }
+
   getFastifyPlugin(): FastifyPluginCallback {
     return fastifyPlugin((fastify, _opts, done) => {
       fastify.decorateReply('render', function (this: FastifyReply, status: number | TemplateData, data?: TemplateData): FastifyReply {
@@ -52,7 +61,7 @@ class TemplateService {
   }
 
   render(data: TemplateData): string {
-    const layout = `layouts/${data.layout || 'default'}`;
+    const layout = `layouts/${data.layout ?? 'bare'}`;
     const templateData = lodash.omit(data, ['template', 'layout']);
     const view = this.engine.render(data.template, templateData);
     return this.engine.render(layout, { ...templateData, body: view });
