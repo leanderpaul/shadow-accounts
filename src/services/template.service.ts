@@ -1,7 +1,7 @@
 /**
  * Importing npm packages
  */
-import { TemplateEngine } from '@leanderpaul/shadow-service';
+import { type JSONData, NeverError, TemplateEngine } from '@leanderpaul/shadow-service';
 import { type FastifyPluginCallback, type FastifyReply } from 'fastify';
 import { fastifyPlugin } from 'fastify-plugin';
 import lodash from 'lodash';
@@ -11,6 +11,7 @@ import lodash from 'lodash';
  */
 import { type TemplateData } from '@app/interfaces';
 
+import { Config } from './config.service';
 import { Context } from './context.service';
 
 /**
@@ -63,6 +64,22 @@ class TemplateService {
   render(data: TemplateData): string {
     const layout = `layouts/${data.layout ?? 'bare'}`;
     const templateData = lodash.omit(data, ['template', 'layout']);
+
+    if (templateData.title) templateData.title = `${templateData.title} - ${Config.getAppName()}`;
+    else templateData.title = Config.getAppName();
+    if (!templateData.description) templateData.description = templateData.title;
+
+    const currentUser = Context.getCurrentUser();
+    if (currentUser) {
+      const user: Record<string, JSONData> = lodash.pick(currentUser, 'firstName', 'lastName', 'role', 'status');
+      user.uid = currentUser.uid.toString();
+      user.fullName = `${user.firstName} ${user.lastName ?? ''}`;
+      const primaryEmail = currentUser.emails.find(email => email.primary);
+      if (!primaryEmail) throw new NeverError('Primary email not found');
+      user.primaryEmail = primaryEmail.email;
+      templateData.user = templateData.user ? lodash.merge(user, templateData.user) : user;
+    }
+
     const view = this.engine.render(data.template, templateData);
     return this.engine.render(layout, { ...templateData, body: view });
   }

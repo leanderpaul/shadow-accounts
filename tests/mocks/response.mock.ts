@@ -69,7 +69,7 @@ export class MockResponse {
       expect(html).not.toContain('<!DOCTYPE html>');
       expect(html).not.toContain('</html>');
       expect(html).not.toContain('</body>');
-      if (expected.title) expect(html).toContain(`<script>setPageMetadata("${expected.title}"`);
+      if (expected.title) expect(html).toContain(`<script>setPageMetadata("${expected.title} - Shadow Accounts"`);
     }
     if (expected?.title && !expected.component) {
       const actualTitle = $('head title').text();
