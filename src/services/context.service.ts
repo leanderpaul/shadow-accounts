@@ -14,7 +14,7 @@ import { type User, type UserSession } from '@app/modules/database/database.type
  * Defining types
  */
 
-export type CurrentUser = Pick<User, 'aid' | 'uid' | 'firstName' | 'lastName' | 'role' | 'status' | 'type'>;
+export type CurrentUser = Pick<User, 'aid' | 'uid' | 'emails' | 'firstName' | 'lastName' | 'role' | 'status' | 'type'>;
 
 export type CurrentSession = Pick<UserSession, 'id' | 'token'>;
 
