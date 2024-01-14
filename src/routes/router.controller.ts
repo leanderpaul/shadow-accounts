@@ -13,7 +13,7 @@ import { AccessGuard, RenderView } from '@app/decorators';
 import { type TemplateData } from '@app/interfaces';
 import { User } from '@app/modules/database';
 import { UserService } from '@app/modules/user';
-import { Context } from '@app/services';
+import { Context, Template } from '@app/services';
 
 /**
  * Defining types
@@ -28,13 +28,6 @@ import { Context } from '@app/services';
 export class RouterController {
   constructor(private readonly userService: UserService) {}
 
-  private getLayout(): string {
-    const request = Context.getCurrentRequest();
-    const requestedWith = request.headers['x-requested-with'] as string | undefined;
-    if (requestedWith?.toLowerCase() === 'xmlhttprequest') return 'spa-page';
-    return 'spa';
-  }
-
   @Get()
   @RenderView()
   async getHomePage(): Promise<TemplateData> {
@@ -44,8 +37,8 @@ export class RouterController {
     if (!user) throw new NeverError('User not found');
     const gender = user.gender ? User.Gender[user.gender] : 'Prefer not to say';
     return {
-      layout: this.getLayout(),
-      template: 'home',
+      layout: Template.getSPALayout(),
+      template: 'user/home',
       title: 'Home',
       description: 'Manage your Shadow account',
       user: {
@@ -66,8 +59,8 @@ export class RouterController {
   @RenderView()
   getSecurityPage(): TemplateData {
     return {
-      layout: this.getLayout(),
-      template: 'security',
+      layout: Template.getSPALayout(),
+      template: 'user/security',
       title: 'Security',
       description: 'Manage your Shadow account security',
     };
@@ -77,8 +70,8 @@ export class RouterController {
   @RenderView()
   getSessionsPage(): TemplateData {
     return {
-      layout: this.getLayout(),
-      template: 'sessions',
+      layout: Template.getSPALayout(),
+      template: 'user/sessions',
       title: 'Sessions',
       description: 'Manage your Shadow account sessions',
     };

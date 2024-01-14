@@ -17,7 +17,12 @@ export interface TemplateData {
   description: string;
   styles?: string[];
   scripts?: string[];
-  layout?: string;
+
+  /**
+   * @default 'bare'
+   */
+  layout?: 'bare' | 'user' | 'admin' | 'component';
+
   template: string;
   libs?: {
     jquery?: boolean;
