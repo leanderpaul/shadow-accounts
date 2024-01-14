@@ -43,10 +43,6 @@ export class RouterController {
       description: 'Manage your Shadow account',
       user: {
         emails: user.emails.sort(a => (a.primary ? -1 : 1)) as any,
-        firstName: user.firstName,
-        lastName: user.lastName ?? '-',
-        fullName: `${user.firstName} ${user.lastName ?? ''}`,
-        email: user.emails.find(a => a.primary)?.email ?? '-',
         rawGender: user.gender ?? '-1',
         gender: lodash.capitalize(gender),
         rawDob: user.dob ?? '',

@@ -13,8 +13,8 @@ import { type JSONData } from '@leanderpaul/shadow-service';
  */
 
 export interface TemplateData {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   styles?: string[];
   scripts?: string[];
 

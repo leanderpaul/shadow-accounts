@@ -10,7 +10,7 @@ import { type FastifyReply } from 'fastify';
  */
 import { RENDER_VIEW_METADATA } from '@app/constants';
 import { Func, TemplateData } from '@app/interfaces';
-import { Context } from '@app/services';
+import { Context, Logger } from '@app/services';
 
 /**
  * Defining types
@@ -21,6 +21,7 @@ export type DynamicRender = TemplateData | FastifyReply;
 /**
  * Declaring the constants
  */
+const logger = Logger.getLogger('RenderDecorator');
 const serverErrorData: TemplateData = {
   title: 'Server Error',
   description: 'Something went wrong on our end. Please try again later.',
@@ -38,6 +39,7 @@ function RenderTemplate(): MethodDecorator {
         if (data === response) return data;
         return response.render(data);
       } catch (err) {
+        logger.error(err);
         return response.render(serverErrorData);
       }
     } as any;

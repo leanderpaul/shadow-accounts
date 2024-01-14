@@ -49,6 +49,10 @@ class ServerConfigService extends ConfigService<ServerConfigRecords> {
     this.set('csrf.secret-key', { defaultValue: arr.fill('A').join(''), validator: secretKeyValidator, transform: transformSecretKey });
     this.set('refresh-token.secret-key', { defaultValue: arr.fill('B').join(''), validator: secretKeyValidator, transform: transformSecretKey });
   }
+
+  getAppName(): string {
+    return 'Shadow Accounts';
+  }
 }
 
 const globalRef = global as any;
