@@ -62,7 +62,7 @@ export class UserAuthService {
     const authInfo: AuthInfo = { userExists: !!user, isLoginAllowed: false };
     let error: IAMError | null = null;
     if (!user) error = new IAMError(IAMErrorCode.U001);
-    else if (user.status === User.Status.ACTIVE) authInfo.isLoginAllowed = true;
+    else if (user.status === User.Status.ACTIVE || user.status === User.Status.UNVERIFIED) authInfo.isLoginAllowed = true;
     else error = new IAMError(user.status === User.Status.INACTIVE ? IAMErrorCode.U006 : IAMErrorCode.U008);
     if (error) authInfo.error = { code: error.getCode(), message: error.getMessage() };
     return authInfo;

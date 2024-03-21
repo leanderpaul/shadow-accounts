@@ -6,8 +6,7 @@ import { describe, it } from 'bun:test';
 /**
  * Importing user defined packages
  */
-import { MockRequest } from '@tests/mocks';
-import { Expect, Tests } from '@tests/utils';
+import { Expect, REST, Tests } from '@tests/utils';
 
 /**
  * Defining types
@@ -22,7 +21,7 @@ describe('e2e: UserController', () => {
     Tests.unauthenicatedAPI('GET', '/user');
 
     it('should return the user info', async () => {
-      const response = await MockRequest.get('/user').session('tester-1');
+      const response = await REST.get('/user').session('tester-1');
       response.expectStatusCode(200);
       response.expectData({
         aid: Expect.toBeID(),
@@ -40,13 +39,13 @@ describe('e2e: UserController', () => {
 
     it('should return error for invalid input', async () => {
       const body = { firstName: '', gender: 'MALE', dob: '2100-01-01' };
-      const response = await MockRequest.patch('/user', body).session('tester-1');
+      const response = await REST.patch('/user', body).session('tester-1');
       response.expectError('S003', ['firstName', 'gender', 'dob']);
     });
 
     it('should update user for valid input', async () => {
       const body = { lastName: 'Test', gender: 1, dob: '2000-01-01' };
-      const response = await MockRequest.patch('/user', body).session('tester-1');
+      const response = await REST.patch('/user', body).session('tester-1');
       response.expectStatusCode(200);
       response.expectData({
         aid: Expect.toBeID(),
@@ -63,7 +62,7 @@ describe('e2e: UserController', () => {
 
     it('should unset field for null value', async () => {
       const body = { lastName: '', gender: null, dob: null };
-      const response = await MockRequest.patch('/user', body).session('tester-1');
+      const response = await REST.patch('/user', body).session('tester-1');
       response.expectStatusCode(200);
       response.expectData({
         aid: Expect.toBeID(),

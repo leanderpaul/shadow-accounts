@@ -14,7 +14,7 @@
  * Declaring the constants
  */
 
-export class MockAuth {
+export class Auth {
   private static sessions = new Map<string, string>();
 
   static async initSession(key: string, email: string): Promise<void> {

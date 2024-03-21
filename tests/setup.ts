@@ -9,7 +9,7 @@ import { afterAll, beforeAll } from 'bun:test';
  */
 import { Seeder } from '@app/seeder';
 
-import { MockAuth } from './mocks/auth.mock';
+import { Auth } from './utils';
 
 /**
  * Defining types
@@ -42,8 +42,8 @@ beforeAll(async () => {
   });
 
   /** Initializing the mock sessions */
-  await MockAuth.initSession('tester-1', 'test-user-1@shadow-apps.test');
-  await MockAuth.initSession('tester-2', 'test-user-2@shadow-apps.test');
+  await Auth.initSession('tester-1', 'test-user-1@shadow-apps.test');
+  await Auth.initSession('tester-2', 'test-user-2@shadow-apps.test');
 });
 
 afterAll(() => proc?.kill(2));
