@@ -16,3 +16,9 @@ public/styles/global.css
 
 # dotenv environment variable files
 .env*
+
+# test reports
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

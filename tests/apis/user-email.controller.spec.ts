@@ -8,9 +8,7 @@ import { beforeAll, describe, it } from 'bun:test';
  */
 import { UserEmailService } from '@app/modules/user';
 import { Seeder } from '@app/seeder';
-import { MockRequest } from '@tests/mocks';
-import { MockAuth } from '@tests/mocks/auth.mock';
-import { Tests } from '@tests/utils';
+import { Auth, REST, Tests } from '@tests/utils';
 
 /**
  * Defining types
@@ -25,7 +23,7 @@ describe('e2e: UserEmailController', () => {
     Tests.unauthenicatedAPI('GET', '/user/emails');
 
     it('should return the user emails', async () => {
-      const response = await MockRequest.get('/user/emails').session('tester-1');
+      const response = await REST.get('/user/emails').session('tester-1');
       response.expectStatusCode(200);
       response.expectData([{ email: 'test-user-1@shadow-apps.test', primary: true, verified: true }]);
     });
@@ -35,18 +33,18 @@ describe('e2e: UserEmailController', () => {
     Tests.unauthenicatedAPI('POST', '/user/emails');
 
     it('should return error for invalid email', async () => {
-      const response = await MockRequest.post('/user/emails').session('tester-1').send({ email: 'invalid-email' });
+      const response = await REST.post('/user/emails').session('tester-1').send({ email: 'invalid-email' });
       response.expectError('S003', ['email']);
     });
 
     it('should return error for duplicate email', async () => {
-      const response = await MockRequest.post('/user/emails').session('tester-1').send({ email: 'test-user-2@shadow-apps.test' });
+      const response = await REST.post('/user/emails').session('tester-1').send({ email: 'test-user-2@shadow-apps.test' });
       response.expectError('U009');
     });
 
     it('should create the user email', async () => {
       const email = 'test-user-1-2@shadow-apps.test';
-      const response = await MockRequest.post('/user/emails').session('tester-1').send({ email });
+      const response = await REST.post('/user/emails').session('tester-1').send({ email });
       response.expectStatusCode(201);
       response.expectData({ email, verified: false });
     });
@@ -56,22 +54,22 @@ describe('e2e: UserEmailController', () => {
     Tests.unauthenicatedAPI('DELETE', '/user/emails');
 
     it('should return error for invalid email', async () => {
-      const response = await MockRequest.delete('/user/emails').session('tester-1').send({ email: 'invalid-email' });
+      const response = await REST.delete('/user/emails').session('tester-1').send({ email: 'invalid-email' });
       response.expectError('S003', ['email']);
     });
 
     it('should return error for primary email', async () => {
-      const response = await MockRequest.delete('/user/emails').session('tester-1').send({ email: 'test-user-1@shadow-apps.test' });
+      const response = await REST.delete('/user/emails').session('tester-1').send({ email: 'test-user-1@shadow-apps.test' });
       response.expectError('U012');
     });
 
     it('should return error for non-existent email', async () => {
-      const response = await MockRequest.delete('/user/emails').session('tester-1').send({ email: 'test-user-1-3@shadow-apps.test' });
+      const response = await REST.delete('/user/emails').session('tester-1').send({ email: 'test-user-1-3@shadow-apps.test' });
       response.expectError('U010');
     });
 
     it('should delete the user email', async () => {
-      const response = await MockRequest.delete('/user/emails').session('tester-1').send({ email: 'test-user-1-2@shadow-apps.test' });
+      const response = await REST.delete('/user/emails').session('tester-1').send({ email: 'test-user-1-2@shadow-apps.test' });
       response.expectStatusCode(204);
     });
   });
@@ -90,28 +88,28 @@ describe('e2e: UserEmailController', () => {
       await userEmailServie.addUserEmail(user.uid, verifiedSecondaryEmail, true);
       await seeder.close();
 
-      await MockAuth.initSession(session, email);
+      await Auth.initSession(session, email);
     });
 
     Tests.unauthenicatedAPI('POST', '/user/emails/primary');
 
     it('should return error for invalid email', async () => {
-      const response = await MockRequest.post('/user/emails/primary').session(session).send({ email: 'invalid-email' });
+      const response = await REST.post('/user/emails/primary').session(session).send({ email: 'invalid-email' });
       response.expectError('S003', ['email']);
     });
 
     it('should return error for non-existent email', async () => {
-      const response = await MockRequest.delete('/user/emails').session(session).send({ email: 'secondary-email-3@shadow-apps.test' });
+      const response = await REST.delete('/user/emails').session(session).send({ email: 'secondary-email-3@shadow-apps.test' });
       response.expectError('U010');
     });
 
     it('should throw error for unverified email', async () => {
-      const response = await MockRequest.post('/user/emails/primary').session(session).send({ email: unverifiedSecondaryEmail });
+      const response = await REST.post('/user/emails/primary').session(session).send({ email: unverifiedSecondaryEmail });
       response.expectError('U011');
     });
 
     it('should set the primary user email', async () => {
-      const response = await MockRequest.post('/user/emails/primary').session(session).send({ email: verifiedSecondaryEmail });
+      const response = await REST.post('/user/emails/primary').session(session).send({ email: verifiedSecondaryEmail });
       response.expectStatusCode(200);
       response.expectData({ success: true });
     });
