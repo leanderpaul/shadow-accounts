@@ -7,6 +7,7 @@ import { fastifyCookie } from '@fastify/cookie';
 import { ShutdownSignal } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 /**
  * Importing user defined packages
@@ -50,7 +51,6 @@ export async function initApp(listen: boolean = true): Promise<NestFastifyApplic
 
   /** Configuring the swagger */
   if (Config.isDev()) {
-    const { DocumentBuilder, SwaggerModule } = await import('@nestjs/swagger');
     const cookieName = Config.get('cookie.name');
     const config = new DocumentBuilder().setTitle('Shadow Accounts API').addCookieAuth(cookieName).build();
     const document = SwaggerModule.createDocument(app, config);
