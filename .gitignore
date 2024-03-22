@@ -12,6 +12,7 @@ node_modules/
 src/routes/dev
 
 # Build output
+dist
 public/styles/global.css
 
 # dotenv environment variable files
