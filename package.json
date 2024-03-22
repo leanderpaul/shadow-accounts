@@ -11,7 +11,8 @@
     "lint:fix": "eslint \"{src,tests}/**/*.ts\" --fix",
     "build:css": "tailwindcss -i ./public/styles/main.css -o ./public/styles/global.css -m",
     "test:ui": "bunx playwright test",
-    "dev": "bun run --watch src/main.ts",
+    "dev": "bun run scripts/dev.ts",
+    "build": "bun run scripts/build.ts",
     "start": "bun run src/main.ts",
     "seeder": "bun run src/seeder.ts"
   },
