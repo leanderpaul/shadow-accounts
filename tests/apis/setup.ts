@@ -9,7 +9,7 @@ import { afterAll, beforeAll } from 'bun:test';
  */
 import { Seeder } from '@app/seeder';
 
-import { Auth } from './utils';
+import { Auth } from '../utils';
 
 /**
  * Defining types
@@ -35,7 +35,7 @@ beforeAll(async () => {
   await seeder.close();
 
   const env = { ...process.env, NODE_ENV: 'test', PORT: '8081', APP_NAME: 'test:shadow-accounts' };
-  const cwd = `${import.meta.dir}/..`;
+  const cwd = `${import.meta.dir}/../..`;
   proc = await new Promise<Subprocess>(resolve => {
     const ipc = (message: string, proc: Subprocess) => message === 'ready' && resolve(proc);
     Bun.spawn(['bun', 'run', 'src/main.ts'], { env, cwd, ipc, stdout: 'ignore' });

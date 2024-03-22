@@ -3,6 +3,4 @@
 
 bun run lint
 
-bun test
-
-bun run test:ui
+bun run test
