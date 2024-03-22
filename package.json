@@ -7,10 +7,11 @@
   "scripts": {
     "prepare": "husky install",
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "clean": "rm -rf dist logs playwright-report test-results",
     "lint": "eslint \"{src,tests}/**/*.ts\"",
     "lint:fix": "eslint \"{src,tests}/**/*.ts\" --fix",
     "build:css": "tailwindcss -i ./public/styles/main.css -o ./public/styles/global.css -m",
-    "test:ui": "bunx playwright test",
+    "test": "bun run scripts/test.ts",
     "dev": "bun run scripts/dev.ts",
     "build": "bun run scripts/build.ts",
     "start": "bun run src/main.ts",
