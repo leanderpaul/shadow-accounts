@@ -35,6 +35,7 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/mongoose": "^10.0.2",
     "@nestjs/platform-fastify": "^10.2.8",
+    "@nestjs/swagger": "^7.3.0",
     "@nestjs/terminus": "^10.2.3",
     "@nestjs/throttler": "^5.0.1",
     "@playwright/test": "^1.42.1",
@@ -50,7 +51,6 @@
   "devDependencies": {
     "@commitlint/cli": "^18.4.1",
     "@commitlint/config-conventional": "^18.4.0",
-    "@nestjs/swagger": "^7.1.16",
     "@nestjs/testing": "^10.0.0",
     "@types/jquery": "^3.5.27",
     "@types/lodash": "^4.14.201",
