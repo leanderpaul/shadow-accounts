@@ -145,9 +145,9 @@
           <path fill="#aaa" d="M12 19.2c-2.5 0-4.71-1.28-6-3.2.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.232 7.232 0 0 1-6 3.2M12 5a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0-3A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10z"></path>
         </svg>
       </div>
-      <div class="ml-2 my-auto">
-        <div class="bold text-2xl cursor-default">{{ user.fullName }}</div>
-        <div class="text-sm text-neutral-500">{{ user.primaryEmail }}</div>
+      <div id="info" class="ml-2 my-auto">
+        <h1 class="bold text-2xl cursor-default">{{ user.fullName }}</h1>
+        <p class="text-sm text-neutral-500">{{ user.primaryEmail }}</p>
       </div>
       <button id="edit-lg" class="btn blue ml-auto compact">Edit</button>
     </div>
@@ -258,7 +258,7 @@
   <div class="content">
     <div id="new-email" class="form-field mt-0">
       <label class="mb-1">Enter your email address</label>
-      <input type="email" name="email">
+      <input type="email" name="email" placeholder="Email Address">
       <div class="error"></div>
     </div>
     <button class="btn blue mt-5 mb-2">Add</button>
@@ -320,6 +320,14 @@
     }
   }
 
+  function validateDOB() {
+    const dob = $('#dob input').val().trim();
+    if (!dob) return true;
+    const dateDiff = new Date().getFullYear() - new Date(dob).getFullYear();
+    if (dateDiff < 5) return errorField('#dob', 'Please enter a valid date of birth with a minimum age of 5 years');
+    return true;
+  }
+
   function editProfile() {
     const firstName = $('#firstName span').text();
     $('#firstName span').addClass('hidden');
@@ -347,7 +355,8 @@
     validCounter += validationName(true);
     validCounter += validationName(false);
     validCounter += validateProfilePic();
-    if (validCounter !== 3) return;
+    validCounter += validateDOB();
+    if (validCounter !== 4) return;
 
     const update = {};
     const fields = ['firstName', 'lastName', 'imageUrl', 'dob', 'gender'];
@@ -416,7 +425,7 @@
         const emailElement = $('.email-addresses li').first().clone();
         emailElement.find('.email').text(email);
         emailElement.find('.icon').css('background-color', getRandomColor());
-        emailElement.find('.badge').removeClass('bg-success').addClass('bg-warn').text('Unverified');
+        emailElement.find('.badges').html('<div class="badge bg-warn">Unverified</div>');
         emailElement.find('.actions').html(`<span class="verify">Resend verification email</span>`);
         const svg = $(deleteIcon).on('click', () => deleteEmailAddress(email));
         emailElement.find('.actions').append(svg);

@@ -1,21 +1,16 @@
-/**
- * Importing npm packages
- */
-import { execSync } from 'node:child_process';
+/** Importing user-defined packages */
+import { UISeeder } from './ui-seeder';
 
-/**
- * Importing user defined packages
- */
+/** Setting up the seeder */
+const seeder = await UISeeder.init();
 
-/**
- * Defining types
- */
+/** Global data */
+await seeder.createUser(1, { firstName: 'One', lastName: 'Tester', verified: true });
+await seeder.createUser(2, { firstName: 'Two' });
 
-/**
- * Declaring the constants
- */
+/** Clossing the connection */
+await seeder.close();
 
-export default function (): void {
-  const env = { ...process.env, NODE_ENV: 'test' };
-  execSync('bun run tests/ui/seed-data.ts', { env });
-}
+/** start the app */
+const { initApp } = await import('@app/main');
+await initApp();

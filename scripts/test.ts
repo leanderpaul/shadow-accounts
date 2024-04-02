@@ -39,6 +39,7 @@ if (runAPITests) {
 
 if (runUITests) {
   printTitle('Running UI tests\n');
+  spawnSync('bun', ['run', 'build:css'], { stdio: 'ignore' });
   const result = spawnSync('bunx', ['playwright', 'test'], { stdio: 'inherit' });
   processResult(result);
 }

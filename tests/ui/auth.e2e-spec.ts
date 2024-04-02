@@ -6,6 +6,7 @@ import { expect, test as it } from '@playwright/test';
 /**
  * Importing user defined packages
  */
+import { Utils } from '@tests/utils/node';
 
 /**
  * Defining types
@@ -15,6 +16,8 @@ import { expect, test as it } from '@playwright/test';
  * Declaring the constants
  */
 const { describe } = it;
+
+it.beforeAll(({ browserName }) => Utils.setValue('browser', browserName));
 
 describe('Sign In', () => {
   it('loads the page', async ({ page }) => {
@@ -39,8 +42,9 @@ describe('Sign In', () => {
   });
 
   it('should return error for invalid password', async ({ page }) => {
+    const email = Utils.getEmail(1);
     await page.goto('/auth/signin');
-    await page.fill('input[name="email"]', 'test-user-1@shadow-apps.test');
+    await page.fill('input[name="email"]', email);
     await page.getByRole('button', { name: 'Next' }).click();
     await page.fill('input[name="password"]', 'invalid-password');
     await page.getByRole('button', { name: 'Verify' }).click();
@@ -48,8 +52,9 @@ describe('Sign In', () => {
   });
 
   it('should sign in successfully', async ({ page }) => {
+    const email = Utils.getEmail(1);
     await page.goto('/auth/signin');
-    await page.fill('input[name="email"]', 'test-user-1@shadow-apps.test');
+    await page.fill('input[name="email"]', email);
     await page.getByRole('button', { name: 'Next' }).click();
     await page.fill('input[name="password"]', 'Password@123');
     await page.getByRole('button', { name: 'Verify' }).click();
