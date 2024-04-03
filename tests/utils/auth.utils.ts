@@ -18,6 +18,8 @@ export class Auth {
   private static sessions = new Map<string, string>();
 
   static async initSession(key: string, email: string): Promise<void> {
+    const session = this.sessions.get(key);
+    if (session) return;
     const port = process.env.PORT ?? 8081;
     const url = `http://127.0.0.1:${port}/auth/signin`;
     const body = { email, password: 'Password@123' };

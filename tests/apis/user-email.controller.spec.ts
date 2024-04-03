@@ -72,6 +72,13 @@ describe('e2e: UserEmailController', () => {
       const response = await REST.delete('/user/emails').session('tester-1').send({ email: 'test-user-1-2@shadow-apps.test' });
       response.expectStatusCode(204);
     });
+
+    it('should make the deleted user email resuable', async () => {
+      const email = 'test-user-1-2@shadow-apps.test';
+      const response = await REST.post('/user/emails').session('tester-1').send({ email });
+      response.expectStatusCode(201);
+      response.expectData({ email, verified: false });
+    });
   });
 
   describe('POST /user/emails/primary', () => {

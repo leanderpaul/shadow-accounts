@@ -12,7 +12,7 @@ import { RequestCache } from '@app/decorators';
 import { IAMError, IAMErrorCode } from '@app/errors';
 import { DatabaseService, Digest, type ID, User, UserVariant } from '@app/modules/database';
 import { UserEmail } from '@app/modules/database/database.types';
-import { MailService } from '@app/services';
+import { Logger, MailService } from '@app/services';
 import { CacheKey } from '@app/services/cache';
 
 /**
@@ -25,6 +25,8 @@ import { CacheKey } from '@app/services/cache';
 
 @Injectable()
 export class UserEmailService {
+  private readonly logger = Logger.getLogger(UserEmailService.name);
+
   private readonly nativeUserModel;
   private readonly userModel;
 
@@ -114,6 +116,7 @@ export class UserEmailService {
     if (!userEmail) throw new IAMError(IAMErrorCode.U010);
     if (userEmail.primary) throw new IAMError(IAMErrorCode.U012);
     const result = await this.userModel.updateOne({ uid }, { $pull: { emails: { email } } });
+    this.digestModel.deleteOne({ type: Digest.Type.VERIFY_EMAIL, identifier: email }).catch(err => this.logger.error('Error deleting email digest', { email, error: err }));
     return result.modifiedCount === 1;
   }
 
