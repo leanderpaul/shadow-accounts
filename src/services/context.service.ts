@@ -8,7 +8,7 @@ import lodash from 'lodash';
 /**
  * Importing user defined packages
  */
-import { type User, type UserSession } from '@app/modules/database/database.types';
+import { type AppService, ServiceAccount, type User, type UserSession } from '@app/modules/database/database.types';
 
 /**
  * Defining types
@@ -16,7 +16,7 @@ import { type User, type UserSession } from '@app/modules/database/database.type
 
 export type CurrentUser = Pick<User, 'aid' | 'uid' | 'emails' | 'firstName' | 'lastName' | 'role' | 'status' | 'type'>;
 
-export type CurrentSession = Pick<UserSession, 'id' | 'token'>;
+export type CurrentSession = Pick<UserSession, 'id' | 'token'> & { service?: true };
 
 /**
  * Declaring the constants
@@ -43,6 +43,28 @@ class AppContextService extends ContextService<FastifyRequest, FastifyReply> {
   setCurrentSession(session: CurrentSession): AppContextService {
     const sessionObj = lodash.pick(session, ['id', 'token']);
     this.set('CURRENT_SESSION', sessionObj);
+    return this;
+  }
+
+  getCurrentService(): AppService | undefined;
+  getCurrentService(required: true): AppService;
+  getCurrentService(required?: true): AppService | undefined {
+    return required ? this.get('CURRENT_SERVICE', true) : this.get('CURRENT_SERVICE');
+  }
+
+  setCurrentService(service: AppService): AppContextService {
+    this.set('CURRENT_SERVICE', service);
+    return this;
+  }
+
+  getCurrentServiceAccount(): ServiceAccount | undefined;
+  getCurrentServiceAccount(required: true): ServiceAccount;
+  getCurrentServiceAccount(required?: true): ServiceAccount | undefined {
+    return required ? this.get('CURRENT_SERVICE_ACCOUNT', true) : this.get('CURRENT_SERVICE_ACCOUNT');
+  }
+
+  setCurrentServiceAccount(account: ServiceAccount): AppContextService {
+    this.set('CURRENT_SERVICE_ACCOUNT', account);
     return this;
   }
 }

@@ -22,7 +22,7 @@ import { Context } from '@app/services';
  * Declaring the constants
  */
 
-@ApiTags('auth')
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(

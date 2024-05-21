@@ -1,6 +1,7 @@
 /**
  * Importing npm packages
  */
+import { RoleAuthorizer } from '@leanderpaul/shadow-service';
 import { type ExecutionContext, Injectable, UseGuards, applyDecorators, mixin } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ApiResponse } from '@nestjs/swagger';
@@ -21,6 +22,13 @@ import { Context } from '@app/services';
 
 export interface AccessGuardOptions {
   verified?: boolean;
+  requiredRole?: IAMRoles;
+  internal?: true;
+  scopedServices?: string[];
+}
+
+export enum IAMRoles {
+  Admin = 'IAMAdmin',
 }
 
 /**
@@ -29,6 +37,10 @@ export interface AccessGuardOptions {
 const cache: Record<string, Guard> = {};
 const unauthenticatedResponse = ApiResponse({ status: 401, type: UnauthenticatedResponse, description: 'Unauthenticated' });
 const unauthorizedResponse = ApiResponse({ status: 403, type: UnauthorizedResponse, description: 'Unauthorized' });
+
+/** Initializing the IAM Roles */
+const iamAdmin = RoleAuthorizer.createRole(IAMRoles.Admin);
+const roleAuthorizer = new RoleAuthorizer([iamAdmin]);
 
 function createAccessGuard(opts: AccessGuardOptions): Guard {
   @Injectable()
@@ -50,6 +62,14 @@ function createAccessGuard(opts: AccessGuardOptions): Guard {
       if (!user && isRender) return this.redirect('/auth/signin');
       if (!user) throw new IAMError(IAMErrorCode.IAM003);
       if (opts.verified && user.status === User.Status.UNVERIFIED) throw new IAMError(IAMErrorCode.U003);
+
+      if (opts.requiredRole) {
+        const serviceAccount = Context.getCurrentServiceAccount();
+        if (!serviceAccount) throw new IAMError(IAMErrorCode.IAM001);
+        const isAuthorized = roleAuthorizer.authorize(opts.requiredRole, serviceAccount.role);
+        if (!isAuthorized) throw new IAMError(IAMErrorCode.IAM001);
+      }
+
       return true;
     }
   }
@@ -60,6 +80,9 @@ function createAccessGuard(opts: AccessGuardOptions): Guard {
 function getAccessGuard(opts: AccessGuardOptions): Guard {
   const cacheKeyArr: string[] = [];
   if (opts.verified) cacheKeyArr.push('verified');
+  if (opts.internal) cacheKeyArr.push('internal');
+  if (opts.requiredRole) cacheKeyArr.push(opts.requiredRole);
+  if (opts.scopedServices) cacheKeyArr.push(`[${opts.scopedServices.join(',')}]`);
 
   const cacheKey = cacheKeyArr.join('-');
   const cachedGuard = cache[cacheKey];

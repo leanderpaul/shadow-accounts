@@ -27,13 +27,15 @@ fs.rmSync('test-results', { recursive: true, force: true });
 /** Running the tests */
 if (runUnitTests) {
   printTitle('Running unit tests');
-  const result = spawnSync('bun', ['test', 'modules', '--preload', 'tests/modules/setup.ts'], { stdio: 'inherit', env });
+  const unitTestEnv = { ...env, APP_NAME: 'unit-test:shadow-accounts' };
+  const result = spawnSync('bun', ['test', 'modules', '--preload', 'tests/modules/setup.ts'], { stdio: 'inherit', env: unitTestEnv });
   processResult(result);
 }
 
 if (runAPITests) {
   printTitle('Running API tests');
-  const result = spawnSync('bun', ['test', 'apis', '--preload', 'tests/apis/setup.ts'], { stdio: 'inherit', env });
+  const apiTestEnv = { ...env, APP_NAME: 'api-test:shadow-accounts' };
+  const result = spawnSync('bun', ['test', 'apis', '--preload', 'tests/apis/setup.ts'], { stdio: 'inherit', env: apiTestEnv });
   processResult(result);
 }
 
