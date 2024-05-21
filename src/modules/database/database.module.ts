@@ -11,8 +11,10 @@ import mongoose, { type Collection, type Connection, type Types } from 'mongoose
 import { Config, Logger } from '@app/services';
 
 import { AccountMongooseModule } from './accounts/account.model';
+import { ServiceAccountMongooseModule } from './accounts/service-account.model';
 import { UserMongooseModule } from './accounts/user.model';
 import { DatabaseService } from './database.service';
+import { AppServiceMongooseModule } from './system/app-service.model';
 import { DigestMongooseModule } from './system/digest.model';
 
 /**
@@ -35,6 +37,8 @@ function mongooseDebugLogger(this: Collection, collectionName: string, methodNam
 const MongoDBModule = MongooseModule.forRoot(Config.get('db.uri'), {
   appName: Config.get('app.name'),
   connectionFactory(connection: Connection) {
+    logger.debug(`mongodb connection opened to '${Config.get('db.uri')}', readyState: ${connection.readyState}`);
+
     /** Setting mongoose options */
     mongoose.set('id', false);
     mongoose.set('runValidators', true);
@@ -44,7 +48,6 @@ const MongoDBModule = MongooseModule.forRoot(Config.get('db.uri'), {
     if (Config.get('log.level') === 'debug') mongoose.set('debug', mongooseDebugLogger);
 
     /** Handling mongoose connection errors */
-    connection.on('open', () => logger.debug(`mongodb connection opened to ${Config.get('db.uri')}`));
     connection.on('error', (err: Error) => logger.error(err));
     connection.on('close', () => logger.debug(`mongodb connection closed`));
 
@@ -53,7 +56,7 @@ const MongoDBModule = MongooseModule.forRoot(Config.get('db.uri'), {
 });
 
 @Module({
-  imports: [MongoDBModule, AccountMongooseModule, UserMongooseModule, DigestMongooseModule],
+  imports: [MongoDBModule, AccountMongooseModule, UserMongooseModule, ServiceAccountMongooseModule, DigestMongooseModule, AppServiceMongooseModule],
   providers: [DatabaseService],
   exports: [DatabaseService],
 })

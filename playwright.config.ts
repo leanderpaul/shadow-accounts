@@ -23,6 +23,6 @@ export default defineConfig({
     url: baseURL + '/health',
     command: 'bun run tests/ui/setup.ts',
     reuseExistingServer: !process.env.CI,
-    env: { ...env, PORT, NODE_ENV: 'test' },
+    env: { ...env, PORT, NODE_ENV: 'test', APP_NAME: 'ui-test:shadow-accounts' },
   },
 });

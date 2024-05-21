@@ -13,7 +13,3 @@
 /**
  * Declaring the constants
  */
-
-export const RENDER_VIEW_METADATA = 'response:render-view';
-
-export const ACCOUNTS_SERVICE = 'iam';

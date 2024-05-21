@@ -22,8 +22,8 @@ export class UISeeder {
   private constructor(private readonly seeder: Seeder) {}
 
   static async init(): Promise<UISeeder> {
-    const seeder = await Seeder.init();
-    await seeder.seedDatabase(true);
+    const seeder = await Seeder.init(true);
+    await seeder.seedDatabase();
     return new UISeeder(seeder);
   }
 

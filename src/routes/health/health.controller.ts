@@ -2,6 +2,7 @@
  * Importing npm packages
  */
 import { Controller, Get } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { HealthCheck, HealthCheckResult, HealthCheckService, MemoryHealthIndicator } from '@nestjs/terminus';
 
 /**
@@ -16,6 +17,7 @@ import { HealthCheck, HealthCheckResult, HealthCheckService, MemoryHealthIndicat
  * Declaring the constants
  */
 
+@ApiTags('Health')
 @Controller('health')
 export class HealthController {
   constructor(

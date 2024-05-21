@@ -9,6 +9,7 @@ import { Module } from '@nestjs/common';
 import { UserModule } from '@app/modules/user';
 
 import { AdminController } from './admin.controller';
+import { AppServiceController } from './app-service.controller';
 
 /**
  * Defining types
@@ -20,6 +21,6 @@ import { AdminController } from './admin.controller';
 
 @Module({
   imports: [UserModule],
-  controllers: [AdminController],
+  controllers: [AdminController, AppServiceController],
 })
 export class AdminRouterModule {}

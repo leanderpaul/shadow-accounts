@@ -7,7 +7,7 @@ import { ApiTags } from '@nestjs/swagger';
 /**
  * Importing user defined packages
  */
-import { AccessGuard, RenderView } from '@app/decorators';
+import { AccessGuard, IAMRoles, RenderView } from '@app/decorators';
 import { type TemplateData } from '@app/interfaces';
 import { Template } from '@app/services';
 
@@ -21,7 +21,7 @@ import { Template } from '@app/services';
 
 @ApiTags('Admin')
 @Controller('admin')
-@AccessGuard()
+@AccessGuard({ requiredRole: IAMRoles.Admin })
 export class AdminController {
   constructor() {}
 

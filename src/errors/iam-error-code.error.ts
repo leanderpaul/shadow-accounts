@@ -63,4 +63,23 @@ export class IAMErrorCode extends ErrorCode {
   static readonly U011 = new IAMErrorCode('U011', ErrorType.CLIENT_ERROR, 'Only verified email addresses can be set as primary');
   /** Primary email address cannot be deleted */
   static readonly U012 = new IAMErrorCode('U012', ErrorType.CLIENT_ERROR, 'Primary email address cannot be deleted');
+
+  /*!
+   * List of all app service related errors
+   */
+
+  /** App service not found */
+  static readonly AS001 = new IAMErrorCode('AS001', ErrorType.NOT_FOUND, 'App service not found');
+  /** App service already exists */
+  static readonly AS002 = new IAMErrorCode('AS002', ErrorType.CLIENT_ERROR, 'App service already exists');
+  /** App service not active */
+  static readonly AS003 = new IAMErrorCode('AS003', ErrorType.CLIENT_ERROR, 'App service not active');
+  /** App service registration not allowed */
+  static readonly AS004 = new IAMErrorCode('AS004', ErrorType.CLIENT_ERROR, 'App service registration not allowed');
+  /** App service role not found */
+  static readonly AS005 = new IAMErrorCode('AS005', ErrorType.NOT_FOUND, 'App service role not found');
+  /** App service role already exists */
+  static readonly AS006 = new IAMErrorCode('AS006', ErrorType.CLIENT_ERROR, 'App service role already exists');
+  /** App service role invalid */
+  static readonly AS007 = new IAMErrorCode('AS007', ErrorType.CLIENT_ERROR, 'App service role invalid');
 }

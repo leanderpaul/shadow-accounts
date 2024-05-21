@@ -22,8 +22,8 @@ beforeAll(async () => {
   if (!uri) throw new Error('DB_URI not set for testing');
 
   /** Deleting old test data and seeding the database */
-  const seeder = await Seeder.init();
-  await seeder.seedDatabase(true);
+  const seeder = await Seeder.init(true);
+  await seeder.seedDatabase();
   await seeder.createUser({ email: 'test-user-1@shadow-apps.test', firstName: 'Tester One', verified: true });
   await seeder.createUser({ email: 'test-user-2@shadow-apps.test', firstName: 'Tester Two' });
   await seeder.close();
