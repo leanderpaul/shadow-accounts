@@ -1,1 +1,50 @@
-<h1>Admin Dashboard</h1>
+<style>
+  .title {
+    margin-bottom: 20px;
+  }
+
+  .stats {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 20px;
+    justify-content: space-between;
+  }
+
+  .stats .card {
+    min-width: 200px;
+    flex-grow: 1;
+    padding: 15px 20px;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .stats label {
+    font-size: 14px;
+    color: #777;
+  }
+
+  .stats .value {
+    margin-top: 5px;
+    font-size: 20px;
+  }
+</style>
+<h1 class="title mb-4">Overview</h1>
+<div class="stats">
+  <div class="card">
+    <label>Total Users</label>
+    <div class="value" data-type="intl-number" data-value="{{ stats.userCount }}"></div>
+  </div>
+  <div class="card">
+    <label>Total Users</label>
+    <div class="value" data-type="intl-number" data-value="{{ stats.userCount }}"></div>
+  </div>
+  <div class="card">
+    <label>Total Users</label>
+    <div class="value" data-type="intl-number" data-value="{{ stats.userCount }}"></div>
+  </div>
+  <div class="card">
+    <label>Total Users</label>
+    <div class="value" data-type="intl-number" data-value="{{ stats.userCount }}"></div>
+  </div>
+</div>

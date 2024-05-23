@@ -11,7 +11,6 @@ import lodash from 'lodash';
  */
 import { type TemplateData } from '@app/interfaces';
 
-import { Config } from './config.service';
 import { Context } from './context.service';
 
 /**
@@ -64,9 +63,6 @@ class TemplateService {
   render(data: TemplateData): string {
     const layout = `layouts/${data.layout ?? 'bare'}`;
     const templateData = lodash.omit(data, ['template', 'layout']);
-
-    if (templateData.title) templateData.title = `${templateData.title} - ${Config.getAppName()}`;
-    else templateData.title = Config.getAppName();
     if (!templateData.description) templateData.description = templateData.title;
 
     const currentUser = Context.getCurrentUser();
@@ -77,6 +73,8 @@ class TemplateService {
       const primaryEmail = currentUser.emails.find(email => email.primary);
       if (!primaryEmail) throw new NeverError('Primary email not found');
       user.primaryEmail = primaryEmail.email;
+      const serviceAccount = Context.getCurrentServiceAccount();
+      if (serviceAccount) user.iamRole = serviceAccount.role;
       templateData.user = templateData.user ? lodash.merge(user, templateData.user) : user;
     }
 

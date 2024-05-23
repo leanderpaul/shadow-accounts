@@ -21,16 +21,16 @@ const { beforeAll, describe } = it;
 
 beforeAll(async ({ browserName }) => {
   Utils.setValue('browser', browserName);
-  await Auth.initSession('u-1', Utils.getEmail(1));
-  await Auth.initSession('u-2', Utils.getEmail(2));
+  await Auth.initSession('user-1');
+  await Auth.initSession('user-2');
 });
 
 describe('Home Page: Profile Component', () => {
   it('should display the profile details', async ({ page }) => {
-    const home = new HomePage(page, 'u-1');
-    await home.goto();
+    const home = new HomePage(page, 'user-1');
+    await home.load();
 
-    const email = Utils.getEmail(1);
+    const email = Utils.getEmail('user-1');
     await expect(home.getInfo('name')).toHaveText('One Tester');
     await expect(home.getInfo('email')).toHaveText(email);
 
@@ -41,8 +41,8 @@ describe('Home Page: Profile Component', () => {
   });
 
   it('should throw error for invalid user details update', async ({ page }) => {
-    const home = new HomePage(page, 'u-1');
-    await home.goto();
+    const home = new HomePage(page, 'user-1');
+    await home.load();
 
     const today = new Date().toISOString().split('T')[0];
     await home.editProfile({ firstName: '', profileImageURL: 'invalid', dob: today }, 'save');
@@ -52,8 +52,8 @@ describe('Home Page: Profile Component', () => {
   });
 
   it('should update the user details', async ({ page }) => {
-    const home = new HomePage(page, 'u-2');
-    await home.goto();
+    const home = new HomePage(page, 'user-2');
+    await home.load();
 
     await home.editProfile({ firstName: 'Two Updated', lastName: 'Tester', dob: '2000-01-01', gender: 'Male' }, 'save');
 
@@ -66,10 +66,10 @@ describe('Home Page: Profile Component', () => {
 
 describe('Home Page: Email Address Component', () => {
   it('should display my email address', async ({ page }) => {
-    const home = new HomePage(page, 'u-1');
-    await home.goto();
+    const home = new HomePage(page, 'user-1');
+    await home.load();
 
-    const email = Utils.getEmail(1);
+    const email = Utils.getEmail('user-1');
     const emailAddresses = home.getEmailAddress();
     const emailAddress = emailAddresses.first();
     await expect(emailAddresses).toHaveCount(1);
@@ -79,23 +79,23 @@ describe('Home Page: Email Address Component', () => {
   });
 
   it('should throw error for adding invalid email address', async ({ page }) => {
-    const home = new HomePage(page, 'u-1');
-    await home.goto();
+    const home = new HomePage(page, 'user-1');
+    await home.load();
 
     await home.addEmailAddress('invalid');
     await expect(home.getFormFieldError('new-email')).toHaveText('Please enter a valid email address');
     await home.closeAddEmailAddressModal();
 
-    const email = Utils.getEmail(1);
+    const email = Utils.getEmail('user-1');
     await home.addEmailAddress(email);
     await expect(home.getFormFieldError('new-email')).toHaveText('User email address already exists');
   });
 
   it('should be able to add new email address', async ({ page }) => {
-    const home = new HomePage(page, 'u-1');
-    await home.goto();
+    const home = new HomePage(page, 'user-1');
+    await home.load();
 
-    const email = 'secondary-' + Utils.getEmail(1);
+    const email = 'secondary-' + Utils.getEmail('user-1');
     await home.addEmailAddress(email);
 
     const emailAddresses = home.getEmailAddress();
@@ -108,8 +108,8 @@ describe('Home Page: Email Address Component', () => {
   });
 
   it('should be able to remove email address', async ({ page }) => {
-    const home = new HomePage(page, 'u-1');
-    await home.goto();
+    const home = new HomePage(page, 'user-1');
+    await home.load();
 
     const emailAddresses = home.getEmailAddress();
     const emailAddress = emailAddresses.nth(1);

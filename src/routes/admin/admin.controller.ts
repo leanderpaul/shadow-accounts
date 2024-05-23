@@ -9,6 +9,7 @@ import { ApiTags } from '@nestjs/swagger';
  */
 import { AccessGuard, IAMRoles, RenderView } from '@app/decorators';
 import { type TemplateData } from '@app/interfaces';
+import { UserService } from '@app/modules/user';
 import { Template } from '@app/services';
 
 /**
@@ -23,16 +24,40 @@ import { Template } from '@app/services';
 @Controller('admin')
 @AccessGuard({ requiredRole: IAMRoles.Admin })
 export class AdminController {
-  constructor() {}
+  constructor(private readonly userService: UserService) {}
 
   @Get()
   @RenderView()
-  getAdminPage(): TemplateData {
+  async getAdminDashboardPage(): Promise<TemplateData> {
+    const userCount = await this.userService.getTotalUserCount();
     return {
       title: 'Admin dashboard',
       description: 'Admin dashboard',
       layout: Template.getSPALayout('admin'),
       template: 'admin/dashboard',
+      stats: { userCount },
+    };
+  }
+
+  @Get('user-info')
+  @RenderView()
+  async getUserInfoPage(): Promise<TemplateData> {
+    return {
+      title: 'User Info',
+      description: 'Get user details',
+      layout: Template.getSPALayout('admin'),
+      template: 'admin/user-info',
+    };
+  }
+
+  @Get('app-services')
+  @RenderView()
+  async getAppServicesPage(): Promise<TemplateData> {
+    return {
+      title: 'App Services',
+      description: 'List of app services',
+      layout: Template.getSPALayout('admin'),
+      template: 'admin/app-services',
     };
   }
 }

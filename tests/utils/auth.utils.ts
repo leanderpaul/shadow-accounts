@@ -2,6 +2,8 @@
  * Importing npm packages
  */
 
+import { Utils } from './common.utils';
+
 /**
  * Importing user defined packages
  */
@@ -17,7 +19,8 @@
 export class Auth {
   private static sessions = new Map<string, string>();
 
-  static async initSession(key: string, email: string): Promise<void> {
+  static async initSession(key: string, email?: string): Promise<void> {
+    if (!email) email = Utils.getEmail(key);
     const session = this.sessions.get(key);
     if (session) return;
     const port = process.env.PORT ?? 8081;

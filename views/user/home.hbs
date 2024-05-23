@@ -490,7 +490,6 @@
 
   $('ul.email-addresses li .icon').each((_, el) => $(el).css('background-color', getRandomColor()));
 
-  $('#menu-btn').on('click', () => ($('#sidenav').addClass('show'), $('#blur').addClass('nav-blur')));
   $('#add-email').on('click', () => toggleModal('#add-email-modal'));
   $('.email-addresses li').on('click', e => toggleEmailOptionsModal(e.currentTarget));
 

@@ -10,7 +10,7 @@ import mongoose from 'mongoose';
  * Importing user defined packages
  */
 import { IAMRoles } from './decorators';
-import { type User } from './modules/database';
+import { type ServiceAccount, type User } from './modules/database';
 import { AppServiceService, SystemModule } from './modules/system';
 import { type CreateUser, UserModule, UserService } from './modules/user';
 import { ServiceAccountService } from './modules/user/service-account.service';
@@ -78,6 +78,13 @@ export class Seeder {
     const createdUser = await userService.createUser({ ...user, password });
     this.seededData.set(user.email, createdUser);
     return createdUser;
+  }
+
+  async createServiceAccount(email: string, service: string, role: string): Promise<ServiceAccount> {
+    const serviceAccountService = this.getService(ServiceAccountService);
+    const serviceAccount = await serviceAccountService.createServiceAccount(email, service, role);
+    this.seededData.set(`${email}:${service}`, serviceAccount);
+    return serviceAccount;
   }
 
   async seedDatabase(): Promise<void> {
