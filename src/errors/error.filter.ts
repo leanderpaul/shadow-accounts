@@ -65,6 +65,11 @@ export class ErrorFilter implements ExceptionFilter {
   catch(error: Error): FastifyReply {
     this.logger.error(error);
 
+    if (error instanceof IAMError) {
+      const genericError = error.getGenericError();
+      if (genericError) error = genericError;
+    }
+
     const res = Context.getCurrentResponse();
     if (error instanceof NotFoundException) return res.render(pageNotFoundData);
     const [statusCode, payload] = this.constructErrorPayload(error);

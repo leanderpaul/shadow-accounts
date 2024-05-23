@@ -1,34 +1,30 @@
 /**
  * Importing npm packages
  */
-import { type Locator, type Page, expect } from '@playwright/test';
+import { type Locator, type Page } from '@playwright/test';
 
 /**
  * Importing user defined packages
  */
 import { Auth, Utils } from '@tests/utils/node';
 
+import { BarePage } from './bare.page';
+
 /**
  * Defining types
  */
 
-export type NotificationType = keyof typeof notificationTypes;
-
 /**
  * Declaring the constants
  */
-const notificationTypes = {
-  success: 'notiflix-notify-success',
-  error: 'notiflix-notify-failure',
-};
 
-export class AuthenticatedPage {
+export class AuthenticatedPage extends BarePage {
   private readonly dropDownButton: Locator;
+  private readonly session: string;
 
-  constructor(
-    protected readonly page: Page,
-    private readonly session: string,
-  ) {
+  constructor(page: Page, session: string) {
+    super(page);
+    this.session = session;
     this.dropDownButton = page.locator('#dropdown-btn');
   }
 
@@ -41,30 +37,5 @@ export class AuthenticatedPage {
   async signOut(): Promise<void> {
     await this.dropDownButton.click();
     await this.page.getByText('Sign Out').click();
-  }
-
-  async gotoProfilePage(): Promise<void> {
-    await this.page.getByText('Profile').click();
-  }
-
-  async gotoSecurityPage(): Promise<void> {
-    await this.page.getByText('Security').click();
-  }
-
-  async gotoSessionsPage(): Promise<void> {
-    await this.page.getByText('Sessions').click();
-  }
-
-  async closeModal(id: string): Promise<void> {
-    await this.page.locator(`#${id}.modal.open .close`).click();
-  }
-
-  async expectNotification(type: NotificationType, msg: string): Promise<void> {
-    const className = notificationTypes[type];
-    const classNameRegex = new RegExp(className + ' ');
-    const notification = this.page.locator('#NotiflixNotifyWrap > .notiflix-notify').filter({ hasText: msg });
-
-    await expect(notification).toBeVisible();
-    await expect(notification).toHaveClass(classNameRegex);
   }
 }

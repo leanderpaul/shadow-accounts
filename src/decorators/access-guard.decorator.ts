@@ -2,7 +2,7 @@
  * Importing npm packages
  */
 import { RoleAuthorizer } from '@leanderpaul/shadow-service';
-import { type ExecutionContext, Injectable, UseGuards, applyDecorators, mixin } from '@nestjs/common';
+import { type ExecutionContext, Injectable, NotFoundException, UseGuards, applyDecorators, mixin } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ApiResponse } from '@nestjs/swagger';
 
@@ -34,6 +34,7 @@ export enum IAMRoles {
 /**
  * Declaring the constants
  */
+const notFound = new NotFoundException();
 const cache: Record<string, Guard> = {};
 const unauthenticatedResponse = ApiResponse({ status: 401, type: UnauthenticatedResponse, description: 'Unauthenticated' });
 const unauthorizedResponse = ApiResponse({ status: 403, type: UnauthorizedResponse, description: 'Unauthorized' });
@@ -65,9 +66,9 @@ function createAccessGuard(opts: AccessGuardOptions): Guard {
 
       if (opts.requiredRole) {
         const serviceAccount = Context.getCurrentServiceAccount();
-        if (!serviceAccount) throw new IAMError(IAMErrorCode.IAM001);
+        if (!serviceAccount) throw new IAMError(IAMErrorCode.IAM001, notFound);
         const isAuthorized = roleAuthorizer.authorize(opts.requiredRole, serviceAccount.role);
-        if (!isAuthorized) throw new IAMError(IAMErrorCode.IAM001);
+        if (!isAuthorized) throw new IAMError(IAMErrorCode.IAM001, notFound);
       }
 
       return true;

@@ -6,7 +6,7 @@ import { type Locator } from '@playwright/test';
 /**
  * Importing user defined packages
  */
-import { AuthenticatedPage } from './authenticated.page';
+import { UserPage } from './user.page';
 
 /**
  * Defining types
@@ -24,12 +24,7 @@ interface EditProfile {
  * Declaring the constants
  */
 
-export class HomePage extends AuthenticatedPage {
-  async goto(): Promise<void> {
-    await this.setup();
-    await this.page.goto('/');
-  }
-
+export class HomePage extends UserPage {
   async editProfile(value: EditProfile, action?: 'save' | 'cancel'): Promise<void> {
     await this.page.getByRole('button', { name: 'Edit' }).click();
     if (value.firstName !== undefined) await this.page.locator('#firstName input').fill(value.firstName);

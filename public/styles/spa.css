@@ -120,6 +120,12 @@ body {
   transition: all 0.2s ease-in-out;
 }
 
+#sidenav .selected,
+#sidenav .item:hover {
+  background-color: #091e29;
+  color: #fff;
+}
+
 #sidenav.show {
   left: 0px;
 }
@@ -144,6 +150,12 @@ body {
   width: 25px;
   height: 25px;
   margin-right: 10px;
+}
+
+#sidenav svg.fa-icon {
+  width: 20px;
+  height: 20px;
+  margin-left: 2.5px;
 }
 
 .logo .title {
@@ -270,12 +282,6 @@ body > .content {
 
   #sidenav {
     left: 0px;
-  }
-
-  #sidenav .selected,
-  #sidenav .item:hover {
-    background-color: #091e29;
-    color: #fff;
   }
 
   body > .content {

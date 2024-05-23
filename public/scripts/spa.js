@@ -14,17 +14,26 @@ $.fn.onlyOn = function (event, callback) {
 
 async function loadPage(event, element) {
   event.preventDefault();
-  const headers = new Headers();
-  headers.append('X-Requested-With', 'XMLHttpRequest');
 
   const url = $(element).attr('href');
+  const currentUrl = window.location.href.replace(window.location.origin, '');
+  if (url === currentUrl) return;
+
+  const headers = new Headers();
+  headers.append('X-Requested-With', 'XMLHttpRequest');
   const response = await fetch(url, { headers });
   const html = await response.text();
 
   $('#app').html(html);
-  $('#sidenav a.item.selected').removeClass('selected');
-  $(`#sidenav a.item[href="${url}"]`).addClass('selected');
   window.history.pushState({}, '', url);
+
+  initPage();
+}
+
+function initPage() {
+  $(`[data-type='intl-number']`).each(formatNumber);
+  $('#sidenav a.item.selected').removeClass('selected');
+  $(`#sidenav a.item[href="${window.location.pathname}"]`).addClass('selected');
 }
 
 function setPageMetadata(title, description) {
@@ -98,9 +107,17 @@ function closeModal() {
   $('#blur').removeClass('modal-blur');
 }
 
+function formatNumber() {
+  const number = $(this).data('value');
+  const language = navigator.language ?? 'en-US';
+  const formatted = new Intl.NumberFormat(language).format(number);
+  $(this).text(formatted);
+}
+
 $(window).on('load', () => {
+  initPage();
+  $('#menu-btn').on('click', () => ($('#sidenav').addClass('show'), $('#blur').addClass('nav-blur')));
   $('#blur').on('click', removeNavBlur);
   $('#sidenav a').on('click', removeNavBlur);
   $('#dropdown-btn').on('click', () => toggleWithMask('#dropdown', 'hidden'));
-  $(`#sidenav a.item[href="${window.location.pathname}"]`).addClass('selected');
 });

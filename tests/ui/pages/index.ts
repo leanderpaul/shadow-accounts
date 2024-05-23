@@ -1,2 +1,4 @@
-export * from './authenticated.page';
-export * from './home.page';
+export * from './admin/admin.page';
+
+export * from './user/user.page';
+export * from './user/home.page';

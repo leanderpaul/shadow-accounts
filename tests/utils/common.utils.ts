@@ -39,10 +39,10 @@ export class Utils {
     return value;
   }
 
-  static getEmail(index: number, browser?: string): string {
+  static getEmail(id: string, browser?: string): string {
     if (!browser) browser = this.getValue('browser');
     const prefix = browser ? `${browser}` : 'test';
-    return `${prefix}-user-${index}@shadow-apps.test`;
+    return `${prefix}-${id}@shadow-apps.test`;
   }
 
   static getParsedCookie(cookie: string): Cookie {

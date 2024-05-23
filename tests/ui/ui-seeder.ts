@@ -27,10 +27,11 @@ export class UISeeder {
     return new UISeeder(seeder);
   }
 
-  async createUser(index: number, userData: Omit<CreateUser, 'email'>): Promise<void> {
+  async createUser(id: string, userData: Omit<CreateUser, 'email'>, adminRole?: string): Promise<void> {
     for (const browser of browsers) {
-      const email = Utils.getEmail(index, browser);
+      const email = Utils.getEmail(id, browser);
       await this.seeder.createUser({ email, ...userData });
+      if (adminRole) await this.seeder.createServiceAccount(email, 'iam', adminRole);
     }
   }
 

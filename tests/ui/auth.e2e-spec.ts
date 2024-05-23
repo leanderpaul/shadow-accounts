@@ -42,7 +42,7 @@ describe('Sign In', () => {
   });
 
   it('should return error for invalid password', async ({ page }) => {
-    const email = Utils.getEmail(1);
+    const email = Utils.getEmail('user-1');
     await page.goto('/auth/signin');
     await page.fill('input[name="email"]', email);
     await page.getByRole('button', { name: 'Next' }).click();
@@ -52,7 +52,7 @@ describe('Sign In', () => {
   });
 
   it('should sign in successfully', async ({ page }) => {
-    const email = Utils.getEmail(1);
+    const email = Utils.getEmail('user-1');
     await page.goto('/auth/signin');
     await page.fill('input[name="email"]', email);
     await page.getByRole('button', { name: 'Next' }).click();
